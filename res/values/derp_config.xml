@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: DerpFest AOSP
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+
+    <!-- Whether to show udfps animation customization or not -->
+    <bool name="config_show_udfps_animation_customization">true</bool>
+</resources>
