@@ -52,16 +52,21 @@ class UdfpsAnimationSectionController(
     }
 
     private fun isUdfpsAvailable(context: Context): Boolean {
-        val hasFingerprint = context.packageManager
-                .hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)
-        return if (hasFingerprint) {
-            val fingerprintManger =
-                    context.getSystemService(Context.FINGERPRINT_SERVICE) as FingerprintManager
+        return if (context.resources
+                .getIntArray(com.android.internal.R.array.config_udfps_sensor_props).isNotEmpty())
+            true
+        else {
+            val hasFingerprint = context.packageManager
+                            .hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)
+            if (hasFingerprint) {
+            val fingerprintManager =
+                context.getSystemService(Context.FINGERPRINT_SERVICE) as FingerprintManager
             val udfpsProps =
-                    fingerprintManger.getSensorPropertiesInternal().filter { it.isAnyUdfpsType() }
+                fingerprintManager.getSensorPropertiesInternal().filter { it.isAnyUdfpsType() }
             udfpsProps.isNotEmpty() // return
-        } else {
-            false
+            } else {
+                false    
+            }
         }
     }
 
