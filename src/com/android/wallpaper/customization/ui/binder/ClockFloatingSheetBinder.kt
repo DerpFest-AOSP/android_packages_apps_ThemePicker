@@ -20,8 +20,6 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.content.Context
-import android.content.res.Configuration.UI_MODE_NIGHT_MASK
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
@@ -492,12 +490,10 @@ object ClockFloatingSheetBinder {
             bindPayload = { itemView: View, colorIcon: ColorOptionIconViewModel ->
                 val colorOptionIconView: ColorOptionIconView2 =
                     itemView.requireViewById(com.android.wallpaper.R.id.background)
-                val night = uiMode and UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
                 val binding =
                     ColorOptionIconBinder2.bind(
                         view = colorOptionIconView,
                         viewModel = colorIcon,
-                        darkTheme = night,
                         colorUpdateViewModel = colorUpdateViewModel,
                         shouldAnimateColor = shouldAnimateColor,
                         lifecycleOwner = lifecycleOwner,
