@@ -38,7 +38,6 @@ constructor(private val defaultCustomizationOptionUtil: DefaultCustomizationOpti
         UDFPS_ICON,
         LOCK_SCREEN_NOTIFICATIONS,
         MORE_LOCK_SCREEN_SETTINGS,
-        FONT,
     }
 
     enum class ThemePickerHomeCustomizationOption : CustomizationOption {

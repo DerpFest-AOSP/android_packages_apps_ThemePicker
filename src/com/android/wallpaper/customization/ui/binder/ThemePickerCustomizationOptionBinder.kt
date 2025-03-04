@@ -65,7 +65,6 @@ import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.FONT as HOME_FONT
-import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.FONT as LOCK_FONT
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsData
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
 import com.android.wallpaper.picker.common.icon.ui.viewbinder.IconViewBinder
@@ -233,12 +232,8 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 .first { it.first == ThemePickerLockCustomizationOption.CLOCK }
                 .second
         val optionClockIcon: ImageView = optionClock.requireViewById(R.id.option_entry_icon)
-        val optionLockFont: View =
-            lockScreenCustomizationOptionEntries.first { it.first == LOCK_FONT }.second
         val optionHomeFont: View =
             homeScreenCustomizationOptionEntries.first { it.first == HOME_FONT }.second
-        val optionLockFontDescription: TextView =
-            optionLockFont.requireViewById(R.id.option_entry_description)
         val optionHomeFontDescription: TextView =
             optionHomeFont.requireViewById(R.id.option_entry_description)
 
@@ -392,12 +387,6 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 }
 
                 launch {
-                    optionsViewModel.onCustomizeLockFontClicked.collect {
-                        optionLockFont.setOnClickListener { _ -> it?.invoke() }
-                    }
-                }
-
-                launch {
                     optionsViewModel.onCustomizeHomeFontClicked.collect {
                         optionHomeFont.setOnClickListener { _ -> it?.invoke() }
                     }
@@ -405,7 +394,6 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
 
                 launch {
                     optionsViewModel.fontPickerViewModel.activeOption.collect { option ->
-                        optionLockFontDescription.text = option?.title.orEmpty()
                         optionHomeFontDescription.text = option?.title.orEmpty()
                     }
                 }
@@ -766,14 +754,12 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     lifecycleOwner,
                 )
             }
-        listOf(LOCK_FONT, HOME_FONT).forEach { option ->
-            customizationOptionFloatingSheetViewMap?.get(option)?.let { view ->
-                (view as ComposeView).setContent {
-                    FontSectionScreen(
-                        viewModel = optionsViewModel.fontPickerViewModel,
-                        isDark = isSystemInDarkTheme(),
-                    )
-                }
+        customizationOptionFloatingSheetViewMap?.get(HOME_FONT)?.let { view ->
+            (view as ComposeView).setContent {
+                FontSectionScreen(
+                    viewModel = optionsViewModel.fontPickerViewModel,
+                    isDark = isSystemInDarkTheme(),
+                )
             }
         }
         if (isComposeRefactorEnabled) {
