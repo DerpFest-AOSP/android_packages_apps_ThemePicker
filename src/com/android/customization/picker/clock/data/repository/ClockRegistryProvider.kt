@@ -55,7 +55,6 @@ class ClockRegistryProvider(
             isEnabled = flags.isCustomClocksEnabled(context),
             handleAllUsers = false,
             DefaultClockProvider(
-                ctx = context,
                 layoutInflater = LayoutInflater.from(context),
                 resources = context.resources,
                 isClockReactiveVariantsEnabled = flags.isClockReactiveVariantsEnabled(),
