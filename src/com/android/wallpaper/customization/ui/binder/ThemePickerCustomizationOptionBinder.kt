@@ -38,7 +38,7 @@ import com.android.customization.picker.color.ui.binder.ColorOptionIconBinder2
 import com.android.customization.picker.color.ui.view.ColorOptionIconView2
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.customization.picker.settings.ui.binder.ColorContrastSectionViewBinder2
-import com.android.systemui.plugins.clocks.ClockFontAxisSetting
+import com.android.systemui.plugins.clocks.ClockAxisStyle
 import com.android.systemui.plugins.clocks.ClockPreviewConfig
 import com.android.systemui.shared.Flags
 import com.android.themepicker.R
@@ -175,6 +175,22 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             navigateToMoreLockScreenSettingsActivity.invoke()
         }
 
+        var optionPackThemeIconHome: ImageView? = null
+        var optionPackThemeIconLock: ImageView? = null
+
+        if (BaseFlags.get().isPackThemeEnabled()) {
+            val optionPackThemeHome: View =
+                homeScreenCustomizationOptionEntries
+                    .first { it.first == ThemePickerHomeCustomizationOption.PACK_THEME }
+                    .second
+            optionPackThemeIconHome = optionPackThemeHome.requireViewById(R.id.option_entry_icon)
+            val optionPackThemeLock: View =
+                homeScreenCustomizationOptionEntries
+                    .first { it.first == ThemePickerHomeCustomizationOption.PACK_THEME }
+                    .second
+            optionPackThemeIconLock = optionPackThemeLock.requireViewById(R.id.option_entry_icon)
+        }
+
         val optionColors: View =
             homeScreenCustomizationOptionEntries
                 .first { it.first == ThemePickerHomeCustomizationOption.COLORS }
@@ -209,6 +225,10 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 optionShortcutIcon1.setColorFilter(color)
                 optionShortcutIcon2.setColorFilter(color)
                 optionShapeGridIcon.setColorFilter(color)
+                if (BaseFlags.get().isPackThemeEnabled()) {
+                    optionPackThemeIconHome?.setColorFilter(color)
+                    optionPackThemeIconLock?.setColorFilter(color)
+                }
             },
             color = colorUpdateViewModel.colorOnSurfaceVariant,
             shouldAnimate = isOnMainScreen,
@@ -473,8 +493,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                         .collect { quadruple ->
                             val (color, clock, axisMap, _) = quadruple
                             clockViewFactory.updateColor(clock.clockId, color)
-                            val axisList = axisMap.map { ClockFontAxisSetting(it.key, it.value) }
-                            clockViewFactory.updateFontAxes(clock.clockId, axisList)
+                            clockViewFactory.updateFontAxes(clock.clockId, ClockAxisStyle(axisMap))
                         }
                 }
 
