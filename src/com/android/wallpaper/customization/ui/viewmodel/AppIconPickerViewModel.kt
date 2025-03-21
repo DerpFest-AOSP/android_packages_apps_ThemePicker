@@ -26,14 +26,18 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.launch
 
 class AppIconPickerViewModel
 @AssistedInject
@@ -95,16 +99,33 @@ constructor(interactor: AppIconInteractor, @Assisted private val viewModelScope:
             selectedShapeKey,
             overridingIsThemedIconEnabled,
             isThemedIconEnabled,
-        ) { overridingShapeKey, selectedShapeKey, overridingIsThemeIconEnabled, isThemeIconEnabled
-            ->
-            if (
-                (overridingShapeKey != null && overridingShapeKey != selectedShapeKey) ||
-                    (overridingIsThemeIconEnabled != null &&
-                        overridingIsThemeIconEnabled != isThemeIconEnabled)
-            ) {
+        ) {
+            overridingShapeKey,
+            selectedShapeKey,
+            overridingIsThemedIconEnabled,
+            currentIsThemedIconEnabled ->
+            val shapeNeedsUpdate =
+                overridingShapeKey != null && overridingShapeKey != selectedShapeKey
+            val themedIconNeedsUpdate =
+                overridingIsThemedIconEnabled != null &&
+                    overridingIsThemedIconEnabled != currentIsThemedIconEnabled
+            if (shapeNeedsUpdate || themedIconNeedsUpdate) {
                 {
-                    overridingShapeKey?.let { interactor.applyShape(it) }
-                    overridingIsThemeIconEnabled?.let { interactor.applyThemedIconEnabled(it) }
+                    if (shapeNeedsUpdate) {
+                        overridingShapeKey?.let { interactor.applyShape(it) }
+                    }
+                    if (themedIconNeedsUpdate) {
+                        coroutineScope {
+                            launch {
+                                overridingIsThemedIconEnabled?.let {
+                                    interactor.applyThemedIconEnabled(it)
+                                }
+                            }
+                            isThemedIconEnabled.drop(1).take(1).collect {
+                                return@collect
+                            }
+                        }
+                    }
                 }
             } else {
                 null

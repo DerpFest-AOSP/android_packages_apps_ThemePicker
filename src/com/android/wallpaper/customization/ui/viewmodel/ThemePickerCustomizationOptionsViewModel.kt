@@ -90,6 +90,7 @@ constructor(
 
         keyguardQuickAffordancePickerViewModel2.resetPreview()
         shapeGridPickerViewModel.resetPreview()
+        appIconPickerViewModel.resetPreview()
         clockPickerViewModel.resetPreview()
         colorPickerViewModel2.resetPreview()
         darkModeViewModel.resetPreview()
@@ -135,13 +136,26 @@ constructor(
             }
         }
 
-    val onCustomizeShapeGridClicked: Flow<(() -> Unit)?> =
+    val onCustomizeIconsClicked: Flow<(() -> Unit)?> =
         selectedOption.map {
             if (it == null) {
                 {
                     defaultCustomizationOptionsViewModel.selectOption(
                         ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
-                            .APP_SHAPE_GRID
+                            .APP_ICONS
+                    )
+                }
+            } else {
+                null
+            }
+        }
+
+    val onCustomizeShapeGridClicked: Flow<(() -> Unit)?> =
+        selectedOption.map {
+            if (it == null) {
+                {
+                    defaultCustomizationOptionsViewModel.selectOption(
+                        ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.GRID
                     )
                 }
             } else {
@@ -158,8 +172,10 @@ constructor(
                         clockPickerViewModel.onApply
                     ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption
                         .SHORTCUTS -> keyguardQuickAffordancePickerViewModel2.onApply
+                    ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.GRID ->
+                        shapeGridPickerViewModel.onApply
                     ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
-                        .APP_SHAPE_GRID -> shapeGridPickerViewModel.onApply
+                        .APP_ICONS -> appIconPickerViewModel.onApply
                     ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS ->
                         combine(colorPickerViewModel2.onApply, darkModeViewModel.onApply) {
                             colorOnApply,

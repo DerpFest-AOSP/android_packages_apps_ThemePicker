@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 The Android Open Source Project
+ * Copyright (C) 2025 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package com.android.wallpaper.customization.ui.binder
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -29,18 +28,19 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.customization.picker.common.ui.view.SingleRowListItemSpacing
+import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
 import com.android.themepicker.R
-import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.GRID
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.APP_ICONS
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.option.ui.adapter.OptionItemAdapter2
+import com.google.android.material.materialswitch.MaterialSwitch
 import java.lang.ref.WeakReference
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 
-// TODO (b/402161932): rename shape grid classes and clean up view model and below
-object ShapeGridFloatingSheetBinder {
+object AppIconFloatingSheetBinder {
 
     fun bind(
         view: View,
@@ -49,8 +49,8 @@ object ShapeGridFloatingSheetBinder {
         lifecycleOwner: LifecycleOwner,
         backgroundDispatcher: CoroutineDispatcher,
     ) {
-        val viewModel = optionsViewModel.shapeGridPickerViewModel
-        val isFloatingSheetActive = { optionsViewModel.selectedOption.value == GRID }
+        val viewModel = optionsViewModel.appIconPickerViewModel
+        val isFloatingSheetActive = { optionsViewModel.selectedOption.value == APP_ICONS }
 
         val floatingSheetContainer =
             view.requireViewById<ViewGroup>(R.id.floating_sheet_content_container)
@@ -66,28 +66,60 @@ object ShapeGridFloatingSheetBinder {
             lifecycleOwner = lifecycleOwner,
         )
 
-        val gridOptionListAdapter =
-            createGridOptionItemAdapter(
+        val shapeOptionListAdapter =
+            createShapeOptionItemAdapter(
                 colorUpdateViewModel = colorUpdateViewModel,
                 shouldAnimateColor = isFloatingSheetActive,
                 lifecycleOwner = lifecycleOwner,
                 backgroundDispatcher = backgroundDispatcher,
             )
-        val gridOptionList =
-            view.requireViewById<RecyclerView>(R.id.grid_options).also {
-                it.initGridOptionList(view.context, gridOptionListAdapter)
+        val shapeOptionList =
+            view.requireViewById<RecyclerView>(R.id.shape_options).also {
+                it.initShapeOptionList(view.context, shapeOptionListAdapter)
             }
+
+        val themedIconsSwitch = view.requireViewById<MaterialSwitch>(R.id.themed_icon_toggle)
 
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.gridOptions.collect { options ->
-                        gridOptionListAdapter.setItems(options) {
+                    viewModel.shapeOptions.collect { options ->
+                        shapeOptionListAdapter.setItems(options) {
                             val indexToFocus =
                                 options.indexOfFirst { it.isSelected.value }.coerceAtLeast(0)
-                            (gridOptionList.layoutManager as LinearLayoutManager).scrollToPosition(
+                            (shapeOptionList.layoutManager as LinearLayoutManager).scrollToPosition(
                                 indexToFocus
                             )
+                        }
+                    }
+                }
+
+                launch {
+                    viewModel.isThemedIconAvailable.collect { isAvailable ->
+                        themedIconsSwitch.isEnabled = isAvailable
+                    }
+                }
+
+                launch {
+                    var binding: SwitchColorBinder.Binding? = null
+                    viewModel.previewingIsThemeIconEnabled.collect {
+                        themedIconsSwitch.isChecked = it
+                        binding?.destroy()
+                        binding =
+                            SwitchColorBinder.bind(
+                                switch = themedIconsSwitch,
+                                isChecked = it,
+                                colorUpdateViewModel = colorUpdateViewModel,
+                                shouldAnimateColor = isFloatingSheetActive,
+                                lifecycleOwner = lifecycleOwner,
+                            )
+                    }
+                }
+
+                launch {
+                    viewModel.toggleThemedIcon.collect {
+                        themedIconsSwitch.setOnCheckedChangeListener { _, _ ->
+                            launch { it.invoke() }
                         }
                     }
                 }
@@ -95,28 +127,28 @@ object ShapeGridFloatingSheetBinder {
         }
     }
 
-    private fun createGridOptionItemAdapter(
+    private fun createShapeOptionItemAdapter(
         colorUpdateViewModel: ColorUpdateViewModel,
         shouldAnimateColor: () -> Boolean,
         lifecycleOwner: LifecycleOwner,
         backgroundDispatcher: CoroutineDispatcher,
-    ): OptionItemAdapter2<Drawable> =
+    ): OptionItemAdapter2<ShapeIconViewModel> =
         OptionItemAdapter2(
-            layoutResourceId = R.layout.grid_option2,
+            layoutResourceId = R.layout.shape_option2,
             lifecycleOwner = lifecycleOwner,
             backgroundDispatcher = backgroundDispatcher,
-            bindPayload = { view: View, gridIcon: Drawable ->
+            bindPayload = { view: View, shapeIcon: ShapeIconViewModel ->
                 val imageView = view.findViewById(R.id.foreground) as? ImageView
-                imageView?.setImageDrawable(gridIcon)
+                imageView?.let { ShapeIconViewBinder.bind(imageView, shapeIcon) }
                 return@OptionItemAdapter2 null
             },
             colorUpdateViewModel = WeakReference(colorUpdateViewModel),
             shouldAnimateColor = shouldAnimateColor,
         )
 
-    private fun RecyclerView.initGridOptionList(
+    private fun RecyclerView.initShapeOptionList(
         context: Context,
-        adapter: OptionItemAdapter2<Drawable>,
+        adapter: OptionItemAdapter2<ShapeIconViewModel>,
     ) {
         apply {
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
@@ -128,7 +160,7 @@ object ShapeGridFloatingSheetBinder {
                         ),
                     itemHorizontalSpacePx =
                         context.resources.getDimensionPixelSize(
-                            R.dimen.floating_sheet_grid_list_item_horizontal_space
+                            R.dimen.floating_sheet_list_item_horizontal_space
                         ),
                 )
             )
