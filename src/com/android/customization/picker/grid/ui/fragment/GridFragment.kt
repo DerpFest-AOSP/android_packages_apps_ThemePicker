@@ -62,14 +62,9 @@ class GridFragment : AppbarFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
-        val view =
-            inflater.inflate(
-                R.layout.fragment_grid,
-                container,
-                false,
-            )
+        val view = inflater.inflate(R.layout.fragment_grid, container, false)
         ViewCompat.setOnApplyWindowInsetsListener(view) { v, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.updateLayoutParams<MarginLayoutParams> {
@@ -90,18 +85,14 @@ class GridFragment : AppbarFragment() {
                 view,
                 wallpaperInfoFactory,
                 injector.getWallpaperInteractor(requireContext()),
-                injector.getGridInteractor(requireContext())
+                injector.getGridInteractor(requireContext()),
             )
 
         val viewModelFactory = injector.getGridScreenViewModelFactory(requireContext())
         gridInteractor = injector.getGridInteractor(requireContext())
         GridScreenBinder.bind(
             view = view,
-            viewModel =
-                ViewModelProvider(
-                    this,
-                    viewModelFactory,
-                )[GridScreenViewModel::class.java],
+            viewModel = ViewModelProvider(this, viewModelFactory)[GridScreenViewModel::class.java],
             lifecycleOwner = this,
             backgroundDispatcher = Dispatchers.IO,
             onOptionsChanged = {
@@ -127,9 +118,9 @@ class GridFragment : AppbarFragment() {
                                     context,
                                     getString(
                                         R.string.toast_of_changing_grid,
-                                        gridInteractor.getSelectOptionStateFlow().value?.title
+                                        gridInteractor.getSelectOptionStateFlow().value?.title,
                                     ),
-                                    Toast.LENGTH_SHORT
+                                    Toast.LENGTH_SHORT,
                                 )
                                 .show()
                             val applyButton: Button = view.requireViewById(R.id.apply_button)
@@ -140,14 +131,14 @@ class GridFragment : AppbarFragment() {
                             val errorMsg =
                                 getString(
                                     R.string.toast_of_failure_to_change_grid,
-                                    gridInteractor.getSelectOptionStateFlow().value?.title
+                                    gridInteractor.getSelectOptionStateFlow().value?.title,
                                 )
                             Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show()
                             Log.e(TAG, errorMsg, throwable)
                         }
                     }
                 )
-            }
+            },
         )
 
         (returnTransition as? Transition)?.doOnStart {
@@ -164,7 +155,7 @@ class GridFragment : AppbarFragment() {
     override fun getToolbarTextColor(): Int {
         return ContextCompat.getColor(
             requireContext(),
-            com.android.wallpaper.R.color.system_on_surface
+            com.android.wallpaper.R.color.system_on_surface,
         )
     }
 
@@ -172,7 +163,7 @@ class GridFragment : AppbarFragment() {
         view: View,
         wallpaperInfoFactory: CurrentWallpaperInfoFactory,
         wallpaperInteractor: WallpaperInteractor,
-        gridInteractor: GridInteractor
+        gridInteractor: GridInteractor,
     ): ScreenPreviewBinder.Binding {
         return ScreenPreviewBinder.bind(
             activity = requireActivity(),
@@ -185,14 +176,15 @@ class GridFragment : AppbarFragment() {
                             authorityMetadataKey =
                                 requireContext()
                                     .getString(
-                                        com.android.wallpaper.R.string.grid_control_metadata_name,
+                                        com.android.wallpaper.R.string.grid_control_metadata_name
                                     ),
+                            screen = Screen.HOME_SCREEN,
                         ),
                     initialExtrasProvider = {
                         val bundle = Bundle()
                         bundle.putString(
                             "name",
-                            gridInteractor.getSelectOptionStateFlow().value?.name
+                            gridInteractor.getSelectOptionStateFlow().value?.name,
                         )
                         bundle
                     },

@@ -24,6 +24,7 @@ import com.android.customization.model.grid.DefaultShapeGridManager.Companion.SE
 import com.android.customization.model.grid.ShapeGridManager
 import com.android.customization.model.grid.ShapeOptionModel
 import com.android.wallpaper.R
+import com.android.wallpaper.model.Screen
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.util.PreviewUtils
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -50,7 +51,8 @@ constructor(
 ) {
     private val authorityMetadataKey: String =
         context.getString(R.string.grid_control_metadata_name)
-    private val previewUtils: PreviewUtils = PreviewUtils(context, authorityMetadataKey)
+    private val previewUtils: PreviewUtils =
+        PreviewUtils(context, authorityMetadataKey, Screen.HOME_SCREEN)
 
     private val _shapeOptions = MutableStateFlow<List<ShapeOptionModel>?>(null)
 
