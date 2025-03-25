@@ -57,9 +57,9 @@ constructor(
     enum class ThemePickerHomeCustomizationOption : CustomizationOptionUtil.CustomizationOption {
         PACK_THEME,
         COLORS,
+        COLOR_CONTRAST,
         APP_ICONS,
         GRID,
-        COLOR_CONTRAST,
     }
 
     override fun getOptionEntries(
@@ -138,9 +138,17 @@ constructor(
                             )
                     )
                     add(
+                        ThemePickerHomeCustomizationOption.COLOR_CONTRAST to
+                            layoutInflater.inflate(
+                                R.layout.customization_option_entry_color_contrast,
+                                optionContainer,
+                                false,
+                            )
+                    )
+                    add(
                         ThemePickerHomeCustomizationOption.APP_ICONS to
                             layoutInflater.inflate(
-                                R.layout.customization_option_entry_themed_icons,
+                                R.layout.customization_option_entry_app_icons,
                                 optionContainer,
                                 false,
                             )
@@ -149,14 +157,6 @@ constructor(
                         ThemePickerHomeCustomizationOption.GRID to
                             layoutInflater.inflate(
                                 R.layout.customization_option_entry_app_shape_grid,
-                                optionContainer,
-                                false,
-                            )
-                    )
-                    add(
-                        ThemePickerHomeCustomizationOption.COLOR_CONTRAST to
-                            layoutInflater.inflate(
-                                R.layout.customization_option_entry_color_contrast,
                                 optionContainer,
                                 false,
                             )

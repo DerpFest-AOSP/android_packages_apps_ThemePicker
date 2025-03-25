@@ -206,6 +206,9 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             homeScreenCustomizationOptionEntries
                 .first { it.first == ThemePickerHomeCustomizationOption.APP_ICONS }
                 .second
+        val optionAppIconsDescription: TextView =
+            optionAppIcons.requireViewById(R.id.option_entry_description)
+        val optionAppIconsIcon: ImageView = optionAppIcons.requireViewById(R.id.option_entry_icon)
 
         val optionShapeGrid: View =
             homeScreenCustomizationOptionEntries
@@ -289,6 +292,24 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     optionsViewModel.onCustomizeIconsClicked.collect {
                         optionAppIcons.setOnClickListener { _ -> it?.invoke() }
                     }
+                }
+
+                launch {
+                    val appIconPickerViewModel = optionsViewModel.appIconPickerViewModel
+                    combine(
+                            appIconPickerViewModel.selectedShape,
+                            appIconPickerViewModel.isThemedIconEnabled,
+                            ::Pair,
+                        )
+                        .collect { (selectedShape, isThemedIconEnabled) ->
+                            // TODO(b/402161932): create and display app icon preview
+                            optionAppIcons
+                                .requireViewById<View>(R.id.option_entry_icon_container)
+                                .visibility = View.INVISIBLE
+                            // TODO(b/402161932): show selected shape text when b/406486710 is fixed
+                            // TODO(b/402161932): show selected theme text after content is decided
+                            optionAppIconsDescription.visibility = View.GONE
+                        }
                 }
 
                 launch {

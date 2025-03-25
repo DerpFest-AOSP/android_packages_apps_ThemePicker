@@ -45,17 +45,16 @@ constructor(interactor: AppIconInteractor, @Assisted private val viewModelScope:
     //// Shape
 
     // The currently-set system shape option
-    val selectedShapeKey =
+    val selectedShape =
         interactor.selectedShapeOption
             .filterNotNull()
-            .map { it.key }
+            .map { toShapeOptionItemViewModel(it) }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
     private val overridingShapeKey = MutableStateFlow<String?>(null)
     // If the overriding key is null, use the currently-set system shape option
     val previewingShapeKey =
-        combine(overridingShapeKey, selectedShapeKey) { overridingShapeOptionKey, selectedShapeKey
-            ->
-            overridingShapeOptionKey ?: selectedShapeKey
+        combine(overridingShapeKey, selectedShape) { overridingShapeOptionKey, selectedShape ->
+            overridingShapeOptionKey ?: selectedShape.key.value
         }
 
     val shapeOptions: Flow<List<OptionItemViewModel2<ShapeIconViewModel>>> =
@@ -96,16 +95,16 @@ constructor(interactor: AppIconInteractor, @Assisted private val viewModelScope:
     val onApply: Flow<(suspend () -> Unit)?> =
         combine(
             overridingShapeKey,
-            selectedShapeKey,
+            selectedShape,
             overridingIsThemedIconEnabled,
             isThemedIconEnabled,
         ) {
             overridingShapeKey,
-            selectedShapeKey,
+            selectedShape,
             overridingIsThemedIconEnabled,
             currentIsThemedIconEnabled ->
             val shapeNeedsUpdate =
-                overridingShapeKey != null && overridingShapeKey != selectedShapeKey
+                overridingShapeKey != null && overridingShapeKey != selectedShape.key.value
             val themedIconNeedsUpdate =
                 overridingIsThemedIconEnabled != null &&
                     overridingIsThemedIconEnabled != currentIsThemedIconEnabled
