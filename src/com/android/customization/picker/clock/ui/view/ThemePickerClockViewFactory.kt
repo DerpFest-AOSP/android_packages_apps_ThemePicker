@@ -27,6 +27,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.android.internal.policy.SystemBarUtils
 import com.android.systemui.plugins.clocks.ClockAxisStyle
 import com.android.systemui.plugins.clocks.ClockController
+import com.android.systemui.plugins.clocks.ClockFaceController.Companion.updateTheme
 import com.android.systemui.plugins.clocks.WeatherData
 import com.android.systemui.shared.Flags
 import com.android.systemui.shared.clocks.ClockRegistry
@@ -124,15 +125,15 @@ constructor(
 
     override fun updateColorForAllClocks(@ColorInt seedColor: Int?) {
         clockControllers.values.forEach {
-            it.largeClock.run { events.onThemeChanged(theme.copy(seedColor = seedColor)) }
-            it.smallClock.run { events.onThemeChanged(theme.copy(seedColor = seedColor)) }
+            it.largeClock.updateTheme { it.copy(seedColor = seedColor) }
+            it.smallClock.updateTheme { it.copy(seedColor = seedColor) }
         }
     }
 
     override fun updateColor(clockId: String, @ColorInt seedColor: Int?) {
         getController(clockId)?.let {
-            it.largeClock.run { events.onThemeChanged(theme.copy(seedColor = seedColor)) }
-            it.smallClock.run { events.onThemeChanged(theme.copy(seedColor = seedColor)) }
+            it.largeClock.updateTheme { it.copy(seedColor = seedColor) }
+            it.smallClock.updateTheme { it.copy(seedColor = seedColor) }
         }
     }
 
@@ -146,8 +147,8 @@ constructor(
     override fun updateRegionDarkness() {
         val isRegionDark = isLockscreenWallpaperDark()
         clockControllers.values.forEach {
-            it.largeClock.run { events.onThemeChanged(theme.copy(isDarkTheme = isRegionDark)) }
-            it.smallClock.run { events.onThemeChanged(theme.copy(isDarkTheme = isRegionDark)) }
+            it.largeClock.updateTheme { it.copy(isDarkTheme = isRegionDark) }
+            it.smallClock.updateTheme { it.copy(isDarkTheme = isRegionDark) }
         }
     }
 
