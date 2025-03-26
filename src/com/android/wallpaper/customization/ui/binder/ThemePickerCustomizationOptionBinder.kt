@@ -151,16 +151,22 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 .second
         val optionClockIcon: ImageView = optionClock.requireViewById(R.id.option_entry_icon)
 
-        val optionShortcut: View =
-            lockScreenCustomizationOptionEntries
-                .first { it.first == ThemePickerLockCustomizationOption.SHORTCUTS }
-                .second
-        val optionShortcutDescription: TextView =
-            optionShortcut.requireViewById(R.id.option_entry_description)
-        val optionShortcutIcon1: ImageView =
-            optionShortcut.requireViewById(R.id.option_entry_icon_1)
-        val optionShortcutIcon2: ImageView =
-            optionShortcut.requireViewById(R.id.option_entry_icon_2)
+        val isKeyguardQuickAffordanceEnabled =
+            BaseFlags.get().isKeyguardQuickAffordanceEnabled(view.context)
+        var optionShortcut: View? = null
+        var optionShortcutDescription: TextView? = null
+        var optionShortcutIcon1: ImageView? = null
+        var optionShortcutIcon2: ImageView? = null
+        if (isKeyguardQuickAffordanceEnabled) {
+            optionShortcut =
+                lockScreenCustomizationOptionEntries
+                    .first { it.first == ThemePickerLockCustomizationOption.SHORTCUTS }
+                    .second
+            optionShortcutDescription =
+                optionShortcut.requireViewById(R.id.option_entry_description)
+            optionShortcutIcon1 = optionShortcut.requireViewById(R.id.option_entry_icon_1)
+            optionShortcutIcon2 = optionShortcut.requireViewById(R.id.option_entry_icon_2)
+        }
 
         val optionLockScreenNotificationsSettings: View =
             lockScreenCustomizationOptionEntries
@@ -227,8 +233,10 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         ColorUpdateBinder.bind(
             setColor = { color ->
                 optionClockIcon.setColorFilter(color)
-                optionShortcutIcon1.setColorFilter(color)
-                optionShortcutIcon2.setColorFilter(color)
+                if (isKeyguardQuickAffordanceEnabled) {
+                    optionShortcutIcon1?.setColorFilter(color)
+                    optionShortcutIcon2?.setColorFilter(color)
+                }
                 optionShapeGridIcon.setColorFilter(color)
                 if (BaseFlags.get().isPackThemeEnabled()) {
                     optionPackThemeIconHome?.setColorFilter(color)
@@ -254,31 +262,35 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     }
                 }
 
-                launch {
-                    optionsViewModel.onCustomizeShortcutClicked.collect {
-                        optionShortcut.setOnClickListener { _ -> it?.invoke() }
+                if (isKeyguardQuickAffordanceEnabled) {
+                    launch {
+                        optionsViewModel.onCustomizeShortcutClicked.collect {
+                            optionShortcut?.setOnClickListener { _ -> it?.invoke() }
+                        }
                     }
                 }
 
-                launch {
-                    optionsViewModel.keyguardQuickAffordancePickerViewModel2.summary.collect {
-                        summary ->
-                        optionShortcutDescription.let {
-                            TextViewBinder.bind(view = it, viewModel = summary.description)
-                        }
-                        summary.icon1?.let { icon ->
-                            optionShortcutIcon1.let {
-                                IconViewBinder.bind(view = it, viewModel = icon)
+                if (isKeyguardQuickAffordanceEnabled) {
+                    launch {
+                        optionsViewModel.keyguardQuickAffordancePickerViewModel2.summary.collect {
+                            summary ->
+                            optionShortcutDescription?.let {
+                                TextViewBinder.bind(view = it, viewModel = summary.description)
                             }
-                        }
-                        optionShortcutIcon1.isVisible = summary.icon1 != null
+                            summary.icon1?.let { icon ->
+                                optionShortcutIcon1?.let {
+                                    IconViewBinder.bind(view = it, viewModel = icon)
+                                }
+                            }
+                            optionShortcutIcon1?.isVisible = summary.icon1 != null
 
-                        summary.icon2?.let { icon ->
-                            optionShortcutIcon2.let {
-                                IconViewBinder.bind(view = it, viewModel = icon)
+                            summary.icon2?.let { icon ->
+                                optionShortcutIcon2?.let {
+                                    IconViewBinder.bind(view = it, viewModel = icon)
+                                }
                             }
+                            optionShortcutIcon2?.isVisible = summary.icon2 != null
                         }
-                        optionShortcutIcon2.isVisible = summary.icon2 != null
                     }
                 }
 
