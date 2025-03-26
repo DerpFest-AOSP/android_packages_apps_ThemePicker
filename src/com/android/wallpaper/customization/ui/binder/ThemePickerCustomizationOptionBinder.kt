@@ -18,6 +18,7 @@ package com.android.wallpaper.customization.ui.binder
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -81,7 +82,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         navigateToMoreLockScreenSettingsActivity: () -> Unit,
         navigateToColorContrastSettingsActivity: () -> Unit,
         navigateToLockScreenNotificationsSettingsActivity: () -> Unit,
-        navigateToPackThemeActivity: () -> Unit,
+        navigateToPackThemeActivity: (Intent) -> Unit,
     ) {
         defaultCustomizationOptionsBinder.bind(
             view,
@@ -179,20 +180,19 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
 
         var optionPackThemeIconHome: ImageView? = null
         var optionPackThemeIconLock: ImageView? = null
-
+        var optionPackThemeHome: View? = null
+        var optionPackThemeLock: View? = null
         if (BaseFlags.get().isPackThemeEnabled()) {
-            val optionPackThemeHome =
+            optionPackThemeHome =
                 homeScreenCustomizationOptionEntries
                     .first { it.first == ThemePickerHomeCustomizationOption.PACK_THEME }
                     .second
-            optionPackThemeHome.setOnClickListener { navigateToPackThemeActivity.invoke() }
             optionPackThemeIconHome = optionPackThemeHome.requireViewById(R.id.option_entry_icon)
 
-            val optionPackThemeLock =
+            optionPackThemeLock =
                 lockScreenCustomizationOptionEntries
                     .first { it.first == ThemePickerHomeCustomizationOption.PACK_THEME }
                     .second
-            optionPackThemeLock.setOnClickListener { navigateToPackThemeActivity.invoke() }
             optionPackThemeIconLock = optionPackThemeLock.requireViewById(R.id.option_entry_icon)
         }
 
@@ -364,6 +364,25 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     optionsViewModel.themedIconViewModel.toggleThemedIcon.collect {
                         optionThemedIconsSwitch.setOnCheckedChangeListener { _, _ ->
                             launch { it.invoke() }
+                        }
+                    }
+                }
+
+                if (BaseFlags.get().isPackThemeEnabled()) {
+                    launch {
+                        optionsViewModel.packThemeViewModel.startThemePackActivityIntent.collect {
+                            intent ->
+                            if (intent != null) {
+                                optionPackThemeHome?.setOnClickListener {
+                                    navigateToPackThemeActivity.invoke(intent)
+                                }
+                                optionPackThemeLock?.setOnClickListener {
+                                    navigateToPackThemeActivity.invoke(intent)
+                                }
+                            } else {
+                                optionPackThemeHome?.setOnClickListener(null)
+                                optionPackThemeLock?.setOnClickListener(null)
+                            }
                         }
                     }
                 }

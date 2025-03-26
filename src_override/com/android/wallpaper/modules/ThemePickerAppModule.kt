@@ -73,6 +73,8 @@ import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptions
 import com.android.wallpaper.picker.customization.ui.binder.ToolbarBinder
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.di.modules.MainDispatcher
+import com.android.wallpaper.picker.domain.interactor.PackThemeInteractor
+import com.android.wallpaper.picker.domain.interactor.implementations.ThemePickerPackThemeInteractor
 import com.android.wallpaper.picker.preview.ui.util.DefaultImageEffectDialogUtil
 import com.android.wallpaper.picker.preview.ui.util.ImageEffectDialogUtil
 import com.android.wallpaper.util.converter.DefaultWallpaperModelFactory
@@ -158,6 +160,10 @@ abstract class ThemePickerAppModule {
     abstract fun bindImageEffectDialogUtil(
         impl: DefaultImageEffectDialogUtil
     ): ImageEffectDialogUtil
+
+    @Binds
+    @Singleton
+    abstract fun bindPackThemeInteractor(impl: ThemePickerPackThemeInteractor): PackThemeInteractor
 
     @Binds
     @Singleton

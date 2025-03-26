@@ -65,6 +65,8 @@ import com.android.wallpaper.picker.customization.ui.binder.DefaultCustomization
 import com.android.wallpaper.picker.customization.ui.binder.ToolbarBinder
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.di.modules.MainDispatcher
+import com.android.wallpaper.picker.domain.interactor.PackThemeInteractor
+import com.android.wallpaper.picker.domain.interactor.implementations.ThemePickerPackThemeInteractor
 import com.android.wallpaper.picker.preview.ui.util.DefaultImageEffectDialogUtil
 import com.android.wallpaper.picker.preview.ui.util.ImageEffectDialogUtil
 import com.android.wallpaper.testing.FakeCategoryInteractor
@@ -173,6 +175,10 @@ abstract class ThemePickerTestModule {
     @Binds
     @Singleton
     abstract fun bindThemesUserEventLogger(impl: TestThemesUserEventLogger): ThemesUserEventLogger
+
+    @Binds
+    @Singleton
+    abstract fun bindPackThemeInteractor(impl: ThemePickerPackThemeInteractor): PackThemeInteractor
 
     @Binds
     @Singleton
