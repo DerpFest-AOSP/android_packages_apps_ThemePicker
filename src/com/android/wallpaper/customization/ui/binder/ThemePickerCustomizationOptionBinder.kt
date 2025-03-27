@@ -52,7 +52,6 @@ import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.DefaultCustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
-import com.android.wallpaper.picker.customization.ui.util.ViewAlphaAnimator.animateToAlpha
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
@@ -504,10 +503,6 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                                 clockPresetIndexedStyle?.style ?: ClockAxisStyle(),
                             )
                         }
-                }
-
-                launch {
-                    viewModel.lockPreviewAnimateToAlpha.collect { clockHostView.animateToAlpha(it) }
                 }
 
                 launch {
