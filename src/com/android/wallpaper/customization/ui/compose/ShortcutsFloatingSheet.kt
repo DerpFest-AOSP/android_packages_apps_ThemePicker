@@ -16,11 +16,18 @@
 
 package com.android.wallpaper.customization.ui.compose
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -33,21 +40,17 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Icon as ComposeIcon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -61,22 +64,25 @@ import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.customization.ui.viewmodel.FloatingToolbarTabViewModel
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
 
+// TODO: b/404820955 - Plug correct colors inherited from the device into all composables
 @Composable
 fun ShortcutsFloatingSheet(
     viewModel: KeyguardQuickAffordancePickerViewModel2,
     modifier: Modifier = Modifier,
 ) {
     val items by viewModel.quickAffordances.collectAsStateWithLifecycle(emptyList())
-    val colorScheme = MaterialTheme.colorScheme
     val tabs by viewModel.tabs.collectAsStateWithLifecycle(emptyList())
 
     PlatformTheme {
-        Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = modifier.padding(4.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
             LazyHorizontalGrid(
                 rows = GridCells.Fixed(2),
                 contentPadding = PaddingValues(12.dp),
                 verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalArrangement = Arrangement.SpaceEvenly,
+                horizontalArrangement = Arrangement.Center,
                 modifier =
                     Modifier.fillMaxWidth()
                         .padding(
@@ -84,7 +90,7 @@ fun ShortcutsFloatingSheet(
                                 dimensionResource(R.dimen.floating_sheet_horizontal_padding)
                         )
                         .clip(shape = RoundedCornerShape(28.dp))
-                        .background(colorScheme.inverseOnSurface)
+                        .background(Color.DarkGray)
                         .size(225.dp),
             ) {
                 items(items) { item -> ShortcutItem(slotIcon = item) }
@@ -101,81 +107,118 @@ private fun ShortcutTabRow(tabs: List<FloatingToolbarTabViewModel>, modifier: Mo
     }
     val leftShortcut = tabs[0]
     val rightShortcut = tabs[1]
-    var selectedTab by remember { mutableStateOf(leftShortcut) }
     Row(
         modifier =
-            modifier
-                .padding(5.dp)
-                .clip(shape = RoundedCornerShape(26.dp))
-                .background(colorScheme.inverseOnSurface),
+            modifier.padding(6.dp).clip(shape = RoundedCornerShape(56.dp)).background(Color.Gray),
         horizontalArrangement = Arrangement.Center,
     ) {
-        TabButton(
-            shortcutTab = leftShortcut,
-            isTabSelected = selectedTab == leftShortcut,
-            colorScheme = colorScheme,
-            onTabClick = { selectedTab = leftShortcut },
-        )
-        TabButton(
-            shortcutTab = rightShortcut,
-            isTabSelected = selectedTab == rightShortcut,
-            colorScheme = colorScheme,
-            onTabClick = { selectedTab = rightShortcut },
-        )
+        TabButton(shortcutTab = leftShortcut)
+        TabButton(shortcutTab = rightShortcut)
     }
 }
 
 @Composable
-private fun TabButton(
-    modifier: Modifier = Modifier,
-    shortcutTab: FloatingToolbarTabViewModel,
-    isTabSelected: Boolean,
-    colorScheme: ColorScheme,
-    onTabClick: () -> Unit,
-) {
+private fun TabButton(modifier: Modifier = Modifier, shortcutTab: FloatingToolbarTabViewModel) {
+    val buttonClickableOrNull = shortcutTab.onClick?.takeIf { !shortcutTab.isSelected }
     Button(
-        onClick = onTabClick,
-        modifier = modifier,
-        shape = RoundedCornerShape(12.dp),
+        enabled = buttonClickableOrNull != null,
+        onClick = { shortcutTab.onClick?.invoke() },
+        modifier = modifier.padding(8.dp),
+        shape = RoundedCornerShape(56.dp),
         colors =
             ButtonColors(
-                containerColor = if (isTabSelected) colorScheme.onSurface else Color.Transparent,
+                containerColor =
+                    if (shortcutTab.isSelected) colorScheme.background else Color.Transparent,
                 contentColor = colorScheme.primary,
-                disabledContainerColor = colorScheme.onSurface,
-                disabledContentColor = colorScheme.onSurface,
+                disabledContainerColor = colorScheme.inverseOnSurface,
+                disabledContentColor = colorScheme.inverseOnSurface,
             ),
     ) {
-        Text(
-            text = shortcutTab.text,
-            style = MaterialTheme.typography.labelMedium,
-            textAlign = TextAlign.Center,
-            modifier = Modifier,
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            AnimatedVisibility(shortcutTab.isSelected) {
+                when (shortcutTab.icon) {
+                    is Icon.Resource -> {
+                        val drawable = painterResource((shortcutTab.icon as Icon.Resource).res)
+                        Image(
+                            painter = drawable,
+                            contentDescription = shortcutTab.text,
+                            modifier = Modifier,
+                        )
+                    }
+
+                    is Icon.Loaded -> {
+                        Image(
+                            painter =
+                                rememberDrawablePainter((shortcutTab.icon as Icon.Loaded).drawable),
+                            contentDescription = shortcutTab.text,
+                            modifier = Modifier,
+                        )
+                    }
+                }
+            }
+            Text(
+                text = shortcutTab.text,
+                style = MaterialTheme.typography.labelMedium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 4.dp),
+                color = Color.White,
+            )
+        }
     }
 }
 
 @Composable
 private fun ShortcutItem(modifier: Modifier = Modifier, slotIcon: OptionItemViewModel2<Icon>) {
-    // TODO (b/404820955): Get the isSelected state from the view model
-    var isSelected by remember { mutableStateOf(false) }
-    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier.width(65.dp)) {
+    val iconState by slotIcon.onClicked.collectAsStateWithLifecycle({})
+    val isIconSelected by slotIcon.isSelected.collectAsStateWithLifecycle(false)
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.width(65.dp).padding(5.dp),
+    ) {
+        val selectedDP = if (isIconSelected) 20.dp else 56.dp
+        val selectedColor = if (isIconSelected) Color.LightGray else Color.Gray
+        val cornerShapeRadius =
+            animateDpAsState(
+                targetValue = selectedDP,
+                animationSpec =
+                    spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessMedium,
+                    ),
+            )
+        val iconColor = animateColorAsState(selectedColor)
         FilledTonalButton(
-            onClick = { isSelected = !isSelected },
-            shape = if (isSelected) RoundedCornerShape(20.dp) else CircleShape,
+            enabled = slotIcon.isEnabled,
+            onClick = { iconState?.invoke() },
+            shape = RoundedCornerShape(cornerShapeRadius.value),
             modifier = Modifier.size(56.dp),
+            contentPadding = PaddingValues(16.dp),
+            colors =
+                ButtonColors(
+                    containerColor = iconColor.value,
+                    contentColor = iconColor.value,
+                    disabledContainerColor = iconColor.value,
+                    disabledContentColor = iconColor.value,
+                ),
         ) {
             when (val curIcon = slotIcon.payload) {
                 is Icon.Resource -> {
                     val drawable = painterResource(curIcon.res)
-                    ComposeIcon(
+                    Image(
                         painter = drawable,
                         contentDescription = slotIcon.text.asComposeString(),
+                        modifier = Modifier.fillMaxSize().clip(CircleShape),
+                        contentScale = ContentScale.Crop,
                     )
                 }
                 is Icon.Loaded -> {
-                    ComposeIcon(
+                    Image(
                         painter = rememberDrawablePainter(curIcon.drawable),
                         contentDescription = slotIcon.text.asComposeString(),
+                        modifier = Modifier.fillMaxSize(),
                     )
                 }
                 else -> {}
@@ -186,6 +229,7 @@ private fun ShortcutItem(modifier: Modifier = Modifier, slotIcon: OptionItemView
             style = MaterialTheme.typography.labelMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.width(55.dp).wrapContentHeight(),
+            color = Color.White,
         )
     }
 }
