@@ -67,6 +67,8 @@ constructor(
         optionContainer: LinearLayout,
         layoutInflater: LayoutInflater,
     ): List<Pair<CustomizationOptionUtil.CustomizationOption, View>> {
+        val isKeyguardQuickAffordanceEnabled =
+            BaseFlags.get().isKeyguardQuickAffordanceEnabled(optionContainer.context)
         val defaultOptionEntries =
             defaultCustomizationOptionUtil.getOptionEntries(screen, optionContainer, layoutInflater)
         return when (screen) {
@@ -91,14 +93,16 @@ constructor(
                                 false,
                             )
                     )
-                    add(
-                        ThemePickerLockCustomizationOption.SHORTCUTS to
-                            layoutInflater.inflate(
-                                R.layout.customization_option_entry_keyguard_quick_affordance,
-                                optionContainer,
-                                false,
-                            )
-                    )
+                    if (isKeyguardQuickAffordanceEnabled) {
+                        add(
+                            ThemePickerLockCustomizationOption.SHORTCUTS to
+                                layoutInflater.inflate(
+                                    R.layout.customization_option_entry_keyguard_quick_affordance,
+                                    optionContainer,
+                                    false,
+                                )
+                        )
+                    }
                     add(
                         ThemePickerLockCustomizationOption.LOCK_SCREEN_NOTIFICATIONS to
                             layoutInflater.inflate(
@@ -172,6 +176,8 @@ constructor(
         val map =
             defaultCustomizationOptionUtil.initFloatingSheet(bottomSheetContainer, layoutInflater)
         val isComposeRefactorEnabled = BaseFlags.get().isComposeRefactorEnabled()
+        val isKeyguardQuickAffordanceEnabled =
+            BaseFlags.get().isKeyguardQuickAffordanceEnabled(bottomSheetContainer.context)
         return buildMap {
             putAll(map)
             put(
@@ -183,15 +189,17 @@ constructor(
                     )
                     .also { bottomSheetContainer.addView(it) },
             )
-            put(
-                ThemePickerLockCustomizationOption.SHORTCUTS,
-                inflateFloatingSheet(
-                        ThemePickerLockCustomizationOption.SHORTCUTS,
-                        bottomSheetContainer,
-                        layoutInflater,
-                    )
-                    .also { bottomSheetContainer.addView(it) },
-            )
+            if (isKeyguardQuickAffordanceEnabled) {
+                put(
+                    ThemePickerLockCustomizationOption.SHORTCUTS,
+                    inflateFloatingSheet(
+                            ThemePickerLockCustomizationOption.SHORTCUTS,
+                            bottomSheetContainer,
+                            layoutInflater,
+                        )
+                        .also { bottomSheetContainer.addView(it) },
+                )
+            }
             put(
                 ThemePickerHomeCustomizationOption.COLORS,
                 if (isComposeRefactorEnabled) {
