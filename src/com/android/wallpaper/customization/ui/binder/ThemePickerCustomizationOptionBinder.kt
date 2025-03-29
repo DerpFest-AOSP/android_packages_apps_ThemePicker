@@ -18,6 +18,7 @@ package com.android.wallpaper.customization.ui.binder
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -52,7 +53,6 @@ import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.DefaultCustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
-import com.android.wallpaper.picker.customization.ui.util.ViewAlphaAnimator.animateToAlpha
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
@@ -81,7 +81,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         navigateToMoreLockScreenSettingsActivity: () -> Unit,
         navigateToColorContrastSettingsActivity: () -> Unit,
         navigateToLockScreenNotificationsSettingsActivity: () -> Unit,
-        navigateToPackThemeActivity: () -> Unit,
+        navigateToPackThemeActivity: (Intent) -> Unit,
     ) {
         defaultCustomizationOptionsBinder.bind(
             view,
@@ -150,16 +150,22 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 .second
         val optionClockIcon: ImageView = optionClock.requireViewById(R.id.option_entry_icon)
 
-        val optionShortcut: View =
-            lockScreenCustomizationOptionEntries
-                .first { it.first == ThemePickerLockCustomizationOption.SHORTCUTS }
-                .second
-        val optionShortcutDescription: TextView =
-            optionShortcut.requireViewById(R.id.option_entry_description)
-        val optionShortcutIcon1: ImageView =
-            optionShortcut.requireViewById(R.id.option_entry_icon_1)
-        val optionShortcutIcon2: ImageView =
-            optionShortcut.requireViewById(R.id.option_entry_icon_2)
+        val isKeyguardQuickAffordanceEnabled =
+            BaseFlags.get().isKeyguardQuickAffordanceEnabled(view.context)
+        var optionShortcut: View? = null
+        var optionShortcutDescription: TextView? = null
+        var optionShortcutIcon1: ImageView? = null
+        var optionShortcutIcon2: ImageView? = null
+        if (isKeyguardQuickAffordanceEnabled) {
+            optionShortcut =
+                lockScreenCustomizationOptionEntries
+                    .first { it.first == ThemePickerLockCustomizationOption.SHORTCUTS }
+                    .second
+            optionShortcutDescription =
+                optionShortcut.requireViewById(R.id.option_entry_description)
+            optionShortcutIcon1 = optionShortcut.requireViewById(R.id.option_entry_icon_1)
+            optionShortcutIcon2 = optionShortcut.requireViewById(R.id.option_entry_icon_2)
+        }
 
         val optionLockScreenNotificationsSettings: View =
             lockScreenCustomizationOptionEntries
@@ -179,20 +185,19 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
 
         var optionPackThemeIconHome: ImageView? = null
         var optionPackThemeIconLock: ImageView? = null
-
+        var optionPackThemeHome: View? = null
+        var optionPackThemeLock: View? = null
         if (BaseFlags.get().isPackThemeEnabled()) {
-            val optionPackThemeHome =
+            optionPackThemeHome =
                 homeScreenCustomizationOptionEntries
                     .first { it.first == ThemePickerHomeCustomizationOption.PACK_THEME }
                     .second
-            optionPackThemeHome.setOnClickListener { navigateToPackThemeActivity.invoke() }
             optionPackThemeIconHome = optionPackThemeHome.requireViewById(R.id.option_entry_icon)
 
-            val optionPackThemeLock =
+            optionPackThemeLock =
                 lockScreenCustomizationOptionEntries
                     .first { it.first == ThemePickerHomeCustomizationOption.PACK_THEME }
                     .second
-            optionPackThemeLock.setOnClickListener { navigateToPackThemeActivity.invoke() }
             optionPackThemeIconLock = optionPackThemeLock.requireViewById(R.id.option_entry_icon)
         }
 
@@ -227,8 +232,10 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         ColorUpdateBinder.bind(
             setColor = { color ->
                 optionClockIcon.setColorFilter(color)
-                optionShortcutIcon1.setColorFilter(color)
-                optionShortcutIcon2.setColorFilter(color)
+                if (isKeyguardQuickAffordanceEnabled) {
+                    optionShortcutIcon1?.setColorFilter(color)
+                    optionShortcutIcon2?.setColorFilter(color)
+                }
                 optionShapeGridIcon.setColorFilter(color)
                 if (BaseFlags.get().isPackThemeEnabled()) {
                     optionPackThemeIconHome?.setColorFilter(color)
@@ -254,31 +261,35 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     }
                 }
 
-                launch {
-                    optionsViewModel.onCustomizeShortcutClicked.collect {
-                        optionShortcut.setOnClickListener { _ -> it?.invoke() }
+                if (isKeyguardQuickAffordanceEnabled) {
+                    launch {
+                        optionsViewModel.onCustomizeShortcutClicked.collect {
+                            optionShortcut?.setOnClickListener { _ -> it?.invoke() }
+                        }
                     }
                 }
 
-                launch {
-                    optionsViewModel.keyguardQuickAffordancePickerViewModel2.summary.collect {
-                        summary ->
-                        optionShortcutDescription.let {
-                            TextViewBinder.bind(view = it, viewModel = summary.description)
-                        }
-                        summary.icon1?.let { icon ->
-                            optionShortcutIcon1.let {
-                                IconViewBinder.bind(view = it, viewModel = icon)
+                if (isKeyguardQuickAffordanceEnabled) {
+                    launch {
+                        optionsViewModel.keyguardQuickAffordancePickerViewModel2.summary.collect {
+                            summary ->
+                            optionShortcutDescription?.let {
+                                TextViewBinder.bind(view = it, viewModel = summary.description)
                             }
-                        }
-                        optionShortcutIcon1.isVisible = summary.icon1 != null
+                            summary.icon1?.let { icon ->
+                                optionShortcutIcon1?.let {
+                                    IconViewBinder.bind(view = it, viewModel = icon)
+                                }
+                            }
+                            optionShortcutIcon1?.isVisible = summary.icon1 != null
 
-                        summary.icon2?.let { icon ->
-                            optionShortcutIcon2.let {
-                                IconViewBinder.bind(view = it, viewModel = icon)
+                            summary.icon2?.let { icon ->
+                                optionShortcutIcon2?.let {
+                                    IconViewBinder.bind(view = it, viewModel = icon)
+                                }
                             }
+                            optionShortcutIcon2?.isVisible = summary.icon2 != null
                         }
-                        optionShortcutIcon2.isVisible = summary.icon2 != null
                     }
                 }
 
@@ -364,6 +375,25 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     optionsViewModel.themedIconViewModel.toggleThemedIcon.collect {
                         optionThemedIconsSwitch.setOnCheckedChangeListener { _, _ ->
                             launch { it.invoke() }
+                        }
+                    }
+                }
+
+                if (BaseFlags.get().isPackThemeEnabled()) {
+                    launch {
+                        optionsViewModel.packThemeViewModel.startThemePackActivityIntent.collect {
+                            intent ->
+                            if (intent != null) {
+                                optionPackThemeHome?.setOnClickListener {
+                                    navigateToPackThemeActivity.invoke(intent)
+                                }
+                                optionPackThemeLock?.setOnClickListener {
+                                    navigateToPackThemeActivity.invoke(intent)
+                                }
+                            } else {
+                                optionPackThemeHome?.setOnClickListener(null)
+                                optionPackThemeLock?.setOnClickListener(null)
+                            }
                         }
                     }
                 }
@@ -504,10 +534,6 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                                 clockPresetIndexedStyle?.style ?: ClockAxisStyle(),
                             )
                         }
-                }
-
-                launch {
-                    viewModel.lockPreviewAnimateToAlpha.collect { clockHostView.animateToAlpha(it) }
                 }
 
                 launch {
