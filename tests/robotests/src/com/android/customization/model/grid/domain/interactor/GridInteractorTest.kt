@@ -48,27 +48,16 @@ class GridInteractorTest {
     @Before
     fun setUp() {
         testScope = TestScope()
-        repository =
-            FakeGridRepository(
-                scope = testScope.backgroundScope,
-                initialOptionCount = 3,
-            )
+        repository = FakeGridRepository(scope = testScope.backgroundScope, initialOptionCount = 3)
         store = FakeSnapshotStore()
         underTest =
             GridInteractor(
                 applicationScope = testScope.backgroundScope,
                 repository = repository,
                 snapshotRestorer = {
-                    GridSnapshotRestorer(
-                            interactor = underTest,
-                        )
-                        .apply {
-                            runBlocking {
-                                setUpSnapshotRestorer(
-                                    store = store,
-                                )
-                            }
-                        }
+                    GridSnapshotRestorer(interactor = underTest).apply {
+                        runBlocking { setUpSnapshotRestorer(store = store) }
+                    }
                 },
             )
     }
@@ -144,5 +133,12 @@ class GridInteractorTest {
             repository.available = false
             val options = collectLastValue(underTest.options)
             assertThat(options()).isNull()
+        }
+
+    @Test
+    fun getGridOptionDrawable() =
+        testScope.runTest {
+            assertThat(underTest.getGridOptionDrawable(0))
+                .isEqualTo(repository.gridOptionDrawables?.get(0))
         }
 }

@@ -17,6 +17,10 @@
 
 package com.android.customization.model.grid.data.repository
 
+import android.graphics.Canvas
+import android.graphics.ColorFilter
+import android.graphics.PixelFormat
+import android.graphics.drawable.Drawable
 import com.android.customization.model.CustomizationManager
 import com.android.customization.picker.grid.data.repository.GridRepository
 import com.android.customization.picker.grid.shared.model.GridOptionItemModel
@@ -34,13 +38,11 @@ import kotlinx.coroutines.flow.stateIn
 class FakeGridRepository(
     private val scope: CoroutineScope,
     initialOptionCount: Int,
-    var available: Boolean = true
+    var available: Boolean = true,
 ) : GridRepository {
+    var gridOptionDrawables: Map<Int, Drawable>? = null
     private val _optionChanges =
-        MutableSharedFlow<Unit>(
-            replay = 1,
-            onBufferOverflow = BufferOverflow.DROP_OLDEST,
-        )
+        MutableSharedFlow<Unit>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
     override suspend fun isAvailable(): Boolean = available
 
@@ -61,18 +63,19 @@ class FakeGridRepository(
 
     override fun isSelectedOptionApplied() = false
 
-    fun setOptions(
-        count: Int,
-        selectedIndex: Int = 0,
-    ) {
+    override fun getGridOptionDrawable(iconId: Int): Drawable? {
+        return gridOptionDrawables?.get(iconId)
+    }
+
+    fun setOptions(count: Int, selectedIndex: Int = 0) {
         options = createOptions(count, selectedIndex)
         _optionChanges.tryEmit(Unit)
     }
 
-    private fun createOptions(
-        count: Int,
-        selectedIndex: Int = 0,
-    ): GridOptionItemsModel {
+    private fun createOptions(count: Int, selectedIndex: Int = 0): GridOptionItemsModel {
+        gridOptionDrawables = buildMap {
+            repeat(times = count) { index -> put(index, FakeDrawable(index)) }
+        }
         selectedOptionIndex.value = selectedIndex
         return GridOptionItemsModel.Loaded(
             options =
@@ -83,6 +86,7 @@ class FakeGridRepository(
                                 name = "option_$index",
                                 cols = 4,
                                 rows = index * 2,
+                                iconId = index,
                                 isSelected =
                                     selectedOptionIndex
                                         .map { it == index }
@@ -97,5 +101,25 @@ class FakeGridRepository(
                     }
                 }
         )
+    }
+}
+
+class FakeDrawable(private val drawableId: Int) : Drawable() {
+    override fun draw(canvas: Canvas) {}
+
+    override fun setAlpha(alpha: Int) {}
+
+    override fun setColorFilter(colorFilter: ColorFilter?) {}
+
+    override fun getOpacity(): Int = PixelFormat.OPAQUE
+
+    override fun getIntrinsicWidth(): Int = 50
+
+    override fun getIntrinsicHeight(): Int = 25
+
+    override fun hashCode(): Int = drawableId
+
+    override fun equals(other: Any?): Boolean {
+        return drawableId == (other as? FakeDrawable)?.drawableId
     }
 }

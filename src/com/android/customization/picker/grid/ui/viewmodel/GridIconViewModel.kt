@@ -17,8 +17,11 @@
 
 package com.android.customization.picker.grid.ui.viewmodel
 
+import android.graphics.drawable.Drawable
+
 data class GridIconViewModel(
     val columns: Int,
     val rows: Int,
     val path: String,
+    val drawable: Drawable?, // Use the drawable first if it is not null
 )
