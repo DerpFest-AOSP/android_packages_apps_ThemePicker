@@ -179,7 +179,7 @@ constructor(
             Screen.HOME_SCREEN ->
                 coroutineScope {
                     launch {
-                        viewModel.shapeGridPickerViewModel.previewingShapeKey.collect {
+                        viewModel.appIconPickerViewModel.previewingShapeKey.collect {
                             workspaceCallback.sendMessage(
                                 MESSAGE_ID_UPDATE_SHAPE,
                                 bundleOf(COL_SHAPE_KEY to it),
@@ -221,12 +221,6 @@ constructor(
                                     }
                                 workspaceCallback.sendMessage(MESSAGE_ID_UPDATE_COLOR, bundle)
                             }
-                    }
-
-                    launch {
-                        viewModel.themedIconViewModel.isActivated.collect {
-                            workspaceCallback.sendMessage(MESSAGE_ID_UPDATE_COLOR, Bundle.EMPTY)
-                        }
                     }
 
                     launch {

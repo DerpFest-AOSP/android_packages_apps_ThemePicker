@@ -28,7 +28,7 @@
         style="@style/CustomizationOptionEntryTitleTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/shape_and_grid_title"
+        android:text="@string/grid_layout"
         android:layout_marginEnd="@dimen/customization_option_entry_text_margin_end"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/option_entry_icon_container"
