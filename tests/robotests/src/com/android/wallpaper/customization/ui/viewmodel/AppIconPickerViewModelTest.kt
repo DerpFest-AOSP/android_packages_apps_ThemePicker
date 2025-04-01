@@ -67,11 +67,11 @@ class AppIconPickerViewModelTest {
     }
 
     @Test
-    fun selectedShapeKey() =
+    fun selectedShape() =
         testScope.runTest {
-            val selectedShapeKey = collectLastValue(underTest.selectedShapeKey)
+            val selectedShapeKey = collectLastValue(underTest.selectedShape)
 
-            assertThat(selectedShapeKey()).isEqualTo("arch")
+            assertThat(selectedShapeKey()?.key?.value).isEqualTo("arch")
         }
 
     @Test
@@ -125,7 +125,7 @@ class AppIconPickerViewModelTest {
         }
 
     @Test
-    fun onApple_shouldBeNonnull_whenClickOnCircleOption() =
+    fun onApply_shouldBeNonnull_whenClickOnCircleOption() =
         testScope.runTest {
             val shapeOptions = collectLastValue(underTest.shapeOptions)
             val circleOption = shapeOptions()?.firstOrNull { it.key.value == "circle" }
@@ -172,7 +172,7 @@ class AppIconPickerViewModelTest {
         }
 
     @Test
-    fun onApple_shouldBeNonnull_whenToggle() =
+    fun onApply_shouldBeNonnull_whenToggle() =
         testScope.runTest {
             val toggleThemedIcon = collectLastValue(underTest.toggleThemedIcon)
             val onApply = collectLastValue(underTest.onApply)

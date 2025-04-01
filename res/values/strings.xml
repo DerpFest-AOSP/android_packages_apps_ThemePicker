@@ -123,6 +123,10 @@
         the grid layout of the apps -->
     <string name="grid_layout">Layout</string>
 
+    <!-- Title of a section of the customization picker where the user can customize app icon
+     shape and theme for the home screen. [CHAR LIMIT=15] -->
+    <string name="app_icons_title">Icons</string>
+
     <!-- Label for a button that allows the user to apply the currently selected Theme.
         [CHAR LIMIT=20] -->
     <string name="apply_theme_btn">Apply</string>
