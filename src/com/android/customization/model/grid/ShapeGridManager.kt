@@ -26,5 +26,11 @@ interface ShapeGridManager {
 
     fun applyShapeGridOption(shapeKey: String, gridKey: String): Int
 
+    /**
+     * @return an integer representing whether the operation was successful, 1 for success and 0 for
+     *   failure
+     */
+    fun applyShapeOption(shapeKey: String): Int
+
     fun getGridOptionDrawable(iconId: Int): Drawable?
 }

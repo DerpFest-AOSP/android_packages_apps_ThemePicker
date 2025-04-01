@@ -42,6 +42,11 @@ class FakeShapeGridManager @Inject constructor() : ShapeGridManager {
         return 0
     }
 
+    override fun applyShapeOption(shapeKey: String): Int {
+        shapeOptions = shapeOptions?.map { it.copy(isCurrent = it.key == shapeKey) }
+        return 0
+    }
+
     override fun getGridOptionDrawable(iconId: Int): Drawable? {
         return when (iconId) {
             0 -> gridOptionDrawable0
@@ -109,5 +114,11 @@ class FakeShapeGridManager @Inject constructor() : ShapeGridManager {
                     isCurrent = false,
                 ),
             )
+
+        const val FOUR_SIDED_COOKIE_IDX = 1
+        private val FOUR_SIDED_COOKIE_MODEL = DEFAULT_SHAPE_OPTION_LIST[FOUR_SIDED_COOKIE_IDX]
+        val FOUR_SIDED_COOKIE_KEY = FOUR_SIDED_COOKIE_MODEL.key
+        val FOUR_SIDED_COOKIE_TITLE = FOUR_SIDED_COOKIE_MODEL.title
+        val FOUR_SIDED_COOKIE_PATH = FOUR_SIDED_COOKIE_MODEL.path
     }
 }
