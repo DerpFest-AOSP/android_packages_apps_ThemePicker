@@ -66,14 +66,9 @@ class ColorPickerFragment : AppbarFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
-        val view =
-            inflater.inflate(
-                R.layout.fragment_color_picker,
-                container,
-                false,
-            )
+        val view = inflater.inflate(R.layout.fragment_color_picker, container, false)
         ViewCompat.setOnApplyWindowInsetsListener(view) { v, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.updateLayoutParams<MarginLayoutParams> {
@@ -119,8 +114,9 @@ class ColorPickerFragment : AppbarFragment() {
                                     requireContext()
                                         .getString(
                                             com.android.wallpaper.R.string
-                                                .lock_screen_preview_provider_authority,
+                                                .lock_screen_preview_provider_authority
                                         ),
+                                screen = Screen.LOCK_SCREEN,
                             ),
                         wallpaperInfoProvider = { forceReload ->
                             suspendCancellableCoroutine { continuation ->
@@ -136,7 +132,7 @@ class ColorPickerFragment : AppbarFragment() {
                                             loadInitialColors(
                                                 wallpaperManager,
                                                 wallpaperColorsRepository,
-                                                Screen.LOCK_SCREEN
+                                                Screen.LOCK_SCREEN,
                                             )
                                         }
                                     }
@@ -170,8 +166,9 @@ class ColorPickerFragment : AppbarFragment() {
                             authorityMetadataKey =
                                 requireContext()
                                     .getString(
-                                        com.android.wallpaper.R.string.grid_control_metadata_name,
+                                        com.android.wallpaper.R.string.grid_control_metadata_name
                                     ),
+                            screen = Screen.HOME_SCREEN,
                         ),
                     wallpaperInfoProvider = { forceReload ->
                         suspendCancellableCoroutine { continuation ->
@@ -187,7 +184,7 @@ class ColorPickerFragment : AppbarFragment() {
                                         loadInitialColors(
                                             wallpaperManager,
                                             wallpaperColorsRepository,
-                                            Screen.HOME_SCREEN
+                                            Screen.HOME_SCREEN,
                                         )
                                     }
                                 }
@@ -265,7 +262,7 @@ class ColorPickerFragment : AppbarFragment() {
     override fun getToolbarTextColor(): Int {
         return ContextCompat.getColor(
             requireContext(),
-            com.android.wallpaper.R.color.system_on_surface
+            com.android.wallpaper.R.color.system_on_surface,
         )
     }
 }

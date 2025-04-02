@@ -23,6 +23,7 @@ import android.graphics.drawable.Drawable
 import android.util.Log
 import androidx.core.content.res.ResourcesCompat
 import com.android.wallpaper.R
+import com.android.wallpaper.model.Screen
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.util.PreviewUtils
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -41,7 +42,8 @@ constructor(
 
     private val authorityMetadataKey: String =
         context.getString(R.string.grid_control_metadata_name)
-    private val previewUtils: PreviewUtils = PreviewUtils(context, authorityMetadataKey)
+    private val previewUtils: PreviewUtils =
+        PreviewUtils(context, authorityMetadataKey, Screen.HOME_SCREEN)
 
     override suspend fun getGridOptions(): List<GridOptionModel>? =
         withContext(bgDispatcher) {

@@ -32,6 +32,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.android.customization.model.ResourceConstants;
 import com.android.themepicker.R;
 import com.android.wallpaper.config.BaseFlags;
+import com.android.wallpaper.model.Screen;
 import com.android.wallpaper.util.PreviewUtils;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class LauncherGridOptionsProvider {
     private OptionChangeLiveData mLiveData;
 
     public LauncherGridOptionsProvider(Context context, String authorityMetadataKey) {
-        mPreviewUtils = new PreviewUtils(context, authorityMetadataKey);
+        mPreviewUtils = new PreviewUtils(context, authorityMetadataKey, Screen.HOME_SCREEN);
         mContext = context;
         mIsGridApplyButtonEnabled = BaseFlags.get().isGridApplyButtonEnabled(context);
     }
