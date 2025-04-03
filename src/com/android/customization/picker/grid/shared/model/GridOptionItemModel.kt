@@ -23,6 +23,7 @@ data class GridOptionItemModel(
     val name: String,
     val cols: Int,
     val rows: Int,
+    val iconId: Int,
     val isSelected: StateFlow<Boolean>,
     val onSelected: suspend () -> Unit,
 )

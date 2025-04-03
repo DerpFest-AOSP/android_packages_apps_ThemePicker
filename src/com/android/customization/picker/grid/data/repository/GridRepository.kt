@@ -17,6 +17,8 @@
 
 package com.android.customization.picker.grid.data.repository
 
+import android.content.Context
+import android.graphics.drawable.Drawable
 import androidx.lifecycle.asFlow
 import com.android.customization.model.CustomizationManager
 import com.android.customization.model.CustomizationManager.Callback
@@ -51,9 +53,12 @@ interface GridRepository {
     fun clearSelectedOption()
 
     fun isSelectedOptionApplied(): Boolean
+
+    fun getGridOptionDrawable(iconId: Int): Drawable?
 }
 
 class GridRepositoryImpl(
+    private val appContext: Context,
     private val applicationScope: CoroutineScope,
     private val manager: GridOptionsManager,
     private val backgroundDispatcher: CoroutineDispatcher,
@@ -99,7 +104,7 @@ class GridRepositoryImpl(
                             continuation.resume(
                                 GridOptionItemsModel.Error(
                                     throwable ?: Exception("Failed to load grid options!")
-                                ),
+                                )
                             )
                         }
                     },
@@ -114,6 +119,7 @@ class GridRepositoryImpl(
             name = option.title,
             rows = option.rows,
             cols = option.cols,
+            iconId = option.gridIconId,
             isSelected =
                 selectedOption
                     .map { it.key() }
@@ -170,7 +176,7 @@ class GridRepositoryImpl(
                         callback.onError(throwable)
                     }
                 }
-            } else callback
+            } else callback,
         )
     }
 
@@ -183,6 +189,10 @@ class GridRepositoryImpl(
     }
 
     override fun isSelectedOptionApplied() = selectedOption.value?.name == appliedOption?.name
+
+    override fun getGridOptionDrawable(iconId: Int): Drawable? {
+        return manager.getGridOptionDrawable(appContext, iconId)
+    }
 
     private fun GridOption?.key(): String? {
         return if (this != null) "${cols}x${rows}" else null
