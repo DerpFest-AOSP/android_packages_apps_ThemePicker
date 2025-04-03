@@ -192,14 +192,19 @@ constructor(
             if (isKeyguardQuickAffordanceEnabled) {
                 put(
                     ThemePickerLockCustomizationOption.SHORTCUTS,
-                    inflateFloatingSheet(
-                            ThemePickerLockCustomizationOption.SHORTCUTS,
-                            bottomSheetContainer,
-                            layoutInflater,
-                        )
+                    if (isComposeRefactorEnabled) {
+                            ComposeView(context)
+                        } else {
+                            inflateFloatingSheet(
+                                ThemePickerLockCustomizationOption.SHORTCUTS,
+                                bottomSheetContainer,
+                                layoutInflater,
+                            )
+                        }
                         .also { bottomSheetContainer.addView(it) },
                 )
             }
+
             put(
                 ThemePickerHomeCustomizationOption.COLORS,
                 if (isComposeRefactorEnabled) {
