@@ -16,12 +16,16 @@
 package com.android.customization.model.grid;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.LiveData;
 
 import com.android.customization.model.CustomizationManager;
@@ -122,5 +126,26 @@ public class GridOptionsManager implements CustomizationManager<GridOption> {
      */
     public LiveData<Object> getOptionChangeObservable(@Nullable Handler handler) {
         return mProvider.getOptionChangeObservable(handler);
+    }
+
+    /**
+     * Get the grid option drawable.
+     */
+    @Nullable
+    public Drawable getGridOptionDrawable(Context context, int iconId) {
+        String launcherPackageName = context
+                .getString(com.android.themepicker.R.string.launcher_overlayable_package);
+        try {
+            return ResourcesCompat.getDrawable(
+                    context.getPackageManager().getResourcesForApplication(launcherPackageName),
+                            iconId, null
+                    );
+        } catch (Resources.NotFoundException | PackageManager.NameNotFoundException nameNotFound) {
+            Log.w(TAG, "Unable to find drawable resource from package "
+                    + launcherPackageName
+                    +  " with resource ID "
+                    + iconId);
+            return null;
+        }
     }
 }

@@ -7,11 +7,8 @@ import com.android.customization.widget.GridTileDrawable
 object GridIconViewBinder {
     fun bind(view: ImageView, viewModel: GridIconViewModel) {
         view.setImageDrawable(
-            GridTileDrawable(
-                viewModel.columns,
-                viewModel.rows,
-                viewModel.path,
-            )
+            viewModel.drawable
+                ?: GridTileDrawable(viewModel.columns, viewModel.rows, viewModel.path)
         )
     }
 }

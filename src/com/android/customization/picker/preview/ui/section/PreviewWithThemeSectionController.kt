@@ -80,35 +80,30 @@ open class PreviewWithThemeSectionController(
                     PreviewUtils(
                         context = context,
                         authority =
-                            context.getString(
-                                R.string.lock_screen_preview_provider_authority,
-                            ),
+                            context.getString(R.string.lock_screen_preview_provider_authority),
+                        screen = screen,
                     )
                 } else {
                     PreviewUtils(
                         context = context,
                         authorityMetadataKey =
-                            context.getString(
-                                R.string.grid_control_metadata_name,
-                            ),
+                            context.getString(R.string.grid_control_metadata_name),
+                        screen = screen,
                     )
                 },
             wallpaperInfoProvider = { forceReload ->
                 suspendCancellableCoroutine { continuation ->
-                    wallpaperInfoFactory.createCurrentWallpaperInfos(
-                        context,
-                        forceReload,
-                    ) { homeWallpaper, lockWallpaper, _ ->
+                    wallpaperInfoFactory.createCurrentWallpaperInfos(context, forceReload) {
+                        homeWallpaper,
+                        lockWallpaper,
+                        _ ->
                         val wallpaper =
                             if (isOnLockScreen) {
                                 lockWallpaper ?: homeWallpaper
                             } else {
                                 homeWallpaper ?: lockWallpaper
                             }
-                        loadInitialColors(
-                            context = context,
-                            screen = screen,
-                        )
+                        loadInitialColors(context = context, screen = screen)
                         continuation.resume(wallpaper, null)
                     }
                 }

@@ -32,7 +32,7 @@ import androidx.transition.Transition
 import androidx.transition.doOnStart
 import com.android.customization.module.ThemePickerInjector
 import com.android.customization.picker.clock.ui.binder.ClockSettingsBinder
-import com.android.systemui.shared.clocks.shared.model.ClockPreviewConstants
+import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants
 import com.android.themepicker.R
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.module.InjectorProvider
@@ -90,6 +90,7 @@ class ClockSettingsFragment : AppbarFragment() {
                                     com.android.wallpaper.R.string
                                         .lock_screen_preview_provider_authority
                                 ),
+                            screen = Screen.LOCK_SCREEN,
                         ),
                     wallpaperInfoProvider = { forceReload ->
                         suspendCancellableCoroutine { continuation ->
@@ -110,7 +111,7 @@ class ClockSettingsFragment : AppbarFragment() {
                         Bundle().apply {
                             // Hide the clock from the system UI rendered preview so we can
                             // place the carousel on top of it.
-                            putBoolean(ClockPreviewConstants.KEY_HIDE_CLOCK, true)
+                            putBoolean(KeyguardPreviewConstants.KEY_HIDE_CLOCK, true)
                         }
                     },
                     wallpaperInteractor = injector.getWallpaperInteractor(requireContext()),
