@@ -28,18 +28,16 @@ class FakeShapeGridManager @Inject constructor() : ShapeGridManager {
     val gridOptionDrawable0: Drawable = ColorDrawable(Color.BLUE)
     val gridOptionDrawable1: Drawable = ColorDrawable(Color.GREEN)
 
-    private var gridOptions: List<GridOptionModel>? = DEFAULT_GRID_OPTION_LIST
+    private var gridOptions: List<GridOptionModel> = DEFAULT_GRID_OPTION_LIST
 
     private var shapeOptions: List<ShapeOptionModel>? = DEFAULT_SHAPE_OPTION_LIST
 
-    override suspend fun getGridOptions(): List<GridOptionModel>? = gridOptions
+    override suspend fun getGridOptions(): List<GridOptionModel> = gridOptions
 
     override suspend fun getShapeOptions(): List<ShapeOptionModel>? = shapeOptions
 
-    override fun applyShapeGridOption(shapeKey: String, gridKey: String): Int {
-        shapeOptions = shapeOptions?.map { it.copy(isCurrent = it.key == shapeKey) }
-        gridOptions = gridOptions?.map { it.copy(isCurrent = it.key == gridKey) }
-        return 0
+    override fun applyGridOption(gridKey: String) {
+        gridOptions = gridOptions.map { it.copy(isCurrent = it.key == gridKey) }
     }
 
     override fun getGridOptionDrawable(iconId: Int): Drawable? {

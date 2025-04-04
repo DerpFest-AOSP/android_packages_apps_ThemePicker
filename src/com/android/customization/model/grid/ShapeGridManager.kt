@@ -19,12 +19,16 @@ package com.android.customization.model.grid
 import android.graphics.drawable.Drawable
 
 interface ShapeGridManager {
-
-    suspend fun getGridOptions(): List<GridOptionModel>?
+    /**
+     * Get a list of grid options.
+     *
+     * @return It will return an empty list if there are no available grid options.
+     */
+    suspend fun getGridOptions(): List<GridOptionModel>
 
     suspend fun getShapeOptions(): List<ShapeOptionModel>?
 
-    fun applyShapeGridOption(shapeKey: String, gridKey: String): Int
+    fun applyGridOption(gridKey: String)
 
     fun getGridOptionDrawable(iconId: Int): Drawable?
 }
