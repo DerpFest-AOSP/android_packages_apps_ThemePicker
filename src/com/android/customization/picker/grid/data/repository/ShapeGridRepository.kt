@@ -20,7 +20,6 @@ package com.android.customization.picker.grid.data.repository
 import android.graphics.drawable.Drawable
 import com.android.customization.model.grid.GridOptionModel
 import com.android.customization.model.grid.ShapeGridManager
-import com.android.customization.model.grid.ShapeOptionModel
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,6 +29,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -43,32 +43,24 @@ constructor(
     @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
 ) {
 
-    private val _shapeOptions = MutableStateFlow<List<ShapeOptionModel>?>(null)
     private val _gridOptions = MutableStateFlow<List<GridOptionModel>?>(null)
 
     init {
-        bgScope.launch {
-            _gridOptions.value = manager.getGridOptions()
-            _shapeOptions.value = manager.getShapeOptions()
-        }
+        bgScope.launch { _gridOptions.value = manager.getGridOptions() }
     }
-
-    val shapeOptions: StateFlow<List<ShapeOptionModel>?> = _shapeOptions.asStateFlow()
-
-    val selectedShapeOption: Flow<ShapeOptionModel?> =
-        shapeOptions.map { shapeOptions -> shapeOptions?.firstOrNull { it.isCurrent } }
 
     val gridOptions: StateFlow<List<GridOptionModel>?> = _gridOptions.asStateFlow()
 
     val selectedGridOption: Flow<GridOptionModel?> =
         gridOptions.map { gridOptions -> gridOptions?.firstOrNull { it.isCurrent } }
 
-    suspend fun applySelectedOption(shapeKey: String, gridKey: String) =
+    val isGridCustomizationAvailable = gridOptions.filterNotNull().map { it.size > 1 }
+
+    suspend fun applySelectedOption(gridKey: String) =
         withContext(bgDispatcher) {
-            manager.applyShapeGridOption(shapeKey, gridKey)
+            manager.applyGridOption(gridKey)
             // After applying, we should query and update shape and grid options again.
             _gridOptions.value = manager.getGridOptions()
-            _shapeOptions.value = manager.getShapeOptions()
         }
 
     fun getGridOptionDrawable(iconId: Int): Drawable? {

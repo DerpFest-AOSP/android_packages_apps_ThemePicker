@@ -45,7 +45,7 @@ constructor(
     private val previewUtils: PreviewUtils =
         PreviewUtils(context, authorityMetadataKey, Screen.HOME_SCREEN)
 
-    override suspend fun getGridOptions(): List<GridOptionModel>? =
+    override suspend fun getGridOptions(): List<GridOptionModel> =
         withContext(bgDispatcher) {
             if (previewUtils.supportsPreview()) {
                 context.contentResolver
@@ -96,9 +96,9 @@ constructor(
                                 list
                             }
                             .sortedByDescending { it.rows * it.cols }
-                    }
+                    } ?: emptyList()
             } else {
-                null
+                emptyList()
             }
         }
 
@@ -148,13 +148,10 @@ constructor(
             }
         }
 
-    override fun applyShapeGridOption(shapeKey: String, gridKey: String): Int {
-        return context.contentResolver.update(
+    override fun applyGridOption(gridKey: String) {
+        context.contentResolver.update(
             previewUtils.getUri(SHAPE_GRID),
-            ContentValues().apply {
-                put(COL_SHAPE_KEY, shapeKey)
-                put(COL_GRID_KEY, gridKey)
-            },
+            ContentValues().apply { put(COL_GRID_KEY, gridKey) },
             null,
             null,
         )

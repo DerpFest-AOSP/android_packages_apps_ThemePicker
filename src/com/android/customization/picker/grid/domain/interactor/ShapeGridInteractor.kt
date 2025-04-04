@@ -25,16 +25,11 @@ import javax.inject.Singleton
 @Singleton
 class ShapeGridInteractor @Inject constructor(private val repository: ShapeGridRepository) {
 
-    val shapeOptions = repository.shapeOptions
-
-    val selectedShapeOption = repository.selectedShapeOption
-
     val gridOptions = repository.gridOptions
 
     val selectedGridOption = repository.selectedGridOption
 
-    suspend fun applySelectedOption(shapeKey: String, gridKey: String) =
-        repository.applySelectedOption(shapeKey, gridKey)
+    suspend fun applySelectedOption(gridKey: String) = repository.applySelectedOption(gridKey)
 
     fun getGridOptionDrawable(iconId: Int): Drawable? = repository.getGridOptionDrawable(iconId)
 }

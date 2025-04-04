@@ -61,52 +61,6 @@ class ShapeGridInteractorTest {
     }
 
     @Test
-    fun shapeOptions_default() =
-        testScope.runTest {
-            val shapeOptions = collectLastValue(underTest.shapeOptions)
-
-            assertThat(shapeOptions()).isEqualTo(FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST)
-        }
-
-    @Test
-    fun shapeOptions_shouldUpdateAfterApplyGridOption() =
-        testScope.runTest {
-            val shapeOptions = collectLastValue(underTest.shapeOptions)
-
-            underTest.applySelectedOption("circle", "practical")
-
-            assertThat(shapeOptions())
-                .isEqualTo(
-                    FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST.map {
-                        it.copy(isCurrent = (it.key == "circle"))
-                    }
-                )
-        }
-
-    @Test
-    fun selectedShapeOption_default() =
-        testScope.runTest {
-            val selectedShapeOption = collectLastValue(underTest.selectedShapeOption)
-
-            assertThat(selectedShapeOption())
-                .isEqualTo(FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST[0])
-        }
-
-    @Test
-    fun selectedShapeOption_shouldUpdateAfterApplyGridOption() =
-        testScope.runTest {
-            val selectedShapeOption = collectLastValue(underTest.selectedShapeOption)
-            val expectedShapeKey = "circle"
-            val expectedShapeOption =
-                FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST.first { it.key == expectedShapeKey }
-                    .copy(isCurrent = true)
-
-            underTest.applySelectedOption(expectedShapeKey, "practical")
-
-            assertThat(selectedShapeOption()).isEqualTo(expectedShapeOption)
-        }
-
-    @Test
     fun gridOptions_default() =
         testScope.runTest {
             val gridOptions = collectLastValue(underTest.gridOptions)
@@ -119,7 +73,7 @@ class ShapeGridInteractorTest {
         testScope.runTest {
             val gridOptions = collectLastValue(underTest.gridOptions)
 
-            underTest.applySelectedOption("arch", "practical")
+            underTest.applySelectedOption("practical")
 
             assertThat(gridOptions())
                 .isEqualTo(
@@ -143,7 +97,7 @@ class ShapeGridInteractorTest {
         testScope.runTest {
             val selectedGridOption = collectLastValue(underTest.selectedGridOption)
 
-            underTest.applySelectedOption("arch", "practical")
+            underTest.applySelectedOption("practical")
 
             assertThat(selectedGridOption())
                 .isEqualTo(FakeShapeGridManager.DEFAULT_GRID_OPTION_LIST[1].copy(isCurrent = true))
