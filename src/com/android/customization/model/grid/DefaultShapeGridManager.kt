@@ -157,6 +157,14 @@ constructor(
         )
     }
 
+    override fun applyShapeOption(shapeKey: String) =
+        context.contentResolver.update(
+            previewUtils.getUri(SET_SHAPE),
+            ContentValues().apply { put(COL_SHAPE_KEY, shapeKey) },
+            null,
+            null,
+        )
+
     override fun getGridOptionDrawable(iconId: Int): Drawable? {
         val launcherPackageName =
             context.getString(com.android.themepicker.R.string.launcher_overlayable_package)

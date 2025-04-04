@@ -184,6 +184,92 @@ class AppIconPickerViewModelTest {
             assertThat(onApply()).isNotNull()
         }
 
+    @Test
+    fun selectedShapeOption_shouldUpdate_afterOnApply() =
+        testScope.runTest {
+            val selectedShapeOption = collectLastValue(underTest.selectedShape)
+            val optionItems = collectLastValue(underTest.shapeOptions)
+            val onApply = collectLastValue(underTest.onApply)
+            val on4SidedCookieOptionClick =
+                optionItems()?.get(FakeShapeGridManager.FOUR_SIDED_COOKIE_IDX)?.onClicked?.let {
+                    collectLastValue(it)
+                }
+            checkNotNull(on4SidedCookieOptionClick)
+
+            on4SidedCookieOptionClick()?.invoke()
+            onApply()?.invoke()
+
+            assertShapeItem(
+                optionItem = selectedShapeOption(),
+                key = FakeShapeGridManager.FOUR_SIDED_COOKIE_KEY,
+                payload =
+                    ShapeIconViewModel(
+                        FakeShapeGridManager.FOUR_SIDED_COOKIE_KEY,
+                        FakeShapeGridManager.FOUR_SIDED_COOKIE_PATH,
+                    ),
+                text = Text.Loaded(FakeShapeGridManager.FOUR_SIDED_COOKIE_TITLE),
+                isTextUserVisible = true,
+                isSelected = true,
+                isEnabled = true,
+            )
+        }
+
+    @Test
+    fun isThemedIconEnabled_shouldUpdate_afterOnApply() {
+        testScope.runTest {
+            val isEnabled = collectLastValue(underTest.isThemedIconEnabled)
+            val toggleThemedIcon = collectLastValue(underTest.toggleThemedIcon)
+            val onApply = collectLastValue(underTest.onApply)
+            assertThat(isEnabled()).isFalse()
+
+            toggleThemedIcon()?.invoke()
+            onApply()?.invoke()
+
+            assertThat(isEnabled()).isTrue()
+
+            toggleThemedIcon()?.invoke()
+            onApply()?.invoke()
+
+            assertThat(isEnabled()).isFalse()
+        }
+    }
+
+    @Test
+    fun shapeAndThemedIcon_shouldUpdate_afterOnApply() {
+        testScope.runTest {
+            val selectedShapeOption = collectLastValue(underTest.selectedShape)
+            val optionItems = collectLastValue(underTest.shapeOptions)
+            val onApply = collectLastValue(underTest.onApply)
+            val on4SidedCookieOptionClick =
+                optionItems()?.get(FakeShapeGridManager.FOUR_SIDED_COOKIE_IDX)?.onClicked?.let {
+                    collectLastValue(it)
+                }
+            checkNotNull(on4SidedCookieOptionClick)
+            val isEnabled = collectLastValue(underTest.isThemedIconEnabled)
+            val toggleThemedIcon = collectLastValue(underTest.toggleThemedIcon)
+            assertThat(isEnabled()).isFalse()
+
+            on4SidedCookieOptionClick()?.invoke()
+            toggleThemedIcon()?.invoke()
+            onApply()?.invoke()
+
+            assertShapeItem(
+                optionItem = selectedShapeOption(),
+                key = FakeShapeGridManager.FOUR_SIDED_COOKIE_KEY,
+                payload =
+                    ShapeIconViewModel(
+                        FakeShapeGridManager.FOUR_SIDED_COOKIE_KEY,
+                        FakeShapeGridManager.FOUR_SIDED_COOKIE_PATH,
+                    ),
+                text = Text.Loaded(FakeShapeGridManager.FOUR_SIDED_COOKIE_TITLE),
+                isTextUserVisible = true,
+                isSelected = true,
+                isEnabled = true,
+            )
+            assertThat(isEnabled()).isTrue()
+        }
+    }
+
     private fun TestScope.assertShapeItem(
         optionItem: OptionItemViewModel2<ShapeIconViewModel>?,
         key: String,
