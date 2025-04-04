@@ -330,8 +330,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 }
 
                 launch {
-                    optionsViewModel.shapeGridPickerViewModel.selectedGridOption.collect {
-                        gridOption ->
+                    optionsViewModel.fridPickerViewModel.selectedGridOption.collect { gridOption ->
                         TextViewBinder.bind(optionShapeGridDescription, gridOption.text)
                         gridOption.payload?.let { optionShapeGridIcon.setImageDrawable(it) }
                     }

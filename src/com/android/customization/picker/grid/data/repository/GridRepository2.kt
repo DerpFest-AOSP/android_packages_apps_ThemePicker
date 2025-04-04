@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -54,7 +55,8 @@ constructor(
     val selectedGridOption: Flow<GridOptionModel?> =
         gridOptions.map { gridOptions -> gridOptions?.firstOrNull { it.isCurrent } }
 
-    val isGridCustomizationAvailable = gridOptions.filterNotNull().map { it.size > 1 }
+    val isGridCustomizationAvailable =
+        gridOptions.filterNotNull().map { it.size > 1 }.distinctUntilChanged()
 
     suspend fun applySelectedOption(gridKey: String) =
         withContext(bgDispatcher) {
