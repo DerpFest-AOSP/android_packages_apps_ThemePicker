@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Singleton
-class ShapeGridRepository
+class GridRepository2
 @Inject
 constructor(
     private val manager: ShapeGridManager,

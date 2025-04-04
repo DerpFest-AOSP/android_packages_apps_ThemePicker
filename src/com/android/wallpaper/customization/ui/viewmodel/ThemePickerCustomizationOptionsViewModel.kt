@@ -45,7 +45,7 @@ constructor(
     keyguardQuickAffordancePickerViewModel2Factory: KeyguardQuickAffordancePickerViewModel2.Factory,
     colorPickerViewModel2Factory: ColorPickerViewModel2.Factory,
     clockPickerViewModelFactory: ClockPickerViewModel.Factory,
-    shapeGridPickerViewModelFactory: ShapeGridPickerViewModel.Factory,
+    gridPickerViewModelFactory: GridPickerViewModel.Factory,
     appIconPickerViewModelFactory: AppIconPickerViewModel.Factory,
     val colorContrastSectionViewModel: ColorContrastSectionViewModel2,
     val darkModeViewModel: DarkModeViewModel,
@@ -65,7 +65,7 @@ constructor(
         keyguardQuickAffordancePickerViewModel2Factory.create(viewModelScope = viewModelScope)
     val colorPickerViewModel2 = colorPickerViewModel2Factory.create(viewModelScope = viewModelScope)
     val shapeGridPickerViewModel =
-        shapeGridPickerViewModelFactory.create(viewModelScope = viewModelScope)
+        gridPickerViewModelFactory.create(viewModelScope = viewModelScope)
     val appIconPickerViewModel =
         appIconPickerViewModelFactory.create(viewModelScope = viewModelScope)
 

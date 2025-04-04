@@ -20,7 +20,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.test.filters.SmallTest
 import com.android.customization.model.grid.FakeShapeGridManager
-import com.android.customization.picker.grid.domain.interactor.ShapeGridInteractor
+import com.android.customization.picker.grid.domain.interactor.GridInteractor2
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
 import com.android.wallpaper.testing.collectLastValue
@@ -45,20 +45,20 @@ import org.robolectric.RobolectricTestRunner
 @OptIn(ExperimentalCoroutinesApi::class)
 @SmallTest
 @RunWith(RobolectricTestRunner::class)
-class ShapeGridPickerViewModelTest {
+class GridPickerViewModelTest {
 
     @get:Rule var hiltRule = HiltAndroidRule(this)
     @Inject lateinit var testScope: TestScope
     @Inject lateinit var gridOptionsManager: FakeShapeGridManager
-    @Inject lateinit var interactor: ShapeGridInteractor
+    @Inject lateinit var interactor: GridInteractor2
     @Inject @ApplicationContext lateinit var appContext: Context
 
-    private lateinit var underTest: ShapeGridPickerViewModel
+    private lateinit var underTest: GridPickerViewModel
 
     @Before
     fun setUp() {
         hiltRule.inject()
-        underTest = ShapeGridPickerViewModel(appContext, interactor, testScope.backgroundScope)
+        underTest = GridPickerViewModel(appContext, interactor, testScope.backgroundScope)
     }
 
     @After

@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package com.android.customization.picker.grid.domain.interactor
+package com.android.customization.picker.grid.data.repository
 
 import androidx.test.filters.SmallTest
 import com.android.customization.model.grid.FakeShapeGridManager
-import com.android.customization.picker.grid.data.repository.ShapeGridRepository
+import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.testing.collectLastValue
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
@@ -40,19 +42,25 @@ import org.robolectric.RobolectricTestRunner
 @OptIn(ExperimentalCoroutinesApi::class)
 @SmallTest
 @RunWith(RobolectricTestRunner::class)
-class ShapeGridInteractorTest {
+class GridRepository2Test {
 
     @get:Rule var hiltRule = HiltAndroidRule(this)
     @Inject lateinit var gridOptionsManager: FakeShapeGridManager
-    @Inject lateinit var repository: ShapeGridRepository
     @Inject lateinit var testScope: TestScope
+    @BackgroundDispatcher @Inject lateinit var bgScope: CoroutineScope
+    @BackgroundDispatcher @Inject lateinit var bgDispatcher: CoroutineDispatcher
 
-    private lateinit var underTest: ShapeGridInteractor
+    private lateinit var underTest: GridRepository2
 
     @Before
     fun setUp() {
         hiltRule.inject()
-        underTest = ShapeGridInteractor(repository)
+        underTest =
+            GridRepository2(
+                manager = gridOptionsManager,
+                bgScope = bgScope,
+                bgDispatcher = bgDispatcher,
+            )
     }
 
     @After
@@ -69,7 +77,7 @@ class ShapeGridInteractorTest {
         }
 
     @Test
-    fun gridOptions_shouldUpdateAfterApplyGridOption() =
+    fun gridOptions_shouldUpdateAfterApplyShapeGridOption() =
         testScope.runTest {
             val gridOptions = collectLastValue(underTest.gridOptions)
 
@@ -93,7 +101,7 @@ class ShapeGridInteractorTest {
         }
 
     @Test
-    fun selectedGridOption_shouldUpdateAfterApplyGridOption() =
+    fun selectedGridOption_shouldUpdateAfterApplyShapeGridOption() =
         testScope.runTest {
             val selectedGridOption = collectLastValue(underTest.selectedGridOption)
 

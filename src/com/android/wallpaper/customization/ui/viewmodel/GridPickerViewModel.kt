@@ -21,7 +21,7 @@ import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import com.android.customization.model.ResourceConstants
 import com.android.customization.model.grid.GridOptionModel
-import com.android.customization.picker.grid.domain.interactor.ShapeGridInteractor
+import com.android.customization.picker.grid.domain.interactor.GridInteractor2
 import com.android.customization.widget.GridTileDrawable
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
@@ -40,11 +40,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 
-class ShapeGridPickerViewModel
+class GridPickerViewModel
 @AssistedInject
 constructor(
     @ApplicationContext private val context: Context,
-    private val interactor: ShapeGridInteractor,
+    private val interactor: GridInteractor2,
     @Assisted private val viewModelScope: CoroutineScope,
 ) {
     // The currently-set system grid option
@@ -127,6 +127,6 @@ constructor(
     @ViewModelScoped
     @AssistedFactory
     interface Factory {
-        fun create(viewModelScope: CoroutineScope): ShapeGridPickerViewModel
+        fun create(viewModelScope: CoroutineScope): GridPickerViewModel
     }
 }
