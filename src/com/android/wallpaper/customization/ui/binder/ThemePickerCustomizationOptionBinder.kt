@@ -23,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.compose.ui.platform.ComposeView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
@@ -44,6 +45,7 @@ import com.android.systemui.plugins.clocks.ClockPreviewConfig
 import com.android.systemui.shared.Flags
 import com.android.themepicker.R
 import com.android.wallpaper.config.BaseFlags
+import com.android.wallpaper.customization.ui.compose.ShortcutsFloatingSheet
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
@@ -404,17 +406,28 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     lifecycleOwner,
                 )
             }
-
-        customizationOptionFloatingSheetViewMap
-            ?.get(ThemePickerLockCustomizationOption.SHORTCUTS)
-            ?.let {
-                ShortcutFloatingSheetBinder.bind(
-                    it,
-                    optionsViewModel,
-                    colorUpdateViewModel,
-                    lifecycleOwner,
-                )
-            }
+        if (isComposeRefactorEnabled) {
+            customizationOptionFloatingSheetViewMap
+                ?.get(ThemePickerLockCustomizationOption.SHORTCUTS)
+                ?.let {
+                    (it as ComposeView).setContent {
+                        ShortcutsFloatingSheet(
+                            optionsViewModel.keyguardQuickAffordancePickerViewModel2
+                        )
+                    }
+                }
+        } else {
+            customizationOptionFloatingSheetViewMap
+                ?.get(ThemePickerLockCustomizationOption.SHORTCUTS)
+                ?.let {
+                    ShortcutFloatingSheetBinder.bind(
+                        it,
+                        optionsViewModel,
+                        colorUpdateViewModel,
+                        lifecycleOwner,
+                    )
+                }
+        }
 
         if (!isComposeRefactorEnabled) {
             customizationOptionFloatingSheetViewMap
