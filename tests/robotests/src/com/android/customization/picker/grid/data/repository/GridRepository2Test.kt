@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package com.android.customization.picker.grid.domain.interactor
+package com.android.customization.picker.grid.data.repository
 
 import androidx.test.filters.SmallTest
 import com.android.customization.model.grid.FakeShapeGridManager
-import com.android.customization.picker.grid.data.repository.ShapeGridRepository
+import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.testing.collectLastValue
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
@@ -40,71 +42,31 @@ import org.robolectric.RobolectricTestRunner
 @OptIn(ExperimentalCoroutinesApi::class)
 @SmallTest
 @RunWith(RobolectricTestRunner::class)
-class ShapeGridInteractorTest {
+class GridRepository2Test {
 
     @get:Rule var hiltRule = HiltAndroidRule(this)
     @Inject lateinit var gridOptionsManager: FakeShapeGridManager
-    @Inject lateinit var repository: ShapeGridRepository
     @Inject lateinit var testScope: TestScope
+    @BackgroundDispatcher @Inject lateinit var bgScope: CoroutineScope
+    @BackgroundDispatcher @Inject lateinit var bgDispatcher: CoroutineDispatcher
 
-    private lateinit var underTest: ShapeGridInteractor
+    private lateinit var underTest: GridRepository2
 
     @Before
     fun setUp() {
         hiltRule.inject()
-        underTest = ShapeGridInteractor(repository)
+        underTest =
+            GridRepository2(
+                manager = gridOptionsManager,
+                bgScope = bgScope,
+                bgDispatcher = bgDispatcher,
+            )
     }
 
     @After
     fun tearDown() {
         Dispatchers.resetMain()
     }
-
-    @Test
-    fun shapeOptions_default() =
-        testScope.runTest {
-            val shapeOptions = collectLastValue(underTest.shapeOptions)
-
-            assertThat(shapeOptions()).isEqualTo(FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST)
-        }
-
-    @Test
-    fun shapeOptions_shouldUpdateAfterApplyGridOption() =
-        testScope.runTest {
-            val shapeOptions = collectLastValue(underTest.shapeOptions)
-
-            underTest.applySelectedOption("circle", "practical")
-
-            assertThat(shapeOptions())
-                .isEqualTo(
-                    FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST.map {
-                        it.copy(isCurrent = (it.key == "circle"))
-                    }
-                )
-        }
-
-    @Test
-    fun selectedShapeOption_default() =
-        testScope.runTest {
-            val selectedShapeOption = collectLastValue(underTest.selectedShapeOption)
-
-            assertThat(selectedShapeOption())
-                .isEqualTo(FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST[0])
-        }
-
-    @Test
-    fun selectedShapeOption_shouldUpdateAfterApplyGridOption() =
-        testScope.runTest {
-            val selectedShapeOption = collectLastValue(underTest.selectedShapeOption)
-            val expectedShapeKey = "circle"
-            val expectedShapeOption =
-                FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST.first { it.key == expectedShapeKey }
-                    .copy(isCurrent = true)
-
-            underTest.applySelectedOption(expectedShapeKey, "practical")
-
-            assertThat(selectedShapeOption()).isEqualTo(expectedShapeOption)
-        }
 
     @Test
     fun gridOptions_default() =
@@ -115,11 +77,11 @@ class ShapeGridInteractorTest {
         }
 
     @Test
-    fun gridOptions_shouldUpdateAfterApplyGridOption() =
+    fun gridOptions_shouldUpdateAfterApplyShapeGridOption() =
         testScope.runTest {
             val gridOptions = collectLastValue(underTest.gridOptions)
 
-            underTest.applySelectedOption("arch", "practical")
+            underTest.applySelectedOption("practical")
 
             assertThat(gridOptions())
                 .isEqualTo(
@@ -139,11 +101,11 @@ class ShapeGridInteractorTest {
         }
 
     @Test
-    fun selectedGridOption_shouldUpdateAfterApplyGridOption() =
+    fun selectedGridOption_shouldUpdateAfterApplyShapeGridOption() =
         testScope.runTest {
             val selectedGridOption = collectLastValue(underTest.selectedGridOption)
 
-            underTest.applySelectedOption("arch", "practical")
+            underTest.applySelectedOption("practical")
 
             assertThat(selectedGridOption())
                 .isEqualTo(FakeShapeGridManager.DEFAULT_GRID_OPTION_LIST[1].copy(isCurrent = true))

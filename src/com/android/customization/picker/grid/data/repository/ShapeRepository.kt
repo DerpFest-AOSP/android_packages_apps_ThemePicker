@@ -17,10 +17,7 @@
 
 package com.android.customization.picker.grid.data.repository
 
-import android.content.ContentValues
 import android.content.Context
-import com.android.customization.model.grid.DefaultShapeGridManager.Companion.COL_SHAPE_KEY
-import com.android.customization.model.grid.DefaultShapeGridManager.Companion.SET_SHAPE
 import com.android.customization.model.grid.ShapeGridManager
 import com.android.customization.model.grid.ShapeOptionModel
 import com.android.wallpaper.R
@@ -67,13 +64,8 @@ constructor(
 
     suspend fun applyShape(shapeKey: String) =
         withContext(bgDispatcher) {
-            context.contentResolver.update(
-                previewUtils.getUri(SET_SHAPE),
-                ContentValues().apply { put(COL_SHAPE_KEY, shapeKey) },
-                null,
-                null,
-            )
-            // After applying, we should query and update shape and grid options again.
+            shapeGridManager.applyShapeOption(shapeKey)
+            // After applying, we should query and update shape options again.
             _shapeOptions.value = shapeGridManager.getShapeOptions()
         }
 }
