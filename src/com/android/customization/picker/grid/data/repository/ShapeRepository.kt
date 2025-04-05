@@ -17,13 +17,11 @@
 
 package com.android.customization.picker.grid.data.repository
 
-import android.content.ContentValues
 import android.content.Context
-import com.android.customization.model.grid.DefaultShapeGridManager.Companion.COL_SHAPE_KEY
-import com.android.customization.model.grid.DefaultShapeGridManager.Companion.SET_SHAPE
 import com.android.customization.model.grid.ShapeGridManager
 import com.android.customization.model.grid.ShapeOptionModel
 import com.android.wallpaper.R
+import com.android.wallpaper.model.Screen
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.util.PreviewUtils
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -50,7 +48,8 @@ constructor(
 ) {
     private val authorityMetadataKey: String =
         context.getString(R.string.grid_control_metadata_name)
-    private val previewUtils: PreviewUtils = PreviewUtils(context, authorityMetadataKey)
+    private val previewUtils: PreviewUtils =
+        PreviewUtils(context, authorityMetadataKey, Screen.HOME_SCREEN)
 
     private val _shapeOptions = MutableStateFlow<List<ShapeOptionModel>?>(null)
 
@@ -65,13 +64,8 @@ constructor(
 
     suspend fun applyShape(shapeKey: String) =
         withContext(bgDispatcher) {
-            context.contentResolver.update(
-                previewUtils.getUri(SET_SHAPE),
-                ContentValues().apply { put(COL_SHAPE_KEY, shapeKey) },
-                null,
-                null,
-            )
-            // After applying, we should query and update shape and grid options again.
+            shapeGridManager.applyShapeOption(shapeKey)
+            // After applying, we should query and update shape options again.
             _shapeOptions.value = shapeGridManager.getShapeOptions()
         }
 }

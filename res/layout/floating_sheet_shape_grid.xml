@@ -30,74 +30,28 @@
         android:clipToPadding="false"
         android:clipChildren="false">
 
-        <FrameLayout
-            android:id="@+id/app_shape_container"
-            android:layout_width="match_parent"
+        <!--
+        This is just an invisible placeholder put in place so that the parent keeps its height
+        stable as the RecyclerView updates from 0 items to N items. Keeping it stable allows the
+        layout logic to keep the size of the preview container stable as well, which bodes well
+        for setting up the SurfaceView for remote rendering without changing its size after the
+        content is loaded into the RecyclerView.
+
+        It's critical for any TextViews inside the included layout to have text.
+        -->
+        <include
+            layout="@layout/grid_option2"
+            android:id="@+id/invisible_grid_option"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/grid_options"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clipToPadding="false"
-            android:clipChildren="false">
-
-            <!--
-            This is just an invisible placeholder put in place so that the parent keeps its height
-            stable as the RecyclerView updates from 0 items to N items. Keeping it stable allows the
-            layout logic to keep the size of the preview container stable as well, which bodes well
-            for setting up the SurfaceView for remote rendering without changing its size after the
-            content is loaded into the RecyclerView.
-
-            It's critical for any TextViews inside the included layout to have text.
-            -->
-            <include
-                layout="@layout/shape_option2"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:visibility="invisible" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/shape_options"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:clipToPadding="false"
-                android:clipChildren="false" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/app_grid_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:clipChildren="false">
-
-            <!--
-            This is just an invisible placeholder put in place so that the parent keeps its height
-            stable as the RecyclerView updates from 0 items to N items. Keeping it stable allows the
-            layout logic to keep the size of the preview container stable as well, which bodes well
-            for setting up the SurfaceView for remote rendering without changing its size after the
-            content is loaded into the RecyclerView.
-
-            It's critical for any TextViews inside the included layout to have text.
-            -->
-            <include
-                layout="@layout/grid_option2"
-                android:id="@+id/invisible_grid_option"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="invisible"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/grid_options"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:clipChildren="false"
-                android:layout_gravity="center_horizontal" />
-        </FrameLayout>
+            android:clipChildren="false"
+            android:layout_gravity="center_horizontal" />
     </FrameLayout>
-
-    <com.android.wallpaper.picker.customization.ui.view.FloatingToolbar
-        android:id="@+id/floating_toolbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginVertical="@dimen/floating_sheet_tab_toolbar_vertical_margin" />
 </LinearLayout>

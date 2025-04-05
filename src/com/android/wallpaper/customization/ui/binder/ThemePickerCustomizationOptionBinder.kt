@@ -23,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.compose.ui.platform.ComposeView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
@@ -44,6 +45,7 @@ import com.android.systemui.plugins.clocks.ClockPreviewConfig
 import com.android.systemui.shared.Flags
 import com.android.themepicker.R
 import com.android.wallpaper.config.BaseFlags
+import com.android.wallpaper.customization.ui.compose.ShortcutsFloatingSheet
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
@@ -56,7 +58,6 @@ import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUti
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
-import com.google.android.material.materialswitch.MaterialSwitch
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
@@ -208,9 +209,17 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         val optionColorsIcon: ColorOptionIconView2 =
             optionColors.requireViewById(R.id.option_entry_icon)
 
+        val optionAppIcons: View =
+            homeScreenCustomizationOptionEntries
+                .first { it.first == ThemePickerHomeCustomizationOption.APP_ICONS }
+                .second
+        val optionAppIconsDescription: TextView =
+            optionAppIcons.requireViewById(R.id.option_entry_description)
+        val optionAppIconsIcon: ImageView = optionAppIcons.requireViewById(R.id.option_entry_icon)
+
         val optionShapeGrid: View =
             homeScreenCustomizationOptionEntries
-                .first { it.first == ThemePickerHomeCustomizationOption.APP_SHAPE_GRID }
+                .first { it.first == ThemePickerHomeCustomizationOption.GRID }
                 .second
         val optionShapeGridDescription: TextView =
             optionShapeGrid.requireViewById(R.id.option_entry_description)
@@ -221,13 +230,6 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 .first { it.first == ThemePickerHomeCustomizationOption.COLOR_CONTRAST }
                 .second
         optionColorContrast.setOnClickListener { navigateToColorContrastSettingsActivity.invoke() }
-
-        val optionThemedIcons =
-            homeScreenCustomizationOptionEntries
-                .first { it.first == ThemePickerHomeCustomizationOption.THEMED_ICONS }
-                .second
-        val optionThemedIconsSwitch =
-            optionThemedIcons.requireViewById<MaterialSwitch>(R.id.option_entry_switch)
 
         ColorUpdateBinder.bind(
             setColor = { color ->
@@ -300,6 +302,30 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 }
 
                 launch {
+                    optionsViewModel.onCustomizeIconsClicked.collect {
+                        optionAppIcons.setOnClickListener { _ -> it?.invoke() }
+                    }
+                }
+
+                launch {
+                    val appIconPickerViewModel = optionsViewModel.appIconPickerViewModel
+                    combine(
+                            appIconPickerViewModel.selectedShape,
+                            appIconPickerViewModel.isThemedIconEnabled,
+                            ::Pair,
+                        )
+                        .collect { (selectedShape, isThemedIconEnabled) ->
+                            // TODO(b/402161932): create and display app icon preview
+                            optionAppIcons
+                                .requireViewById<View>(R.id.option_entry_icon_container)
+                                .visibility = View.INVISIBLE
+                            // TODO(b/402161932): show selected shape text when b/406486710 is fixed
+                            // TODO(b/402161932): show selected theme text after content is decided
+                            optionAppIconsDescription.visibility = View.GONE
+                        }
+                }
+
+                launch {
                     optionsViewModel.onCustomizeShapeGridClicked.collect {
                         optionShapeGrid.setOnClickListener { _ -> it?.invoke() }
                     }
@@ -349,36 +375,6 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     }
                 }
 
-                launch {
-                    optionsViewModel.themedIconViewModel.isAvailable.collect { isAvailable ->
-                        optionThemedIconsSwitch.isEnabled = isAvailable
-                    }
-                }
-
-                launch {
-                    var binding: SwitchColorBinder.Binding? = null
-                    optionsViewModel.themedIconViewModel.isActivated.collect {
-                        optionThemedIconsSwitch.isChecked = it
-                        binding?.destroy()
-                        binding =
-                            SwitchColorBinder.bind(
-                                switch = optionThemedIconsSwitch,
-                                isChecked = it,
-                                colorUpdateViewModel = colorUpdateViewModel,
-                                shouldAnimateColor = isOnMainScreen,
-                                lifecycleOwner = lifecycleOwner,
-                            )
-                    }
-                }
-
-                launch {
-                    optionsViewModel.themedIconViewModel.toggleThemedIcon.collect {
-                        optionThemedIconsSwitch.setOnCheckedChangeListener { _, _ ->
-                            launch { it.invoke() }
-                        }
-                    }
-                }
-
                 if (BaseFlags.get().isPackThemeEnabled()) {
                     launch {
                         optionsViewModel.packThemeViewModel.startThemePackActivityIntent.collect {
@@ -410,17 +406,28 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     lifecycleOwner,
                 )
             }
-
-        customizationOptionFloatingSheetViewMap
-            ?.get(ThemePickerLockCustomizationOption.SHORTCUTS)
-            ?.let {
-                ShortcutFloatingSheetBinder.bind(
-                    it,
-                    optionsViewModel,
-                    colorUpdateViewModel,
-                    lifecycleOwner,
-                )
-            }
+        if (isComposeRefactorEnabled) {
+            customizationOptionFloatingSheetViewMap
+                ?.get(ThemePickerLockCustomizationOption.SHORTCUTS)
+                ?.let {
+                    (it as ComposeView).setContent {
+                        ShortcutsFloatingSheet(
+                            optionsViewModel.keyguardQuickAffordancePickerViewModel2
+                        )
+                    }
+                }
+        } else {
+            customizationOptionFloatingSheetViewMap
+                ?.get(ThemePickerLockCustomizationOption.SHORTCUTS)
+                ?.let {
+                    ShortcutFloatingSheetBinder.bind(
+                        it,
+                        optionsViewModel,
+                        colorUpdateViewModel,
+                        lifecycleOwner,
+                    )
+                }
+        }
 
         if (!isComposeRefactorEnabled) {
             customizationOptionFloatingSheetViewMap
@@ -436,9 +443,9 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         }
 
         customizationOptionFloatingSheetViewMap
-            ?.get(ThemePickerHomeCustomizationOption.APP_SHAPE_GRID)
+            ?.get(ThemePickerHomeCustomizationOption.APP_ICONS)
             ?.let {
-                ShapeGridFloatingSheetBinder.bind(
+                AppIconFloatingSheetBinder.bind(
                     it,
                     optionsViewModel,
                     colorUpdateViewModel,
@@ -446,6 +453,16 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     Dispatchers.IO,
                 )
             }
+
+        customizationOptionFloatingSheetViewMap?.get(ThemePickerHomeCustomizationOption.GRID)?.let {
+            ShapeGridFloatingSheetBinder.bind(
+                it,
+                optionsViewModel,
+                colorUpdateViewModel,
+                lifecycleOwner,
+                Dispatchers.IO,
+            )
+        }
     }
 
     override fun bindClockPreview(

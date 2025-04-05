@@ -26,14 +26,18 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.launch
 
 class AppIconPickerViewModel
 @AssistedInject
@@ -41,17 +45,16 @@ constructor(interactor: AppIconInteractor, @Assisted private val viewModelScope:
     //// Shape
 
     // The currently-set system shape option
-    val selectedShapeKey =
+    val selectedShape =
         interactor.selectedShapeOption
             .filterNotNull()
-            .map { it.key }
+            .map { toShapeOptionItemViewModel(it) }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
     private val overridingShapeKey = MutableStateFlow<String?>(null)
     // If the overriding key is null, use the currently-set system shape option
     val previewingShapeKey =
-        combine(overridingShapeKey, selectedShapeKey) { overridingShapeOptionKey, selectedShapeKey
-            ->
-            overridingShapeOptionKey ?: selectedShapeKey
+        combine(overridingShapeKey, selectedShape) { overridingShapeOptionKey, selectedShape ->
+            overridingShapeOptionKey ?: selectedShape.key.value
         }
 
     val shapeOptions: Flow<List<OptionItemViewModel2<ShapeIconViewModel>>> =
@@ -92,19 +95,36 @@ constructor(interactor: AppIconInteractor, @Assisted private val viewModelScope:
     val onApply: Flow<(suspend () -> Unit)?> =
         combine(
             overridingShapeKey,
-            selectedShapeKey,
+            selectedShape,
             overridingIsThemedIconEnabled,
             isThemedIconEnabled,
-        ) { overridingShapeKey, selectedShapeKey, overridingIsThemeIconEnabled, isThemeIconEnabled
-            ->
-            if (
-                (overridingShapeKey != null && overridingShapeKey != selectedShapeKey) ||
-                    (overridingIsThemeIconEnabled != null &&
-                        overridingIsThemeIconEnabled != isThemeIconEnabled)
-            ) {
+        ) {
+            overridingShapeKey,
+            selectedShape,
+            overridingIsThemedIconEnabled,
+            currentIsThemedIconEnabled ->
+            val shapeNeedsUpdate =
+                overridingShapeKey != null && overridingShapeKey != selectedShape.key.value
+            val themedIconNeedsUpdate =
+                overridingIsThemedIconEnabled != null &&
+                    overridingIsThemedIconEnabled != currentIsThemedIconEnabled
+            if (shapeNeedsUpdate || themedIconNeedsUpdate) {
                 {
-                    overridingShapeKey?.let { interactor.applyShape(it) }
-                    overridingIsThemeIconEnabled?.let { interactor.applyThemedIconEnabled(it) }
+                    if (shapeNeedsUpdate) {
+                        overridingShapeKey?.let { interactor.applyShape(it) }
+                    }
+                    if (themedIconNeedsUpdate) {
+                        coroutineScope {
+                            launch {
+                                overridingIsThemedIconEnabled?.let {
+                                    interactor.applyThemedIconEnabled(it)
+                                }
+                            }
+                            isThemedIconEnabled.drop(1).take(1).collect {
+                                return@collect
+                            }
+                        }
+                    }
                 }
             } else {
                 null

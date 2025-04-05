@@ -45,7 +45,7 @@ constructor(
     keyguardQuickAffordancePickerViewModel2Factory: KeyguardQuickAffordancePickerViewModel2.Factory,
     colorPickerViewModel2Factory: ColorPickerViewModel2.Factory,
     clockPickerViewModelFactory: ClockPickerViewModel.Factory,
-    shapeGridPickerViewModelFactory: ShapeGridPickerViewModel.Factory,
+    gridPickerViewModelFactory: GridPickerViewModel.Factory,
     appIconPickerViewModelFactory: AppIconPickerViewModel.Factory,
     val colorContrastSectionViewModel: ColorContrastSectionViewModel2,
     val darkModeViewModel: DarkModeViewModel,
@@ -65,7 +65,7 @@ constructor(
         keyguardQuickAffordancePickerViewModel2Factory.create(viewModelScope = viewModelScope)
     val colorPickerViewModel2 = colorPickerViewModel2Factory.create(viewModelScope = viewModelScope)
     val shapeGridPickerViewModel =
-        shapeGridPickerViewModelFactory.create(viewModelScope = viewModelScope)
+        gridPickerViewModelFactory.create(viewModelScope = viewModelScope)
     val appIconPickerViewModel =
         appIconPickerViewModelFactory.create(viewModelScope = viewModelScope)
 
@@ -90,6 +90,7 @@ constructor(
 
         keyguardQuickAffordancePickerViewModel2.resetPreview()
         shapeGridPickerViewModel.resetPreview()
+        appIconPickerViewModel.resetPreview()
         clockPickerViewModel.resetPreview()
         colorPickerViewModel2.resetPreview()
         darkModeViewModel.resetPreview()
@@ -135,13 +136,26 @@ constructor(
             }
         }
 
-    val onCustomizeShapeGridClicked: Flow<(() -> Unit)?> =
+    val onCustomizeIconsClicked: Flow<(() -> Unit)?> =
         selectedOption.map {
             if (it == null) {
                 {
                     defaultCustomizationOptionsViewModel.selectOption(
                         ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
-                            .APP_SHAPE_GRID
+                            .APP_ICONS
+                    )
+                }
+            } else {
+                null
+            }
+        }
+
+    val onCustomizeShapeGridClicked: Flow<(() -> Unit)?> =
+        selectedOption.map {
+            if (it == null) {
+                {
+                    defaultCustomizationOptionsViewModel.selectOption(
+                        ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.GRID
                     )
                 }
             } else {
@@ -158,8 +172,10 @@ constructor(
                         clockPickerViewModel.onApply
                     ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption
                         .SHORTCUTS -> keyguardQuickAffordancePickerViewModel2.onApply
+                    ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.GRID ->
+                        shapeGridPickerViewModel.onApply
                     ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
-                        .APP_SHAPE_GRID -> shapeGridPickerViewModel.onApply
+                        .APP_ICONS -> appIconPickerViewModel.onApply
                     ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS ->
                         combine(colorPickerViewModel2.onApply, darkModeViewModel.onApply) {
                             colorOnApply,

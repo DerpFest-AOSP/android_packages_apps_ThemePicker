@@ -28,8 +28,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.themepicker.R as ThemePickerR
 import com.android.wallpaper.R
-import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.APP_SHAPE_GRID
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.APP_ICONS
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.GRID
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.CLOCK
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.SHORTCUTS
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
@@ -123,10 +124,11 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
                         val stringResId =
                             when (it) {
                                 COLORS -> ThemePickerR.string.system_colors_title
-                                APP_SHAPE_GRID -> ThemePickerR.string.shape_and_grid_title
+                                GRID -> ThemePickerR.string.shape_and_grid_title
                                 CLOCK -> ThemePickerR.string.clock_title
                                 SHORTCUTS ->
                                     ThemePickerR.string.keyguard_quick_affordance_section_title
+                                APP_ICONS -> ThemePickerR.string.app_icons_title
                                 else -> R.string.app_name
                             }
                         toolbar.title = toolbar.resources.getString(stringResId)

@@ -17,6 +17,7 @@
 
 package com.android.customization.picker.grid.domain.interactor
 
+import android.graphics.drawable.Drawable
 import com.android.customization.model.CustomizationManager
 import com.android.customization.picker.grid.data.repository.GridRepository
 import com.android.customization.picker.grid.shared.model.GridOptionItemModel
@@ -94,6 +95,7 @@ class GridInteractor(
                             name = option.name,
                             cols = option.cols,
                             rows = option.rows,
+                            iconId = option.iconId,
                             isSelected = option.isSelected,
                             onSelected = {
                                 option.onSelected()
@@ -106,4 +108,6 @@ class GridInteractor(
             model
         }
     }
+
+    fun getGridOptionDrawable(iconId: Int): Drawable? = repository.getGridOptionDrawable(iconId)
 }

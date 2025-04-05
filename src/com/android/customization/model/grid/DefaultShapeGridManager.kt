@@ -23,6 +23,7 @@ import android.graphics.drawable.Drawable
 import android.util.Log
 import androidx.core.content.res.ResourcesCompat
 import com.android.wallpaper.R
+import com.android.wallpaper.model.Screen
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.util.PreviewUtils
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -41,9 +42,10 @@ constructor(
 
     private val authorityMetadataKey: String =
         context.getString(R.string.grid_control_metadata_name)
-    private val previewUtils: PreviewUtils = PreviewUtils(context, authorityMetadataKey)
+    private val previewUtils: PreviewUtils =
+        PreviewUtils(context, authorityMetadataKey, Screen.HOME_SCREEN)
 
-    override suspend fun getGridOptions(): List<GridOptionModel>? =
+    override suspend fun getGridOptions(): List<GridOptionModel> =
         withContext(bgDispatcher) {
             if (previewUtils.supportsPreview()) {
                 context.contentResolver
@@ -94,9 +96,9 @@ constructor(
                                 list
                             }
                             .sortedByDescending { it.rows * it.cols }
-                    }
+                    } ?: emptyList()
             } else {
-                null
+                emptyList()
             }
         }
 
@@ -146,23 +148,30 @@ constructor(
             }
         }
 
-    override fun applyShapeGridOption(shapeKey: String, gridKey: String): Int {
-        return context.contentResolver.update(
+    override fun applyGridOption(gridKey: String) {
+        context.contentResolver.update(
             previewUtils.getUri(SHAPE_GRID),
-            ContentValues().apply {
-                put(COL_SHAPE_KEY, shapeKey)
-                put(COL_GRID_KEY, gridKey)
-            },
+            ContentValues().apply { put(COL_GRID_KEY, gridKey) },
             null,
             null,
         )
     }
 
+    override fun applyShapeOption(shapeKey: String) =
+        context.contentResolver.update(
+            previewUtils.getUri(SET_SHAPE),
+            ContentValues().apply { put(COL_SHAPE_KEY, shapeKey) },
+            null,
+            null,
+        )
+
     override fun getGridOptionDrawable(iconId: Int): Drawable? {
+        val launcherPackageName =
+            context.getString(com.android.themepicker.R.string.launcher_overlayable_package)
         try {
             val drawable =
                 ResourcesCompat.getDrawable(
-                    context.packageManager.getResourcesForApplication(APP_RESOURCES_PACKAGE_NAME),
+                    context.packageManager.getResourcesForApplication(launcherPackageName),
                     iconId,
                     /* theme = */ null,
                 )
@@ -170,7 +179,7 @@ constructor(
         } catch (exception: Resources.NotFoundException) {
             Log.w(
                 TAG,
-                "Unable to find drawable resource from package $APP_RESOURCES_PACKAGE_NAME with resource ID $iconId",
+                "Unable to find drawable resource from package $launcherPackageName with resource ID $iconId",
             )
             return null
         }
@@ -181,7 +190,7 @@ constructor(
         const val SHAPE_OPTIONS: String = "shape_options"
         const val GRID_OPTIONS: String = "list_options"
         const val SHAPE_GRID: String = "default_grid"
-        const val SET_SHAPE: String = "set_shape"
+        const val SET_SHAPE: String = "shape"
         const val COL_SHAPE_KEY: String = "shape_key"
         const val COL_GRID_KEY: String = "name"
         const val COL_GRID_NAME: String = "grid_name"
@@ -192,7 +201,5 @@ constructor(
         const val COL_IS_DEFAULT: String = "is_default"
         const val COL_PATH: String = "path"
         const val KEY_GRID_ICON_ID: String = "grid_icon_id"
-        private const val APP_RESOURCES_PACKAGE_NAME: String =
-            "com.google.android.apps.nexuslauncher"
     }
 }

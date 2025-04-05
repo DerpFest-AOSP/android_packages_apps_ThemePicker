@@ -57,9 +57,9 @@ constructor(
     enum class ThemePickerHomeCustomizationOption : CustomizationOptionUtil.CustomizationOption {
         PACK_THEME,
         COLORS,
-        THEMED_ICONS,
-        APP_SHAPE_GRID,
         COLOR_CONTRAST,
+        APP_ICONS,
+        GRID,
     }
 
     override fun getOptionEntries(
@@ -142,25 +142,25 @@ constructor(
                             )
                     )
                     add(
-                        ThemePickerHomeCustomizationOption.THEMED_ICONS to
-                            layoutInflater.inflate(
-                                R.layout.customization_option_entry_themed_icons,
-                                optionContainer,
-                                false,
-                            )
-                    )
-                    add(
-                        ThemePickerHomeCustomizationOption.APP_SHAPE_GRID to
-                            layoutInflater.inflate(
-                                R.layout.customization_option_entry_app_shape_grid,
-                                optionContainer,
-                                false,
-                            )
-                    )
-                    add(
                         ThemePickerHomeCustomizationOption.COLOR_CONTRAST to
                             layoutInflater.inflate(
                                 R.layout.customization_option_entry_color_contrast,
+                                optionContainer,
+                                false,
+                            )
+                    )
+                    add(
+                        ThemePickerHomeCustomizationOption.APP_ICONS to
+                            layoutInflater.inflate(
+                                R.layout.customization_option_entry_app_icons,
+                                optionContainer,
+                                false,
+                            )
+                    )
+                    add(
+                        ThemePickerHomeCustomizationOption.GRID to
+                            layoutInflater.inflate(
+                                R.layout.customization_option_entry_app_shape_grid,
                                 optionContainer,
                                 false,
                             )
@@ -192,14 +192,19 @@ constructor(
             if (isKeyguardQuickAffordanceEnabled) {
                 put(
                     ThemePickerLockCustomizationOption.SHORTCUTS,
-                    inflateFloatingSheet(
-                            ThemePickerLockCustomizationOption.SHORTCUTS,
-                            bottomSheetContainer,
-                            layoutInflater,
-                        )
+                    if (isComposeRefactorEnabled) {
+                            ComposeView(context)
+                        } else {
+                            inflateFloatingSheet(
+                                ThemePickerLockCustomizationOption.SHORTCUTS,
+                                bottomSheetContainer,
+                                layoutInflater,
+                            )
+                        }
                         .also { bottomSheetContainer.addView(it) },
                 )
             }
+
             put(
                 ThemePickerHomeCustomizationOption.COLORS,
                 if (isComposeRefactorEnabled) {
@@ -214,9 +219,17 @@ constructor(
                     .also { bottomSheetContainer.addView(it) },
             )
             put(
-                ThemePickerHomeCustomizationOption.APP_SHAPE_GRID,
+                ThemePickerHomeCustomizationOption.APP_ICONS,
                 inflateFloatingSheet(
-                        ThemePickerHomeCustomizationOption.APP_SHAPE_GRID,
+                    ThemePickerHomeCustomizationOption.APP_ICONS,
+                    bottomSheetContainer,
+                    layoutInflater,
+                ),
+            )
+            put(
+                ThemePickerHomeCustomizationOption.GRID,
+                inflateFloatingSheet(
+                        ThemePickerHomeCustomizationOption.GRID,
                         bottomSheetContainer,
                         layoutInflater,
                     )
@@ -243,7 +256,8 @@ constructor(
             ThemePickerLockCustomizationOption.CLOCK -> R.layout.floating_sheet_clock
             ThemePickerLockCustomizationOption.SHORTCUTS -> R.layout.floating_sheet_shortcut
             ThemePickerHomeCustomizationOption.COLORS -> R.layout.floating_sheet_colors
-            ThemePickerHomeCustomizationOption.APP_SHAPE_GRID -> R.layout.floating_sheet_shape_grid
+            ThemePickerHomeCustomizationOption.APP_ICONS -> R.layout.floating_sheet_app_icon
+            ThemePickerHomeCustomizationOption.GRID -> R.layout.floating_sheet_shape_grid
             else ->
                 throw IllegalStateException(
                     "Customization option $option does not have a bottom sheet view"
