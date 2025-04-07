@@ -51,6 +51,7 @@
     <string name="grid_title" msgid="1688173478777254123">"Ilovalar jadvali"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Ilova shakli va maketi"</string>
     <string name="grid_layout" msgid="370175667652663686">"Maket"</string>
+    <string name="app_icons_title" msgid="8953944517006998975">"Belgilar"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"Tatbiq etish"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"Tahrirlash uchun tegining"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Joriy fon rasmini saqlab qolish"</string>
@@ -126,7 +127,7 @@
     <string name="wallpaper_color_title" msgid="5687965239180986458">"Fon rasmi rangi"</string>
     <string name="preset_color_tab" msgid="3133391839341329314">"Asosiy ranglar"</string>
     <string name="preset_color_tab_2" msgid="1444107326712562538">"Boshqa ranglar"</string>
-    <string name="preset_color_subheader" msgid="8230588536141279371">"Belgilar, soat va boshqa elementlar rangini tanllang."</string>
+    <string name="preset_color_subheader" msgid="8230588536141279371">"Belgilar, soat va boshqa elementlar rangini tanlang."</string>
     <string name="color_changed" msgid="7029571720331641235">"Rang oʻzgartirildi"</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"Dinamik"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"Tizim ranglari"</string>

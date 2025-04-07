@@ -51,6 +51,8 @@
     <string name="grid_title" msgid="1688173478777254123">"Grade de apps"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Formato e layout do app"</string>
     <string name="grid_layout" msgid="370175667652663686">"Layout"</string>
+    <!-- no translation found for app_icons_title (8953944517006998975) -->
+    <skip />
     <string name="apply_theme_btn" msgid="6293081192321303991">"Aplicar"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"Toque para editar"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Manter o plano de fundo atual"</string>
@@ -126,7 +128,7 @@
     <string name="wallpaper_color_title" msgid="5687965239180986458">"Cor do plano de fundo"</string>
     <string name="preset_color_tab" msgid="3133391839341329314">"Cores básicas"</string>
     <string name="preset_color_tab_2" msgid="1444107326712562538">"Outras cores"</string>
-    <string name="preset_color_subheader" msgid="8230588536141279371">"Escolha a cor que quiser para ícones, relógio e mais"</string>
+    <string name="preset_color_subheader" msgid="8230588536141279371">"Escolha uma para ícones, relógio e outros"</string>
     <string name="color_changed" msgid="7029571720331641235">"Cor trocada"</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"Dinâmica"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"Cores do sistema"</string>
@@ -145,7 +147,7 @@
     <string name="color_contrast_medium_title" msgid="8071574793250090215">"Médio"</string>
     <string name="color_contrast_high_title" msgid="5554685752479470200">"Alto"</string>
     <string name="keyguard_quick_affordance_two_selected_template" msgid="1757099194522296363">"<xliff:g id="FIRST">%1$s</xliff:g>, <xliff:g id="SECOND">%2$s</xliff:g>"</string>
-    <string name="keyguard_quick_affordance_none_selected" msgid="8494127020144112003">"Nenhum"</string>
+    <string name="keyguard_quick_affordance_none_selected" msgid="8494127020144112003">"Nenhuma"</string>
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"Mostrar notificações na tela de bloqueio"</string>
     <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"Notificações na tela de bloqueio"</string>
     <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Gerencie como as notificações aparecem e o que mostrar"</string>
