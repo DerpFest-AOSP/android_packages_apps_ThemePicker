@@ -410,6 +410,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             customizationOptionFloatingSheetViewMap
                 ?.get(ThemePickerLockCustomizationOption.SHORTCUTS)
                 ?.let {
+                    // TODO(b/409112907) Evaluate Compose performance before enabling flag
                     (it as ComposeView).setContent {
                         ShortcutsFloatingSheet(
                             optionsViewModel.keyguardQuickAffordancePickerViewModel2
