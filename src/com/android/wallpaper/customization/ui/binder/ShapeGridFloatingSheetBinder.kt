@@ -49,7 +49,7 @@ object ShapeGridFloatingSheetBinder {
         lifecycleOwner: LifecycleOwner,
         backgroundDispatcher: CoroutineDispatcher,
     ) {
-        val viewModel = optionsViewModel.shapeGridPickerViewModel
+        val viewModel = optionsViewModel.fridPickerViewModel
         val isFloatingSheetActive = { optionsViewModel.selectedOption.value == GRID }
 
         val floatingSheetContainer =

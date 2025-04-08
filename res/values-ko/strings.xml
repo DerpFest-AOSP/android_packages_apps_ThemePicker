@@ -51,6 +51,8 @@
     <string name="grid_title" msgid="1688173478777254123">"앱 그리드"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"앱 모양 및 레이아웃"</string>
     <string name="grid_layout" msgid="370175667652663686">"레이아웃"</string>
+    <!-- no translation found for app_icons_title (8953944517006998975) -->
+    <skip />
     <string name="apply_theme_btn" msgid="6293081192321303991">"적용"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"탭하여 수정"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"현재 배경화면 유지"</string>
@@ -122,7 +124,7 @@
     <string name="theme_packs_description" msgid="4647233199054882039">"Pixel 테마 둘러보기"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"앱 그리드 변경"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"배경화면 색상"</string>
-    <string name="wallpaper_color_subheader" msgid="4044464573669965670">"아이콘, 텍스트 등의 색상이 배경화면과 일치합니다"</string>
+    <string name="wallpaper_color_subheader" msgid="4044464573669965670">"아이콘, 텍스트 등의 색상이 배경화면 색상과 매치됩니다"</string>
     <string name="wallpaper_color_title" msgid="5687965239180986458">"배경화면 색상"</string>
     <string name="preset_color_tab" msgid="3133391839341329314">"기본 색상"</string>
     <string name="preset_color_tab_2" msgid="1444107326712562538">"기타 색상"</string>

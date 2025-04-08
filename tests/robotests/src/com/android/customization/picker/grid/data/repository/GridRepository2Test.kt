@@ -55,12 +55,6 @@ class GridRepository2Test {
     @Before
     fun setUp() {
         hiltRule.inject()
-        underTest =
-            GridRepository2(
-                manager = gridOptionsManager,
-                bgScope = bgScope,
-                bgDispatcher = bgDispatcher,
-            )
     }
 
     @After
@@ -71,6 +65,12 @@ class GridRepository2Test {
     @Test
     fun gridOptions_default() =
         testScope.runTest {
+            underTest =
+                GridRepository2(
+                    manager = gridOptionsManager,
+                    bgScope = bgScope,
+                    bgDispatcher = bgDispatcher,
+                )
             val gridOptions = collectLastValue(underTest.gridOptions)
 
             assertThat(gridOptions()).isEqualTo(FakeShapeGridManager.DEFAULT_GRID_OPTION_LIST)
@@ -79,6 +79,12 @@ class GridRepository2Test {
     @Test
     fun gridOptions_shouldUpdateAfterApplyShapeGridOption() =
         testScope.runTest {
+            underTest =
+                GridRepository2(
+                    manager = gridOptionsManager,
+                    bgScope = bgScope,
+                    bgDispatcher = bgDispatcher,
+                )
             val gridOptions = collectLastValue(underTest.gridOptions)
 
             underTest.applySelectedOption("practical")
@@ -94,6 +100,12 @@ class GridRepository2Test {
     @Test
     fun selectedGridOption_default() =
         testScope.runTest {
+            underTest =
+                GridRepository2(
+                    manager = gridOptionsManager,
+                    bgScope = bgScope,
+                    bgDispatcher = bgDispatcher,
+                )
             val selectedGridOption = collectLastValue(underTest.selectedGridOption)
 
             assertThat(selectedGridOption())
@@ -103,11 +115,48 @@ class GridRepository2Test {
     @Test
     fun selectedGridOption_shouldUpdateAfterApplyShapeGridOption() =
         testScope.runTest {
+            underTest =
+                GridRepository2(
+                    manager = gridOptionsManager,
+                    bgScope = bgScope,
+                    bgDispatcher = bgDispatcher,
+                )
             val selectedGridOption = collectLastValue(underTest.selectedGridOption)
 
             underTest.applySelectedOption("practical")
 
             assertThat(selectedGridOption())
                 .isEqualTo(FakeShapeGridManager.DEFAULT_GRID_OPTION_LIST[1].copy(isCurrent = true))
+        }
+
+    @Test
+    fun isGridCustomizationAvailable_true() =
+        testScope.runTest {
+            underTest =
+                GridRepository2(
+                    manager = gridOptionsManager,
+                    bgScope = bgScope,
+                    bgDispatcher = bgDispatcher,
+                )
+            val isGridCustomizationAvailable =
+                collectLastValue(underTest.isGridCustomizationAvailable)
+
+            assertThat(isGridCustomizationAvailable()).isTrue()
+        }
+
+    @Test
+    fun isGridCustomizationAvailable_false_whenZeroOptions() =
+        testScope.runTest {
+            gridOptionsManager.setGridOptions(emptyList())
+            underTest =
+                GridRepository2(
+                    manager = gridOptionsManager,
+                    bgScope = bgScope,
+                    bgDispatcher = bgDispatcher,
+                )
+            val isGridCustomizationAvailable =
+                collectLastValue(underTest.isGridCustomizationAvailable)
+
+            assertThat(isGridCustomizationAvailable()).isFalse()
         }
 }

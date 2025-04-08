@@ -51,6 +51,7 @@
     <string name="grid_title" msgid="1688173478777254123">"အက်ပ်ဇယား"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"အက်ပ်ပုံစံ၊ အပြင်အဆင်"</string>
     <string name="grid_layout" msgid="370175667652663686">"အပြင်အဆင်"</string>
+    <string name="app_icons_title" msgid="8953944517006998975">"သင်္ကေတများ"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"အသုံးပြုရန်"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"တည်းဖြတ်ရန် တို့ပါ"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"လက်ရှိနောက်ခံပုံ ဆက်ထားရန်"</string>
@@ -126,7 +127,7 @@
     <string name="wallpaper_color_title" msgid="5687965239180986458">"နောက်ခံအရောင်"</string>
     <string name="preset_color_tab" msgid="3133391839341329314">"အခြေခံအရောင်များ"</string>
     <string name="preset_color_tab_2" msgid="1444107326712562538">"အခြားအရောင်"</string>
-    <string name="preset_color_subheader" msgid="8230588536141279371">"သင့်သင်္ကေတများ၊ နာရီစသည်တို့အတွက် အရောင်တစ်ခုခုရွေးပါ"</string>
+    <string name="preset_color_subheader" msgid="8230588536141279371">"သင်္ကေတ၊ နာရီစသည်တို့အတွက် အရောင်ရွေးပါ"</string>
     <string name="color_changed" msgid="7029571720331641235">"အရောင် ပြောင်းလိုက်ပါပြီ"</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"ပြောင်းနိုင်သော"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"စနစ်အရောင်"</string>

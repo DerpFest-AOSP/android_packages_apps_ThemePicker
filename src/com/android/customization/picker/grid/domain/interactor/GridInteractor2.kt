@@ -25,6 +25,8 @@ import javax.inject.Singleton
 @Singleton
 class GridInteractor2 @Inject constructor(private val repository: GridRepository2) {
 
+    val isGridCustomizationAvailable = repository.isGridCustomizationAvailable
+
     val gridOptions = repository.gridOptions
 
     val selectedGridOption = repository.selectedGridOption

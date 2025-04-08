@@ -65,6 +65,7 @@ import com.android.wallpaper.picker.customization.ui.viewmodel.FloatingToolbarTa
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
 
 // TODO: b/404820955 - Plug correct colors inherited from the device into all composables
+// TODO(b/409112907) Evaluate Compose performance before enabling flag
 @Composable
 fun ShortcutsFloatingSheet(
     viewModel: KeyguardQuickAffordancePickerViewModel2,

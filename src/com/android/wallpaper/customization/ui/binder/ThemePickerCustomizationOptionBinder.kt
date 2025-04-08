@@ -332,8 +332,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 }
 
                 launch {
-                    optionsViewModel.shapeGridPickerViewModel.selectedGridOption.collect {
-                        gridOption ->
+                    optionsViewModel.fridPickerViewModel.selectedGridOption.collect { gridOption ->
                         TextViewBinder.bind(optionShapeGridDescription, gridOption.text)
                         gridOption.payload?.let { optionShapeGridIcon.setImageDrawable(it) }
                     }
@@ -410,6 +409,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             customizationOptionFloatingSheetViewMap
                 ?.get(ThemePickerLockCustomizationOption.SHORTCUTS)
                 ?.let {
+                    // TODO(b/409112907) Evaluate Compose performance before enabling flag
                     (it as ComposeView).setContent {
                         ShortcutsFloatingSheet(
                             optionsViewModel.keyguardQuickAffordancePickerViewModel2
