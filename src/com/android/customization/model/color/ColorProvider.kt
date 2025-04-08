@@ -320,20 +320,6 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
     }
 
     /**
-     * Returns the preview of a preset ColorScheme based on this order: top left, top right, bottom
-     * left, bottom right
-     */
-    private fun getFixedPresetColorPreview(colorScheme: ColorScheme, seed: Int): IntArray {
-        val colors =
-            when (colorScheme.style) {
-                Style.FRUIT_SALAD -> intArrayOf(colorScheme.accent3.s100, colorScheme.accent1.s200)
-                Style.RAINBOW -> intArrayOf(colorScheme.accent1.s200, colorScheme.accent1.s200)
-                else -> intArrayOf(seed, seed)
-            }
-        return intArrayOf(colors[0], colors[1], colors[0], colors[1])
-    }
-
-    /**
      * Returns the light theme contrast-adjusted preview of a preset ColorScheme, based on this
      * order: top left, top right, bottom left, bottom right
      */
@@ -457,18 +443,8 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
                     lightColors = getLightMonochromePreview(lightColorScheme)
                 }
                 else -> {
-                    darkColors =
-                        if (isNewPickerUi) {
-                            getFixedPresetColorPreview(darkColorScheme, colorFromStub)
-                        } else {
-                            getDarkPresetColorPreview(darkColorScheme)
-                        }
-                    lightColors =
-                        if (isNewPickerUi) {
-                            getFixedPresetColorPreview(lightColorScheme, colorFromStub)
-                        } else {
-                            getLightPresetColorPreview(lightColorScheme)
-                        }
+                    darkColors = getDarkPresetColorPreview(darkColorScheme)
+                    lightColors = getLightPresetColorPreview(lightColorScheme)
                 }
             }
         }
