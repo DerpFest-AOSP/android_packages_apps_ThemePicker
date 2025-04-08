@@ -18,6 +18,7 @@ package com.android.wallpaper.customization.ui.viewmodel
 
 import com.android.customization.picker.mode.ui.viewmodel.DarkModeViewModel
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsData
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModelFactory
 import com.android.wallpaper.picker.customization.ui.viewmodel.DefaultCustomizationOptionsViewModel
@@ -64,10 +65,14 @@ constructor(
     val keyguardQuickAffordancePickerViewModel2 =
         keyguardQuickAffordancePickerViewModel2Factory.create(viewModelScope = viewModelScope)
     val colorPickerViewModel2 = colorPickerViewModel2Factory.create(viewModelScope = viewModelScope)
-    val shapeGridPickerViewModel =
-        gridPickerViewModelFactory.create(viewModelScope = viewModelScope)
+    val fridPickerViewModel = gridPickerViewModelFactory.create(viewModelScope = viewModelScope)
     val appIconPickerViewModel =
         appIconPickerViewModelFactory.create(viewModelScope = viewModelScope)
+
+    override val customizationOptionsData: Flow<CustomizationOptionsData> =
+        fridPickerViewModel.isGridCustomizationAvailable.map {
+            ThemePickerCustomizationOptionsData(isGridCustomizationAvailable = it)
+        }
 
     private var onApplyJob: Job? = null
 
@@ -89,7 +94,7 @@ constructor(
         defaultCustomizationOptionsViewModel.resetPreview()
 
         keyguardQuickAffordancePickerViewModel2.resetPreview()
-        shapeGridPickerViewModel.resetPreview()
+        fridPickerViewModel.resetPreview()
         appIconPickerViewModel.resetPreview()
         clockPickerViewModel.resetPreview()
         colorPickerViewModel2.resetPreview()
@@ -173,7 +178,7 @@ constructor(
                     ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption
                         .SHORTCUTS -> keyguardQuickAffordancePickerViewModel2.onApply
                     ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.GRID ->
-                        shapeGridPickerViewModel.onApply
+                        fridPickerViewModel.onApply
                     ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
                         .APP_ICONS -> appIconPickerViewModel.onApply
                     ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS ->
