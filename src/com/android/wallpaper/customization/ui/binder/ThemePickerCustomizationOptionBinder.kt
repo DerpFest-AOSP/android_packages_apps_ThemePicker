@@ -376,6 +376,32 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
 
                 if (BaseFlags.get().isPackThemeEnabled()) {
                     launch {
+                        optionsViewModel.packThemeViewModel.packThemeData.collect { packThemeData ->
+                            val homeTitle =
+                                optionPackThemeHome?.findViewById<TextView>(R.id.option_entry_title)
+                            val lockTitle =
+                                optionPackThemeLock?.findViewById<TextView>(R.id.option_entry_title)
+                            val homeDescription =
+                                optionPackThemeHome?.findViewById<TextView>(
+                                    R.id.option_entry_description
+                                )
+                            val lockDescription =
+                                optionPackThemeHome?.findViewById<TextView>(
+                                    R.id.option_entry_description
+                                )
+                            if (packThemeData.currentThemePackInfo.title.isNotEmpty()) {
+                                homeTitle?.text = packThemeData.currentThemePackInfo.title
+                                lockTitle?.text = packThemeData.currentThemePackInfo.title
+                            }
+                            if (packThemeData.currentThemePackInfo.description.isNotEmpty()) {
+                                homeDescription?.text =
+                                    packThemeData.currentThemePackInfo.description
+                                lockDescription?.text =
+                                    packThemeData.currentThemePackInfo.description
+                            }
+                        }
+                    }
+                    launch {
                         optionsViewModel.packThemeViewModel.startThemePackActivityIntent.collect {
                             intent ->
                             if (intent != null) {
