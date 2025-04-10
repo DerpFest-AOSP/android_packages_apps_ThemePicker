@@ -26,6 +26,7 @@ import android.widget.TextView
 import androidx.compose.ui.platform.ComposeView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -60,6 +61,8 @@ import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewMo
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsData
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
@@ -401,7 +404,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                                     R.id.option_entry_description
                                 )
                             val lockDescription =
-                                optionPackThemeHome?.findViewById<TextView>(
+                                optionPackThemeLock?.findViewById<TextView>(
                                     R.id.option_entry_description
                                 )
                             if (packThemeData.currentThemePackInfo.title.isNotEmpty()) {
@@ -413,6 +416,27 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                                     packThemeData.currentThemePackInfo.description
                                 lockDescription?.text =
                                     packThemeData.currentThemePackInfo.description
+                            }
+                            if (packThemeData.currentThemePackInfo.thumbnailUri.isNotEmpty()) {
+                                val uri = packThemeData.currentThemePackInfo.thumbnailUri.toUri()
+                                val corner =
+                                    (THUMBNAIL_CORNER_RADIUS *
+                                            view.context.resources.displayMetrics.density)
+                                        .toInt()
+                                optionPackThemeIconHome?.let {
+                                    Glide.with(view.context)
+                                        .load(uri)
+                                        .transform(RoundedCorners(corner))
+                                        .into(it)
+                                    it.colorFilter = null
+                                }
+                                optionPackThemeIconLock?.let {
+                                    Glide.with(view.context)
+                                        .load(uri)
+                                        .transform(RoundedCorners(corner))
+                                        .into(it)
+                                    it.colorFilter = null
+                                }
                             }
                         }
                     }
@@ -625,4 +649,8 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
     }
 
     data class Quadruple<A, B, C, D>(val first: A, val second: B, val third: C, val fourth: D)
+
+    companion object {
+        private const val THUMBNAIL_CORNER_RADIUS = 18
+    }
 }
