@@ -49,7 +49,6 @@ class AppIconPickerViewModelTest {
 
     @get:Rule var hiltRule = HiltAndroidRule(this)
     @Inject lateinit var testScope: TestScope
-    @Inject lateinit var gridOptionsManager: FakeShapeGridManager
     @Inject lateinit var interactor: AppIconInteractor
     @Inject @ApplicationContext lateinit var appContext: Context
 
@@ -58,7 +57,7 @@ class AppIconPickerViewModelTest {
     @Before
     fun setUp() {
         hiltRule.inject()
-        underTest = AppIconPickerViewModel(interactor, testScope.backgroundScope)
+        underTest = AppIconPickerViewModel(appContext, interactor, testScope.backgroundScope)
     }
 
     @After
