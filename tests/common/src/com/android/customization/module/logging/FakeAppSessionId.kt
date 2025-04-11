@@ -13,11 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.android.customization.module.logging
 
-interface AppSessionId {
+import javax.inject.Inject
+import javax.inject.Singleton
 
-    fun createNewId(): AppSessionId
+@Singleton
+class FakeAppSessionId @Inject constructor() : AppSessionId {
+    override fun createNewId(): AppSessionId {
+        return FakeAppSessionId()
+    }
 
-    fun getId(): Int
+    override fun getId(): Int {
+        return TEST_APP_SESSION_ID
+    }
+
+    companion object {
+        const val TEST_APP_SESSION_ID = 1007
+    }
 }
