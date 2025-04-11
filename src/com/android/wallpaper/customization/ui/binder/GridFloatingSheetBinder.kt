@@ -39,8 +39,7 @@ import java.lang.ref.WeakReference
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 
-// TODO (b/402161932): rename shape grid classes and clean up view model and below
-object ShapeGridFloatingSheetBinder {
+object GridFloatingSheetBinder {
 
     fun bind(
         view: View,
@@ -49,7 +48,7 @@ object ShapeGridFloatingSheetBinder {
         lifecycleOwner: LifecycleOwner,
         backgroundDispatcher: CoroutineDispatcher,
     ) {
-        val viewModel = optionsViewModel.fridPickerViewModel
+        val viewModel = optionsViewModel.gridPickerViewModel
         val isFloatingSheetActive = { optionsViewModel.selectedOption.value == GRID }
 
         val floatingSheetContainer =

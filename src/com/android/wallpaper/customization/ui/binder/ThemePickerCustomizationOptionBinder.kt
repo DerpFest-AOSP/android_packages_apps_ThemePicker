@@ -345,7 +345,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     }
 
                     launch {
-                        optionsViewModel.fridPickerViewModel.selectedGridOption.collect { gridOption
+                        optionsViewModel.gridPickerViewModel.selectedGridOption.collect { gridOption
                             ->
                             optionGridDescription?.let { TextViewBinder.bind(it, gridOption.text) }
                             gridOption.payload?.let { optionGridIcon?.setImageDrawable(it) }
@@ -496,7 +496,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             }
 
         customizationOptionFloatingSheetViewMap?.get(ThemePickerHomeCustomizationOption.GRID)?.let {
-            ShapeGridFloatingSheetBinder.bind(
+            GridFloatingSheetBinder.bind(
                 it,
                 optionsViewModel,
                 colorUpdateViewModel,

@@ -170,7 +170,7 @@ constructor(
                         add(
                             ThemePickerHomeCustomizationOption.GRID to
                                 layoutInflater.inflate(
-                                    R.layout.customization_option_entry_app_shape_grid,
+                                    R.layout.customization_option_entry_grid,
                                     optionContainer,
                                     false,
                                 )
@@ -276,7 +276,7 @@ constructor(
             ThemePickerLockCustomizationOption.SHORTCUTS -> R.layout.floating_sheet_shortcut
             ThemePickerHomeCustomizationOption.COLORS -> R.layout.floating_sheet_colors
             ThemePickerHomeCustomizationOption.APP_ICONS -> R.layout.floating_sheet_app_icon
-            ThemePickerHomeCustomizationOption.GRID -> R.layout.floating_sheet_shape_grid
+            ThemePickerHomeCustomizationOption.GRID -> R.layout.floating_sheet_grid
             else ->
                 throw IllegalStateException(
                     "Customization option $option does not have a bottom sheet view"
