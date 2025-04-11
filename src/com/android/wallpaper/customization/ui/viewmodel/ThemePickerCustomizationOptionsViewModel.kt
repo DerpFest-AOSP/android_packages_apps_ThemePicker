@@ -65,12 +65,12 @@ constructor(
     val keyguardQuickAffordancePickerViewModel2 =
         keyguardQuickAffordancePickerViewModel2Factory.create(viewModelScope = viewModelScope)
     val colorPickerViewModel2 = colorPickerViewModel2Factory.create(viewModelScope = viewModelScope)
-    val fridPickerViewModel = gridPickerViewModelFactory.create(viewModelScope = viewModelScope)
+    val gridPickerViewModel = gridPickerViewModelFactory.create(viewModelScope = viewModelScope)
     val appIconPickerViewModel =
         appIconPickerViewModelFactory.create(viewModelScope = viewModelScope)
 
     override val customizationOptionsData: Flow<CustomizationOptionsData> =
-        fridPickerViewModel.isGridCustomizationAvailable.map {
+        gridPickerViewModel.isGridCustomizationAvailable.map {
             ThemePickerCustomizationOptionsData(isGridCustomizationAvailable = it)
         }
 
@@ -94,7 +94,7 @@ constructor(
         defaultCustomizationOptionsViewModel.resetPreview()
 
         keyguardQuickAffordancePickerViewModel2.resetPreview()
-        fridPickerViewModel.resetPreview()
+        gridPickerViewModel.resetPreview()
         appIconPickerViewModel.resetPreview()
         clockPickerViewModel.resetPreview()
         colorPickerViewModel2.resetPreview()
@@ -178,7 +178,7 @@ constructor(
                     ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption
                         .SHORTCUTS -> keyguardQuickAffordancePickerViewModel2.onApply
                     ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.GRID ->
-                        fridPickerViewModel.onApply
+                        gridPickerViewModel.onApply
                     ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
                         .APP_ICONS -> appIconPickerViewModel.onApply
                     ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS ->
