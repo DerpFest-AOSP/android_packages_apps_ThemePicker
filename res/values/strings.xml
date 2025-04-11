@@ -127,6 +127,18 @@
      shape and theme for the home screen. [CHAR LIMIT=15] -->
     <string name="app_icons_title">Icons</string>
 
+    <!-- Description of a section of the customization picker where the user can configure app icon
+        shape and theme, e.g. Circle, themed. [CHAR LIMIT=NONE] -->
+    <string name="app_icons_description"><xliff:g name="shape">%1$s</xliff:g>, <xliff:g name="theme">%2$s</xliff:g></string>
+
+    <!-- Part of the app icon section description, shown when the user's app icons are not themed.
+        [CHAR LIMIT=15] -->
+    <string name="app_icons_theme_default">default</string>
+
+    <!-- Part of the app icon section description, shown when the user has themed icons turned on.
+        [CHAR LIMIT=15] -->
+    <string name="app_icons_theme_themed">themed</string>
+
     <!-- Label for a button that allows the user to apply the currently selected Theme.
         [CHAR LIMIT=20] -->
     <string name="apply_theme_btn">Apply</string>
