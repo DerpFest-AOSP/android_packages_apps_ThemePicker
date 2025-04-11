@@ -554,6 +554,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                                     )
                                     cs.applyTo(clockHostView)
                                 }
+                                clockViewFactory.updateTimeFormat(clock.clockId)
                             } else {
                                 val clockView =
                                     when (size) {
