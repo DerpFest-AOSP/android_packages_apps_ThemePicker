@@ -19,6 +19,7 @@ package com.android.wallpaper.customization.ui.binder
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.provider.Settings
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -105,6 +106,12 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         customizationOptionsData as ThemePickerCustomizationOptionsData
 
         val isComposeRefactorEnabled = BaseFlags.get().isComposeRefactorEnabled()
+
+        val showPackEntry =
+            Settings.Secure.getInt(
+                view.context.contentResolver,
+                Settings.Secure.PACK_THEME_FEATURE_ENABLED,
+            ) == 1
 
         val optionsViewModel =
             viewModel.customizationOptionsViewModel as ThemePickerCustomizationOptionsViewModel
@@ -194,7 +201,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         var optionPackThemeIconLock: ImageView? = null
         var optionPackThemeHome: View? = null
         var optionPackThemeLock: View? = null
-        if (BaseFlags.get().isPackThemeEnabled()) {
+        if (BaseFlags.get().isPackThemeEnabled() && showPackEntry) {
             optionPackThemeHome =
                 homeScreenCustomizationOptionEntries
                     .first { it.first == ThemePickerHomeCustomizationOption.PACK_THEME }
