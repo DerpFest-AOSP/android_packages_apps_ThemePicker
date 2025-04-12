@@ -51,6 +51,8 @@
     <string name="grid_title" msgid="1688173478777254123">"شبكة التطبيقات"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"شكل التطبيق وتصميمه"</string>
     <string name="grid_layout" msgid="370175667652663686">"التصميم"</string>
+    <!-- no translation found for app_icons_title (8953944517006998975) -->
+    <skip />
     <string name="apply_theme_btn" msgid="6293081192321303991">"تطبيق"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"انقُر للتعديل."</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"الاحتفاظ بالخلفية الحالية"</string>
@@ -126,7 +128,7 @@
     <string name="wallpaper_color_title" msgid="5687965239180986458">"لون الخلفية"</string>
     <string name="preset_color_tab" msgid="3133391839341329314">"الألوان الأساسية"</string>
     <string name="preset_color_tab_2" msgid="1444107326712562538">"ألوان أخرى"</string>
-    <string name="preset_color_subheader" msgid="8230588536141279371">"اختَر أي لون للرموز والساعة وغير ذلك"</string>
+    <string name="preset_color_subheader" msgid="8230588536141279371">"يمكنك اختيار أي لون للرموز والساعة وغير ذلك"</string>
     <string name="color_changed" msgid="7029571720331641235">"تم تغيير اللون."</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"ألوان ديناميكية"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"ألوان النظام"</string>

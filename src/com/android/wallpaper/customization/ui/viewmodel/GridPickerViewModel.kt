@@ -47,6 +47,8 @@ constructor(
     private val interactor: GridInteractor2,
     @Assisted private val viewModelScope: CoroutineScope,
 ) {
+    val isGridCustomizationAvailable = interactor.isGridCustomizationAvailable
+
     // The currently-set system grid option
     val selectedGridOption =
         interactor.selectedGridOption

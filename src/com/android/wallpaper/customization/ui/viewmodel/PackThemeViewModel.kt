@@ -18,6 +18,7 @@ package com.android.wallpaper.customization.ui.viewmodel
 
 import android.content.ComponentName
 import android.content.Intent
+import com.android.customization.picker.pack.data.PackThemeData
 import com.android.wallpaper.picker.domain.interactor.PackThemeInteractor
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
@@ -39,4 +40,5 @@ class PackThemeViewModel @Inject constructor(private val interactor: PackThemeIn
                 null
             }
         }
+    val packThemeData: Flow<PackThemeData> = interactor.packThemeData
 }

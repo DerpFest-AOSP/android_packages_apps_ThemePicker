@@ -48,6 +48,7 @@ import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.customization.ui.compose.ShortcutsFloatingSheet
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption
+import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsData
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
 import com.android.wallpaper.picker.common.icon.ui.viewbinder.IconViewBinder
 import com.android.wallpaper.picker.common.text.ui.viewbinder.TextViewBinder
@@ -56,6 +57,7 @@ import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptions
 import com.android.wallpaper.picker.customization.ui.binder.DefaultCustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsData
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
 import javax.inject.Inject
@@ -72,6 +74,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
     CustomizationOptionsBinder {
 
     override fun bind(
+        customizationOptionsData: CustomizationOptionsData,
         view: View,
         lockScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
         homeScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
@@ -85,6 +88,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         navigateToPackThemeActivity: (Intent) -> Unit,
     ) {
         defaultCustomizationOptionsBinder.bind(
+            customizationOptionsData,
             view,
             lockScreenCustomizationOptionEntries,
             homeScreenCustomizationOptionEntries,
@@ -97,6 +101,8 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             navigateToLockScreenNotificationsSettingsActivity,
             navigateToPackThemeActivity,
         )
+
+        customizationOptionsData as ThemePickerCustomizationOptionsData
 
         val isComposeRefactorEnabled = BaseFlags.get().isComposeRefactorEnabled()
 
@@ -217,13 +223,17 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             optionAppIcons.requireViewById(R.id.option_entry_description)
         val optionAppIconsIcon: ImageView = optionAppIcons.requireViewById(R.id.option_entry_icon)
 
-        val optionShapeGrid: View =
-            homeScreenCustomizationOptionEntries
-                .first { it.first == ThemePickerHomeCustomizationOption.GRID }
-                .second
-        val optionShapeGridDescription: TextView =
-            optionShapeGrid.requireViewById(R.id.option_entry_description)
-        val optionShapeGridIcon: ImageView = optionShapeGrid.requireViewById(R.id.option_entry_icon)
+        var optionGrid: View? = null
+        var optionGridDescription: TextView? = null
+        var optionGridIcon: ImageView? = null
+        if (customizationOptionsData.isGridCustomizationAvailable) {
+            optionGrid =
+                homeScreenCustomizationOptionEntries
+                    .first { it.first == ThemePickerHomeCustomizationOption.GRID }
+                    .second
+            optionGridDescription = optionGrid.requireViewById(R.id.option_entry_description)
+            optionGridIcon = optionGrid.requireViewById(R.id.option_entry_icon)
+        }
 
         val optionColorContrast: View =
             homeScreenCustomizationOptionEntries
@@ -238,7 +248,9 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     optionShortcutIcon1?.setColorFilter(color)
                     optionShortcutIcon2?.setColorFilter(color)
                 }
-                optionShapeGridIcon.setColorFilter(color)
+                if (customizationOptionsData.isGridCustomizationAvailable) {
+                    optionGridIcon?.setColorFilter(color)
+                }
                 if (BaseFlags.get().isPackThemeEnabled()) {
                     optionPackThemeIconHome?.setColorFilter(color)
                     optionPackThemeIconLock?.setColorFilter(color)
@@ -308,34 +320,31 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 }
 
                 launch {
-                    val appIconPickerViewModel = optionsViewModel.appIconPickerViewModel
-                    combine(
-                            appIconPickerViewModel.selectedShape,
-                            appIconPickerViewModel.isThemedIconEnabled,
-                            ::Pair,
+                    optionsViewModel.appIconPickerViewModel.summary.collect { description ->
+                        // TODO(b/402161932): create and display app icon preview
+                        optionAppIcons
+                            .requireViewById<View>(R.id.option_entry_icon_container)
+                            .visibility = View.INVISIBLE
+                        TextViewBinder.bind(
+                            view = optionAppIconsDescription,
+                            viewModel = description,
                         )
-                        .collect { (selectedShape, isThemedIconEnabled) ->
-                            // TODO(b/402161932): create and display app icon preview
-                            optionAppIcons
-                                .requireViewById<View>(R.id.option_entry_icon_container)
-                                .visibility = View.INVISIBLE
-                            // TODO(b/402161932): show selected shape text when b/406486710 is fixed
-                            // TODO(b/402161932): show selected theme text after content is decided
-                            optionAppIconsDescription.visibility = View.GONE
-                        }
-                }
-
-                launch {
-                    optionsViewModel.onCustomizeShapeGridClicked.collect {
-                        optionShapeGrid.setOnClickListener { _ -> it?.invoke() }
                     }
                 }
 
-                launch {
-                    optionsViewModel.shapeGridPickerViewModel.selectedGridOption.collect {
-                        gridOption ->
-                        TextViewBinder.bind(optionShapeGridDescription, gridOption.text)
-                        gridOption.payload?.let { optionShapeGridIcon.setImageDrawable(it) }
+                if (customizationOptionsData.isGridCustomizationAvailable) {
+                    launch {
+                        optionsViewModel.onCustomizeShapeGridClicked.collect {
+                            optionGrid?.setOnClickListener { _ -> it?.invoke() }
+                        }
+                    }
+
+                    launch {
+                        optionsViewModel.gridPickerViewModel.selectedGridOption.collect { gridOption
+                            ->
+                            optionGridDescription?.let { TextViewBinder.bind(it, gridOption.text) }
+                            gridOption.payload?.let { optionGridIcon?.setImageDrawable(it) }
+                        }
                     }
                 }
 
@@ -377,6 +386,32 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
 
                 if (BaseFlags.get().isPackThemeEnabled()) {
                     launch {
+                        optionsViewModel.packThemeViewModel.packThemeData.collect { packThemeData ->
+                            val homeTitle =
+                                optionPackThemeHome?.findViewById<TextView>(R.id.option_entry_title)
+                            val lockTitle =
+                                optionPackThemeLock?.findViewById<TextView>(R.id.option_entry_title)
+                            val homeDescription =
+                                optionPackThemeHome?.findViewById<TextView>(
+                                    R.id.option_entry_description
+                                )
+                            val lockDescription =
+                                optionPackThemeHome?.findViewById<TextView>(
+                                    R.id.option_entry_description
+                                )
+                            if (packThemeData.currentThemePackInfo.title.isNotEmpty()) {
+                                homeTitle?.text = packThemeData.currentThemePackInfo.title
+                                lockTitle?.text = packThemeData.currentThemePackInfo.title
+                            }
+                            if (packThemeData.currentThemePackInfo.description.isNotEmpty()) {
+                                homeDescription?.text =
+                                    packThemeData.currentThemePackInfo.description
+                                lockDescription?.text =
+                                    packThemeData.currentThemePackInfo.description
+                            }
+                        }
+                    }
+                    launch {
                         optionsViewModel.packThemeViewModel.startThemePackActivityIntent.collect {
                             intent ->
                             if (intent != null) {
@@ -410,6 +445,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             customizationOptionFloatingSheetViewMap
                 ?.get(ThemePickerLockCustomizationOption.SHORTCUTS)
                 ?.let {
+                    // TODO(b/409112907) Evaluate Compose performance before enabling flag
                     (it as ComposeView).setContent {
                         ShortcutsFloatingSheet(
                             optionsViewModel.keyguardQuickAffordancePickerViewModel2
@@ -455,7 +491,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             }
 
         customizationOptionFloatingSheetViewMap?.get(ThemePickerHomeCustomizationOption.GRID)?.let {
-            ShapeGridFloatingSheetBinder.bind(
+            GridFloatingSheetBinder.bind(
                 it,
                 optionsViewModel,
                 colorUpdateViewModel,

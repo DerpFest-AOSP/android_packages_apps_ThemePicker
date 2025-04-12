@@ -116,7 +116,7 @@ constructor(
     }
 
     /** View-models for each slot, keyed by slot ID. */
-    private val slots: StateFlow<Map<String, KeyguardQuickAffordanceSlotViewModel>> =
+    val slots: StateFlow<Map<String, KeyguardQuickAffordanceSlotViewModel>> =
         combine(
                 quickAffordanceInteractor.slots,
                 quickAffordanceInteractor.affordances,

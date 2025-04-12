@@ -188,7 +188,7 @@ constructor(
                     }
 
                     launch {
-                        viewModel.shapeGridPickerViewModel.previewingGridKey.collect {
+                        viewModel.gridPickerViewModel.previewingGridKey.collect {
                             workspaceCallback.sendMessage(
                                 MESSAGE_ID_UPDATE_GRID,
                                 bundleOf(COL_GRID_NAME to it),

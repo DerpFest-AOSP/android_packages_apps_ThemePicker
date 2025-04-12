@@ -27,11 +27,13 @@ import com.android.customization.picker.mode.shared.util.DarkModeLifecycleUtil
 import com.android.themepicker.R
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.customization.ui.compose.ColorFloatingSheet
+import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsData
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.Screen.HOME_SCREEN
 import com.android.wallpaper.model.Screen.LOCK_SCREEN
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil
 import com.android.wallpaper.picker.customization.ui.util.DefaultCustomizationOptionUtil
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsData
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
@@ -63,14 +65,21 @@ constructor(
     }
 
     override fun getOptionEntries(
+        customizationOptionsData: CustomizationOptionsData,
         screen: Screen,
         optionContainer: LinearLayout,
         layoutInflater: LayoutInflater,
     ): List<Pair<CustomizationOptionUtil.CustomizationOption, View>> {
+        customizationOptionsData as ThemePickerCustomizationOptionsData
         val isKeyguardQuickAffordanceEnabled =
             BaseFlags.get().isKeyguardQuickAffordanceEnabled(optionContainer.context)
         val defaultOptionEntries =
-            defaultCustomizationOptionUtil.getOptionEntries(screen, optionContainer, layoutInflater)
+            defaultCustomizationOptionUtil.getOptionEntries(
+                customizationOptionsData = customizationOptionsData,
+                screen = screen,
+                optionContainer = optionContainer,
+                layoutInflater = layoutInflater,
+            )
         return when (screen) {
             LOCK_SCREEN ->
                 buildList {
@@ -157,24 +166,32 @@ constructor(
                                 false,
                             )
                     )
-                    add(
-                        ThemePickerHomeCustomizationOption.GRID to
-                            layoutInflater.inflate(
-                                R.layout.customization_option_entry_app_shape_grid,
-                                optionContainer,
-                                false,
-                            )
-                    )
+                    if (customizationOptionsData.isGridCustomizationAvailable) {
+                        add(
+                            ThemePickerHomeCustomizationOption.GRID to
+                                layoutInflater.inflate(
+                                    R.layout.customization_option_entry_grid,
+                                    optionContainer,
+                                    false,
+                                )
+                        )
+                    }
                 }
         }
     }
 
     override fun initFloatingSheet(
+        customizationOptionsData: CustomizationOptionsData,
         bottomSheetContainer: FrameLayout,
         layoutInflater: LayoutInflater,
     ): Map<CustomizationOptionUtil.CustomizationOption, View> {
+        customizationOptionsData as ThemePickerCustomizationOptionsData
         val map =
-            defaultCustomizationOptionUtil.initFloatingSheet(bottomSheetContainer, layoutInflater)
+            defaultCustomizationOptionUtil.initFloatingSheet(
+                customizationOptionsData = customizationOptionsData,
+                bottomSheetContainer = bottomSheetContainer,
+                layoutInflater = layoutInflater,
+            )
         val isComposeRefactorEnabled = BaseFlags.get().isComposeRefactorEnabled()
         val isKeyguardQuickAffordanceEnabled =
             BaseFlags.get().isKeyguardQuickAffordanceEnabled(bottomSheetContainer.context)
@@ -226,15 +243,17 @@ constructor(
                     layoutInflater,
                 ),
             )
-            put(
-                ThemePickerHomeCustomizationOption.GRID,
-                inflateFloatingSheet(
-                        ThemePickerHomeCustomizationOption.GRID,
-                        bottomSheetContainer,
-                        layoutInflater,
-                    )
-                    .also { bottomSheetContainer.addView(it) },
-            )
+            if (customizationOptionsData.isGridCustomizationAvailable) {
+                put(
+                    ThemePickerHomeCustomizationOption.GRID,
+                    inflateFloatingSheet(
+                            ThemePickerHomeCustomizationOption.GRID,
+                            bottomSheetContainer,
+                            layoutInflater,
+                        )
+                        .also { bottomSheetContainer.addView(it) },
+                )
+            }
         }
     }
 
@@ -257,7 +276,7 @@ constructor(
             ThemePickerLockCustomizationOption.SHORTCUTS -> R.layout.floating_sheet_shortcut
             ThemePickerHomeCustomizationOption.COLORS -> R.layout.floating_sheet_colors
             ThemePickerHomeCustomizationOption.APP_ICONS -> R.layout.floating_sheet_app_icon
-            ThemePickerHomeCustomizationOption.GRID -> R.layout.floating_sheet_shape_grid
+            ThemePickerHomeCustomizationOption.GRID -> R.layout.floating_sheet_grid
             else ->
                 throw IllegalStateException(
                     "Customization option $option does not have a bottom sheet view"

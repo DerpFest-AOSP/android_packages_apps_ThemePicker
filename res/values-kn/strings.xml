@@ -51,6 +51,7 @@
     <string name="grid_title" msgid="1688173478777254123">"ಆ್ಯಪ್ ಗ್ರಿಡ್"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"ಆ್ಯಪ್ ಆಕಾರ, ಲೇಔಟ್"</string>
     <string name="grid_layout" msgid="370175667652663686">"ಲೇಔಟ್"</string>
+    <string name="app_icons_title" msgid="8953944517006998975">"ಐಕಾನ್‌ಗಳು"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"ಅನ್ವಯಿಸಿ"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"ಎಡಿಟ್ ಮಾಡಲು ಟ್ಯಾಪ್ ಮಾಡಿ"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"ಪ್ರಸ್ತುತ ವಾಲ್‌ಪೇಪರ್ ಅನ್ನು ಉಳಿಸಿ"</string>
@@ -150,7 +151,7 @@
     <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"ಲಾಕ್‌ ಸ್ಕ್ರೀನ್ ಮೇಲೆ ನೋಟಿಫಿಕೇಶನ್"</string>
     <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"ನೋಟಿಫಿಕೇಶನ್‌ ಹೇಗೆ ಕಾಣಿಸಬೇಕು, ಏನು ತೋರಿಸಬೇಕು ಎಂಬುದನ್ನು ನಿರ್ವಹಿಸಿ"</string>
     <string name="more_settings_section_title" msgid="6854797937797818510">"ಇನ್ನಷ್ಟು ಲಾಕ್ ಸ್ಕ್ರೀನ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು"</string>
-    <string name="more_settings_section_description" msgid="1860115709122398325">"ಗೌಪ್ಯತೆ, Now Playing ಮತ್ತು ಇನ್ನಷ್ಟು"</string>
+    <string name="more_settings_section_description" msgid="1860115709122398325">"ಗೌಪ್ಯತೆ, ಇದೀಗ ಪ್ಲೇ ಮಾಡಲಾಗುತ್ತಿದೆ ಮತ್ತು ಇನ್ನಷ್ಟು"</string>
     <string name="more_colors" msgid="3191071655353004591">"ಇನ್ನಷ್ಟು ಬಣ್ಣಗಳು"</string>
     <string name="content_description_dynamic_color_option" msgid="2191721655642529886">"ಪ್ರಾಥಮಿಕ ಡೈನಾಮಿಕ್ ಥೀಮ್"</string>
     <string name="content_description_neutral_color_option" msgid="3385443834001275301">"ಪ್ರಾಥಮಿಕ ತಟಸ್ಥ ಥೀಮ್"</string>
