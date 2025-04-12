@@ -320,21 +320,16 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 }
 
                 launch {
-                    val appIconPickerViewModel = optionsViewModel.appIconPickerViewModel
-                    combine(
-                            appIconPickerViewModel.selectedShape,
-                            appIconPickerViewModel.isThemedIconEnabled,
-                            ::Pair,
+                    optionsViewModel.appIconPickerViewModel.summary.collect { description ->
+                        // TODO(b/402161932): create and display app icon preview
+                        optionAppIcons
+                            .requireViewById<View>(R.id.option_entry_icon_container)
+                            .visibility = View.INVISIBLE
+                        TextViewBinder.bind(
+                            view = optionAppIconsDescription,
+                            viewModel = description,
                         )
-                        .collect { (selectedShape, isThemedIconEnabled) ->
-                            // TODO(b/402161932): create and display app icon preview
-                            optionAppIcons
-                                .requireViewById<View>(R.id.option_entry_icon_container)
-                                .visibility = View.INVISIBLE
-                            // TODO(b/402161932): show selected shape text when b/406486710 is fixed
-                            // TODO(b/402161932): show selected theme text after content is decided
-                            optionAppIconsDescription.visibility = View.GONE
-                        }
+                    }
                 }
 
                 if (customizationOptionsData.isGridCustomizationAvailable) {
@@ -345,7 +340,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     }
 
                     launch {
-                        optionsViewModel.fridPickerViewModel.selectedGridOption.collect { gridOption
+                        optionsViewModel.gridPickerViewModel.selectedGridOption.collect { gridOption
                             ->
                             optionGridDescription?.let { TextViewBinder.bind(it, gridOption.text) }
                             gridOption.payload?.let { optionGridIcon?.setImageDrawable(it) }
@@ -496,7 +491,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             }
 
         customizationOptionFloatingSheetViewMap?.get(ThemePickerHomeCustomizationOption.GRID)?.let {
-            ShapeGridFloatingSheetBinder.bind(
+            GridFloatingSheetBinder.bind(
                 it,
                 optionsViewModel,
                 colorUpdateViewModel,

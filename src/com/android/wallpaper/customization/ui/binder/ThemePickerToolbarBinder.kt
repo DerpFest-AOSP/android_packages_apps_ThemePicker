@@ -124,7 +124,7 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
                         val stringResId =
                             when (it) {
                                 COLORS -> ThemePickerR.string.system_colors_title
-                                GRID -> ThemePickerR.string.shape_and_grid_title
+                                GRID -> ThemePickerR.string.grid_layout
                                 CLOCK -> ThemePickerR.string.clock_title
                                 SHORTCUTS ->
                                     ThemePickerR.string.keyguard_quick_affordance_section_title

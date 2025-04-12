@@ -16,14 +16,17 @@
 
 package com.android.wallpaper.customization.ui.viewmodel
 
+import android.content.Context
 import com.android.customization.model.grid.ShapeOptionModel
 import com.android.customization.picker.grid.domain.interactor.AppIconInteractor
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
+import com.android.themepicker.R
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
@@ -41,7 +44,11 @@ import kotlinx.coroutines.launch
 
 class AppIconPickerViewModel
 @AssistedInject
-constructor(interactor: AppIconInteractor, @Assisted private val viewModelScope: CoroutineScope) {
+constructor(
+    @ApplicationContext private val applicationContext: Context,
+    interactor: AppIconInteractor,
+    @Assisted private val viewModelScope: CoroutineScope,
+) {
     //// Shape
 
     // The currently-set system shape option
@@ -90,6 +97,24 @@ constructor(interactor: AppIconInteractor, @Assisted private val viewModelScope:
                 val newValue = !it
                 overridingIsThemedIconEnabled.value = newValue
             }
+        }
+
+    val summary: Flow<Text> =
+        combine(selectedShape, isThemedIconEnabled) { selectedShape, isThemedIconEnabled ->
+            val selectedShapeString = selectedShape.text.asString(applicationContext)
+            val appIconThemeString =
+                if (isThemedIconEnabled) {
+                    applicationContext.getString(R.string.app_icons_theme_themed)
+                } else {
+                    applicationContext.getString(R.string.app_icons_theme_default)
+                }
+            Text.Loaded(
+                applicationContext.getString(
+                    R.string.app_icons_description,
+                    selectedShapeString,
+                    appIconThemeString,
+                )
+            )
         }
 
     val onApply: Flow<(suspend () -> Unit)?> =
