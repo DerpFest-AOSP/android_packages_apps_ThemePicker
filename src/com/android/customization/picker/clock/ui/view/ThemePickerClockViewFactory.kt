@@ -18,13 +18,13 @@ package com.android.customization.picker.clock.ui.view
 import android.app.Activity
 import android.app.WallpaperColors
 import android.app.WallpaperManager
-import android.content.Context
 import android.graphics.Rect
 import android.view.View
 import android.widget.FrameLayout
 import androidx.annotation.ColorInt
 import androidx.lifecycle.LifecycleOwner
-import com.android.internal.policy.SystemBarUtils
+import com.android.systemui.customization.clocks.ContextUtil.getSafeStatusBarHeight
+import com.android.systemui.customization.clocks.R as clocksR
 import com.android.systemui.plugins.clocks.ClockAxisStyle
 import com.android.systemui.plugins.clocks.ClockController
 import com.android.systemui.plugins.clocks.ClockFaceController.Companion.updateTheme
@@ -98,9 +98,7 @@ constructor(
         val layoutParams =
             FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.WRAP_CONTENT,
-                resources.getDimensionPixelSize(
-                    com.android.systemui.customization.R.dimen.small_clock_height
-                ),
+                resources.getDimensionPixelSize(clocksR.dimen.small_clock_height),
             )
         layoutParams.topMargin = getSmallClockTopMargin()
         layoutParams.marginStart = getSmallClockStartPadding()
@@ -110,18 +108,12 @@ constructor(
     }
 
     private fun getSmallClockTopMargin() =
-        getStatusBarHeight(appContext) +
-            appContext.resources.getDimensionPixelSize(
-                com.android.systemui.customization.R.dimen.small_clock_padding_top
-            )
+        activity.getSafeStatusBarHeight() +
+            appContext.resources.getDimensionPixelSize(clocksR.dimen.small_clock_padding_top)
 
     private fun getSmallClockStartPadding() =
-        appContext.resources.getDimensionPixelSize(
-            com.android.systemui.customization.R.dimen.clock_padding_start
-        ) +
-            appContext.resources.getDimensionPixelSize(
-                com.android.systemui.customization.R.dimen.status_view_margin_horizontal
-            )
+        appContext.resources.getDimensionPixelSize(clocksR.dimen.clock_padding_start) +
+            appContext.resources.getDimensionPixelSize(clocksR.dimen.status_view_margin_horizontal)
 
     override fun updateColorForAllClocks(@ColorInt seedColor: Int?) {
         clockControllers.values.forEach {
@@ -196,26 +188,18 @@ constructor(
 
     private fun initClockController(clockId: String): ClockController? {
         val isWallpaperDark = isLockscreenWallpaperDark()
-        return registry.createExampleClock(clockId)?.also { controller ->
+        return registry.createExampleClock(activity, clockId)?.also { controller ->
             controller.initialize(isWallpaperDark, 0f, 0f, null)
 
             // Initialize large clock
             controller.largeClock.events.onFontSettingChanged(
-                resources
-                    .getDimensionPixelSize(
-                        com.android.systemui.customization.R.dimen.large_clock_text_size
-                    )
-                    .toFloat()
+                resources.getDimensionPixelSize(clocksR.dimen.large_clock_text_size).toFloat()
             )
             controller.largeClock.events.onTargetRegionChanged(getLargeClockRegion())
 
             // Initialize small clock
             controller.smallClock.events.onFontSettingChanged(
-                resources
-                    .getDimensionPixelSize(
-                        com.android.systemui.customization.R.dimen.small_clock_text_size
-                    )
-                    .toFloat()
+                resources.getDimensionPixelSize(clocksR.dimen.small_clock_text_size).toFloat()
             )
             controller.smallClock.events.onTargetRegionChanged(getSmallClockRegion())
             controller.events.onWeatherDataChanged(WeatherData.getPlaceholderWeatherData())
@@ -229,13 +213,8 @@ constructor(
      */
     private fun getLargeClockRegion(): Rect {
         val largeClockTopMargin =
-            resources.getDimensionPixelSize(
-                com.android.systemui.customization.R.dimen.keyguard_large_clock_top_margin
-            )
-        val targetHeight =
-            resources.getDimensionPixelSize(
-                com.android.systemui.customization.R.dimen.large_clock_text_size
-            ) * 2
+            resources.getDimensionPixelSize(clocksR.dimen.keyguard_large_clock_top_margin)
+        val targetHeight = resources.getDimensionPixelSize(clocksR.dimen.large_clock_text_size) * 2
         val top = (screenSize.y / 2 - targetHeight / 2 + largeClockTopMargin / 2)
         return Rect(0, top, screenSize.x, (top + targetHeight))
     }
@@ -247,27 +226,7 @@ constructor(
      */
     private fun getSmallClockRegion(): Rect {
         val topMargin = getSmallClockTopMargin()
-        val targetHeight =
-            resources.getDimensionPixelSize(
-                com.android.systemui.customization.R.dimen.small_clock_height
-            )
+        val targetHeight = resources.getDimensionPixelSize(clocksR.dimen.small_clock_height)
         return Rect(getSmallClockStartPadding(), topMargin, screenSize.x, topMargin + targetHeight)
-    }
-
-    companion object {
-        private fun getStatusBarHeight(context: Context): Int {
-            val display = context.displayNoVerify
-            if (display != null) {
-                return SystemBarUtils.getStatusBarHeight(context.resources, display.cutout)
-            }
-
-            var result = 0
-            val resourceId: Int =
-                context.resources.getIdentifier("status_bar_height", "dimen", "android")
-            if (resourceId > 0) {
-                result = context.resources.getDimensionPixelSize(resourceId)
-            }
-            return result
-        }
     }
 }

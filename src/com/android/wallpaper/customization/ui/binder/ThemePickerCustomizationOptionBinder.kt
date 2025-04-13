@@ -41,7 +41,6 @@ import com.android.customization.picker.color.ui.view.ColorOptionIconView2
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.customization.picker.settings.ui.binder.ColorContrastSectionViewBinder2
 import com.android.systemui.plugins.clocks.ClockAxisStyle
-import com.android.systemui.plugins.clocks.ClockPreviewConfig
 import com.android.systemui.shared.Flags
 import com.android.themepicker.R
 import com.android.wallpaper.config.BaseFlags
@@ -528,30 +527,12 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                             clockHostView.removeAllViews()
                             // For new customization picker, we should get views from clocklayout
                             if (Flags.newCustomizationPickerUi()) {
-                                clockViewFactory.getController(clock.clockId)?.let { clockController
-                                    ->
-                                    val udfpsTop =
-                                        clockPickerViewModel.getUdfpsLocation()?.let {
-                                            it.centerY - it.radius
-                                        }
-                                    val previewConfig =
-                                        ClockPreviewConfig(
-                                            context = context,
-                                            isShadeLayoutWide =
-                                                clockPickerViewModel.getIsShadeLayoutWide(),
-                                            isSceneContainerFlagEnabled = false,
-                                            udfpsTop = udfpsTop,
-                                        )
-                                    addClockViews(clockController, clockHostView, size)
+                                clockViewFactory.getController(clock.clockId)?.run {
                                     val cs = ConstraintSet()
-                                    clockController.largeClock.layout.applyPreviewConstraints(
-                                        previewConfig,
-                                        cs,
-                                    )
-                                    clockController.smallClock.layout.applyPreviewConstraints(
-                                        previewConfig,
-                                        cs,
-                                    )
+                                    clockHostView.addClockViews(this, size, cs)
+                                    val cfg = clockPickerViewModel.buildPreviewConfig(context)
+                                    largeClock.layout.applyPreviewConstraints(cfg, cs)
+                                    smallClock.layout.applyPreviewConstraints(cfg, cs)
                                     cs.applyTo(clockHostView)
                                 }
                             } else {
