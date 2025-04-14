@@ -535,6 +535,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                                     smallClock.layout.applyPreviewConstraints(cfg, cs)
                                     cs.applyTo(clockHostView)
                                 }
+                                clockViewFactory.updateTimeFormat(clock.clockId)
                             } else {
                                 val clockView =
                                     when (size) {
