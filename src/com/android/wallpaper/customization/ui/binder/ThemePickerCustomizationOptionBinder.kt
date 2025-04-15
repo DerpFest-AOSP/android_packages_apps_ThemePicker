@@ -19,6 +19,7 @@ package com.android.wallpaper.customization.ui.binder
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.AdaptiveIconDrawable
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -65,6 +66,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.DisposableHandle
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -322,14 +324,28 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 }
 
                 launch {
-                    optionsViewModel.appIconPickerViewModel.summary.collect { description ->
-                        // TODO(b/402161932): create and display app icon preview
-                        optionAppIcons
-                            .requireViewById<View>(R.id.option_entry_icon_container)
-                            .visibility = View.INVISIBLE
+                    var disposableHandle: DisposableHandle? = null
+                    val previewIconPackageName =
+                        view.context.resources.getString(R.string.camera_package)
+                    val appIconDrawable =
+                        ShapeIconViewBinder.loadAppIcon(view.context, previewIconPackageName)
+                    optionsViewModel.appIconPickerViewModel.summary.collect { summary ->
+                        disposableHandle?.dispose()
+                        summary.iconShape?.let {
+                            disposableHandle =
+                                ShapeIconViewBinder.bindPreviewIcon(
+                                    view = optionAppIconsIcon,
+                                    appIconDrawable = appIconDrawable as? AdaptiveIconDrawable,
+                                    shapeIcon = summary.iconShape,
+                                    isThemed = summary.isThemed,
+                                    colorUpdateViewModel = colorUpdateViewModel,
+                                    shouldAnimateColor = isOnMainScreen,
+                                    lifecycleOwner = lifecycleOwner,
+                                )
+                        }
                         TextViewBinder.bind(
                             view = optionAppIconsDescription,
-                            viewModel = description,
+                            viewModel = summary.description,
                         )
                     }
                 }

@@ -269,6 +269,37 @@ class AppIconPickerViewModelTest {
         }
     }
 
+    @Test
+    fun summary_shouldUpdate_afterOnApply() {
+        testScope.runTest {
+            val summary = collectLastValue(underTest.summary)
+            val optionItems = collectLastValue(underTest.shapeOptions)
+            val onApply = collectLastValue(underTest.onApply)
+            val on4SidedCookieOptionClick =
+                optionItems()?.get(FakeShapeGridManager.FOUR_SIDED_COOKIE_IDX)?.onClicked?.let {
+                    collectLastValue(it)
+                }
+            checkNotNull(on4SidedCookieOptionClick)
+            val isEnabled = collectLastValue(underTest.isThemedIconEnabled)
+            val toggleThemedIcon = collectLastValue(underTest.toggleThemedIcon)
+            assertThat(isEnabled()).isFalse()
+
+            on4SidedCookieOptionClick()?.invoke()
+            toggleThemedIcon()?.invoke()
+            onApply()?.invoke()
+
+            val currentSummary = summary()
+            assertThat(currentSummary?.iconShape)
+                .isEqualTo(
+                    ShapeIconViewModel(
+                        FakeShapeGridManager.FOUR_SIDED_COOKIE_KEY,
+                        FakeShapeGridManager.FOUR_SIDED_COOKIE_PATH,
+                    )
+                )
+            assertThat(currentSummary?.isThemed).isEqualTo(true)
+        }
+    }
+
     private fun TestScope.assertShapeItem(
         optionItem: OptionItemViewModel2<ShapeIconViewModel>?,
         key: String,
