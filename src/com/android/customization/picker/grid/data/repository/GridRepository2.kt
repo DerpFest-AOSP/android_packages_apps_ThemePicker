@@ -58,7 +58,7 @@ constructor(
     val isGridCustomizationAvailable =
         gridOptions.filterNotNull().map { it.size > 1 }.distinctUntilChanged()
 
-    suspend fun applySelectedOption(gridKey: String) =
+    suspend fun applyGridOption(gridKey: String) =
         withContext(bgDispatcher) {
             manager.applyGridOption(gridKey)
             // After applying, we should query and update shape and grid options again.
