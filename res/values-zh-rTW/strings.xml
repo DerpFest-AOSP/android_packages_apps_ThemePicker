@@ -51,7 +51,12 @@
     <string name="grid_title" msgid="1688173478777254123">"應用程式排列顯示"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"應用程式的形狀和版面配置"</string>
     <string name="grid_layout" msgid="370175667652663686">"版面配置"</string>
-    <!-- no translation found for app_icons_title (8953944517006998975) -->
+    <string name="app_icons_title" msgid="8953944517006998975">"圖示"</string>
+    <!-- no translation found for app_icons_description (6616831372060467315) -->
+    <skip />
+    <!-- no translation found for app_icons_theme_default (4773453045331265070) -->
+    <skip />
+    <!-- no translation found for app_icons_theme_themed (6539464818104931856) -->
     <skip />
     <string name="apply_theme_btn" msgid="6293081192321303991">"套用"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"輕觸這裡即可編輯"</string>

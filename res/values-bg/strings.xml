@@ -52,6 +52,12 @@
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Оформление и форма"</string>
     <string name="grid_layout" msgid="370175667652663686">"Оформление"</string>
     <string name="app_icons_title" msgid="8953944517006998975">"Икони"</string>
+    <!-- no translation found for app_icons_description (6616831372060467315) -->
+    <skip />
+    <!-- no translation found for app_icons_theme_default (4773453045331265070) -->
+    <skip />
+    <!-- no translation found for app_icons_theme_themed (6539464818104931856) -->
+    <skip />
     <string name="apply_theme_btn" msgid="6293081192321303991">"Прилагане"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"Докоснете, за да редактирате"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Запазване на текущия тапет"</string>
