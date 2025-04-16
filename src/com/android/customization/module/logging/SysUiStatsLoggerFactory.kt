@@ -15,9 +15,6 @@
  */
 package com.android.customization.module.logging
 
-interface AppSessionId {
-
-    fun createNewId(): AppSessionId
-
-    fun getId(): Int
+interface SysUiStatsLoggerFactory {
+    fun get(action: Int): SysUiStatsLogger
 }

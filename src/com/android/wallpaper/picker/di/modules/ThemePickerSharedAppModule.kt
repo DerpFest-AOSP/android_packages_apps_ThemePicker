@@ -18,6 +18,10 @@ package com.android.wallpaper.picker.di.modules
 
 import com.android.customization.model.grid.DefaultShapeGridManager
 import com.android.customization.model.grid.ShapeGridManager
+import com.android.customization.module.logging.AppSessionId
+import com.android.customization.module.logging.AppSessionIdImpl
+import com.android.customization.module.logging.SysUiStatsLoggerFactory
+import com.android.customization.module.logging.SysUiStatsLoggerFactoryImpl
 import com.android.customization.picker.mode.shared.util.DarkModeUtil
 import com.android.customization.picker.mode.shared.util.DarkModeUtilImpl
 import dagger.Binds
@@ -30,9 +34,17 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class ThemePickerSharedAppModule {
 
+    @Binds @Singleton abstract fun bindAppSessionId(impl: AppSessionIdImpl): AppSessionId
+
     @Binds @Singleton abstract fun bindDarkModeUtil(impl: DarkModeUtilImpl): DarkModeUtil
 
     @Binds
     @Singleton
     abstract fun bindGridOptionsManager(impl: DefaultShapeGridManager): ShapeGridManager
+
+    @Binds
+    @Singleton
+    abstract fun bindSysUiStatsLoggerFactory(
+        impl: SysUiStatsLoggerFactoryImpl
+    ): SysUiStatsLoggerFactory
 }
