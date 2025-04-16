@@ -17,6 +17,7 @@
 package com.android.wallpaper.customization.ui.util
 
 import android.content.Context
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -73,6 +74,11 @@ constructor(
         customizationOptionsData as ThemePickerCustomizationOptionsData
         val isKeyguardQuickAffordanceEnabled =
             BaseFlags.get().isKeyguardQuickAffordanceEnabled(optionContainer.context)
+        val showPackEntry =
+            Settings.Secure.getInt(
+                context.contentResolver,
+                Settings.Secure.PACK_THEME_FEATURE_ENABLED,
+            ) == 1
         val defaultOptionEntries =
             defaultCustomizationOptionUtil.getOptionEntries(
                 customizationOptionsData = customizationOptionsData,
@@ -84,7 +90,7 @@ constructor(
             LOCK_SCREEN ->
                 buildList {
                     addAll(defaultOptionEntries)
-                    if (BaseFlags.get().isPackThemeEnabled()) {
+                    if (BaseFlags.get().isPackThemeEnabled() && showPackEntry) {
                         add(
                             ThemePickerHomeCustomizationOption.PACK_THEME to
                                 layoutInflater.inflate(
@@ -132,7 +138,7 @@ constructor(
             HOME_SCREEN ->
                 buildList {
                     addAll(defaultOptionEntries)
-                    if (BaseFlags.get().isPackThemeEnabled()) {
+                    if (BaseFlags.get().isPackThemeEnabled() && showPackEntry) {
                         add(
                             ThemePickerHomeCustomizationOption.PACK_THEME to
                                 layoutInflater.inflate(
