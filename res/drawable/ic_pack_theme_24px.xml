@@ -18,12 +18,12 @@
     android:height="24dp"
     android:tint="?attr/colorControlNormal"
     android:translateX="100"
-    android:viewportHeight="1920"
-    android:viewportWidth="1920">
+    android:viewportHeight="2496"
+    android:viewportWidth="2496">
 
     <group
-        android:translateX="480"
-        android:translateY="480">
+        android:translateX="768"
+        android:translateY="768">
         <path
             android:fillColor="?android:textColorPrimary"
             android:pathData="M340,240L260,160L340,80L420,160L340,240ZM800,700L720,620L800,540L880,620L800,700ZM205,868L92,755Q80,743 80,727Q80,711 92,699L455,335Q490,300 540,300Q590,300 625,335Q660,370 660,420Q660,470 625,505L261,868Q249,880 233,880Q217,880 205,868ZM740,401Q740,326 687,273Q634,220 559,220Q634,220 687,167.5Q740,115 740,40Q740,115 792.5,167.5Q845,220 920,220Q845,220 792.5,273Q740,326 740,401ZM484,533L484,533Q484,533 469.5,519Q455,505 455,505Q455,505 441,491Q427,477 427,477L427,477L455,505L484,533ZM233,784L484,533L427,477L177,727L233,784Z" />
