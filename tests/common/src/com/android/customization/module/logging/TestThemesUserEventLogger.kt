@@ -46,6 +46,9 @@ class TestThemesUserEventLogger @Inject constructor() :
     var useThemedIcon: Boolean = false
         private set
 
+    var shapeId: String? = null
+        private set
+
     override fun logThemeColorApplied(@ColorSource source: Int, style: Int, seedColor: Int) {
         this.themeColorSource = source
         this.themeColorStyle = style
@@ -74,6 +77,10 @@ class TestThemesUserEventLogger @Inject constructor() :
 
     override fun logDarkThemeApplied(useDarkTheme: Boolean) {
         this.useDarkTheme = useDarkTheme
+    }
+
+    override fun logShapeApplied(shapeId: String) {
+        this.shapeId = shapeId
     }
 
     @ClockSize

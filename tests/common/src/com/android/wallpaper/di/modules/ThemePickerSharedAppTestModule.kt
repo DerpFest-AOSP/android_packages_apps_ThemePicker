@@ -18,6 +18,10 @@ package com.android.wallpaper.di.modules
 
 import com.android.customization.model.grid.FakeShapeGridManager
 import com.android.customization.model.grid.ShapeGridManager
+import com.android.customization.module.logging.AppSessionId
+import com.android.customization.module.logging.FakeAppSessionId
+import com.android.customization.module.logging.FakeSysUiStatsLoggerFactory
+import com.android.customization.module.logging.SysUiStatsLoggerFactory
 import com.android.customization.picker.mode.shared.util.DarkModeUtil
 import com.android.customization.picker.mode.shared.util.FakeDarkModeUtil
 import com.android.wallpaper.picker.di.modules.ThemePickerSharedAppModule
@@ -34,9 +38,17 @@ import javax.inject.Singleton
 )
 abstract class ThemePickerSharedAppTestModule {
 
+    @Binds @Singleton abstract fun bindAppSessionId(impl: FakeAppSessionId): AppSessionId
+
     @Binds @Singleton abstract fun bindDarkModeUtil(impl: FakeDarkModeUtil): DarkModeUtil
 
     @Binds
     @Singleton
     abstract fun bindGridOptionsManager(impl: FakeShapeGridManager): ShapeGridManager
+
+    @Binds
+    @Singleton
+    abstract fun bindSysUiStatsLoggerFactory(
+        impl: FakeSysUiStatsLoggerFactory
+    ): SysUiStatsLoggerFactory
 }

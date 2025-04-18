@@ -13,11 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.android.customization.module.logging
 
-interface AppSessionId {
+import javax.inject.Inject
+import javax.inject.Singleton
 
-    fun createNewId(): AppSessionId
+@Singleton
+class SysUiStatsLoggerFactoryImpl @Inject constructor() : SysUiStatsLoggerFactory {
 
-    fun getId(): Int
+    override fun get(action: Int): SysUiStatsLogger {
+        return SysUiStatsLoggerImpl(action)
+    }
 }
