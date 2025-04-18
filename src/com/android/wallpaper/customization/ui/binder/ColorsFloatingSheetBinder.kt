@@ -16,8 +16,6 @@
 
 package com.android.wallpaper.customization.ui.binder
 
-import android.content.res.Configuration.UI_MODE_NIGHT_MASK
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -103,7 +101,6 @@ object ColorsFloatingSheetBinder {
 
         val colorsAdapter =
             createOptionItemAdapter(
-                uiMode = view.resources.configuration.uiMode,
                 colorUpdateViewModel = colorUpdateViewModel,
                 shouldAnimateColor = isFloatingSheetActive,
                 lifecycleOwner = lifecycleOwner,
@@ -172,7 +169,6 @@ object ColorsFloatingSheetBinder {
     }
 
     private fun createOptionItemAdapter(
-        uiMode: Int,
         colorUpdateViewModel: ColorUpdateViewModel,
         shouldAnimateColor: () -> Boolean,
         lifecycleOwner: LifecycleOwner,
@@ -185,12 +181,10 @@ object ColorsFloatingSheetBinder {
                     itemView.requireViewById<ColorOptionIconView2>(
                         com.android.wallpaper.R.id.background
                     )
-                val night = uiMode and UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
                 val binding =
                     ColorOptionIconBinder2.bind(
                         view = colorOptionIconView,
                         viewModel = colorIcon,
-                        darkTheme = night,
                         colorUpdateViewModel = colorUpdateViewModel,
                         shouldAnimateColor = shouldAnimateColor,
                         lifecycleOwner = lifecycleOwner,
