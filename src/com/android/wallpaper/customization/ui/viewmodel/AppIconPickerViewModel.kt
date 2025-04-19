@@ -99,7 +99,7 @@ constructor(
             }
         }
 
-    val summary: Flow<Text> =
+    val summary: Flow<AppIconPickerSummaryViewModel> =
         combine(selectedShape, isThemedIconEnabled) { selectedShape, isThemedIconEnabled ->
             val selectedShapeString = selectedShape.text.asString(applicationContext)
             val appIconThemeString =
@@ -108,12 +108,17 @@ constructor(
                 } else {
                     applicationContext.getString(R.string.app_icons_theme_default)
                 }
-            Text.Loaded(
-                applicationContext.getString(
-                    R.string.app_icons_description,
-                    selectedShapeString,
-                    appIconThemeString,
-                )
+            AppIconPickerSummaryViewModel(
+                description =
+                    Text.Loaded(
+                        applicationContext.getString(
+                            R.string.app_icons_description,
+                            selectedShapeString,
+                            appIconThemeString,
+                        )
+                    ),
+                iconShape = selectedShape.payload,
+                isThemed = isThemedIconEnabled,
             )
         }
 
