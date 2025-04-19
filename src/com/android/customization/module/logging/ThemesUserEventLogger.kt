@@ -41,6 +41,8 @@ interface ThemesUserEventLogger : UserEventLogger {
 
     fun logDarkThemeApplied(useDarkTheme: Boolean)
 
+    fun logShapeApplied(shapeId: String)
+
     @IntDef(
         StyleEnums.COLOR_SOURCE_UNSPECIFIED,
         StyleEnums.COLOR_SOURCE_HOME_SCREEN_WALLPAPER,

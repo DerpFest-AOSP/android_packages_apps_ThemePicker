@@ -21,6 +21,7 @@ import android.view.View
 import android.view.View.MeasureSpec.EXACTLY
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import com.android.customization.picker.clock.shared.ClockSize
 import com.android.systemui.plugins.clocks.ClockController
 import com.android.wallpaper.util.ScreenSizeCalculator
@@ -43,30 +44,24 @@ class ClockConstraintLayoutHostView(context: Context, attrs: AttributeSet?) :
     }
 
     companion object {
-        fun addClockViews(
+        fun ClockConstraintLayoutHostView.addClockViews(
             clockController: ClockController,
-            rootView: ClockConstraintLayoutHostView,
             size: ClockSize,
+            cs: ConstraintSet,
         ) {
             clockController.let { clock ->
-                when (size) {
-                    ClockSize.DYNAMIC -> {
-                        clock.largeClock.layout.views.forEach {
-                            if (it.parent != null) {
-                                (it.parent as ViewGroup).removeView(it)
-                            }
-                            rootView.addView(it).apply { it.visibility = View.VISIBLE }
-                        }
+                val layout =
+                    when (size) {
+                        ClockSize.DYNAMIC -> clock.largeClock.layout
+                        ClockSize.SMALL -> clock.smallClock.layout
                     }
+                layout.views.forEach { view ->
+                    (view.parent as? ViewGroup)?.let { it.removeView(view) }
+                    this.addView(view)
 
-                    ClockSize.SMALL -> {
-                        clock.smallClock.layout.views.forEach {
-                            if (it.parent != null) {
-                                (it.parent as ViewGroup).removeView(it)
-                            }
-                            rootView.addView(it).apply { it.visibility = View.VISIBLE }
-                        }
-                    }
+                    // Set the view to be invisible until the constraint set is applied
+                    view.visibility = View.INVISIBLE
+                    cs.setVisibility(view.id, View.VISIBLE)
                 }
             }
         }

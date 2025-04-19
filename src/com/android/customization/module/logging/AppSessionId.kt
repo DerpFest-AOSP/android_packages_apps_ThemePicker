@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 The Android Open Source Project
+ * Copyright (C) 2025 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,43 +15,9 @@
  */
 package com.android.customization.module.logging
 
-import android.util.Log
-import com.android.internal.logging.InstanceId
-import com.android.internal.logging.InstanceIdSequence
-import javax.inject.Inject
-import javax.inject.Singleton
+interface AppSessionId {
 
-@Singleton
-class AppSessionId @Inject constructor() {
+    fun createNewId(): AppSessionId
 
-    private var idSequence: InstanceIdSequence? = null
-
-    private var sessionId: InstanceId? = null
-
-    fun createNewId(): AppSessionId {
-        sessionId = newInstanceId()
-        return this
-    }
-
-    fun getId(): Int {
-        val id =
-            sessionId
-                ?: newInstanceId().also {
-                    Log.w(
-                        TAG,
-                        "Session ID should not be null. We should always call createNewId() before calling getId()."
-                    )
-                    sessionId = it
-                }
-        return id.hashCode()
-    }
-
-    private fun newInstanceId(): InstanceId =
-        (idSequence ?: InstanceIdSequence(INSTANCE_ID_MAX).also { idSequence = it }).newInstanceId()
-
-    companion object {
-        private const val TAG = "AppSessionId"
-        // At most 20 bits: ~1m possibilities, ~0.5% probability of collision in 100 values
-        private const val INSTANCE_ID_MAX = 1 shl 20
-    }
+    fun getId(): Int
 }

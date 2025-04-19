@@ -28,9 +28,11 @@ import com.android.customization.picker.clock.shared.model.ClockMetadataModel
 import com.android.customization.picker.clock.ui.viewmodel.ClockColorViewModel
 import com.android.customization.picker.color.domain.interactor.ColorPickerInteractor2
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
+import com.android.internal.policy.SystemBarUtils
 import com.android.systemui.plugins.clocks.AxisPresetConfig
 import com.android.systemui.plugins.clocks.AxisPresetConfig.IndexedStyle
 import com.android.systemui.plugins.clocks.ClockAxisStyle
+import com.android.systemui.plugins.clocks.ClockPreviewConfig
 import com.android.themepicker.R
 import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
@@ -520,6 +522,17 @@ constructor(
         overridingClockPresetIndexedStyle.value = null
         _selectedTab.value = Tab.STYLE
         onApplyClicked.value = false
+    }
+
+    suspend fun buildPreviewConfig(previewContext: Context): ClockPreviewConfig {
+        return ClockPreviewConfig(
+            isShadeLayoutWide = getIsShadeLayoutWide(),
+            isSceneContainerFlagEnabled = false,
+            udfpsTop = getUdfpsLocation()?.let { it.centerY - it.radius },
+            statusBarHeight = SystemBarUtils.getStatusBarHeight(previewContext),
+            splitShadeTopMargin = 0,
+            clockTopMargin = 0,
+        )
     }
 
     companion object {

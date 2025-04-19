@@ -16,6 +16,8 @@
 
 package com.android.wallpaper.customization.ui.view
 
+import android.annotation.ColorInt
+import android.content.Context
 import android.graphics.Canvas
 import android.graphics.ColorFilter
 import android.graphics.Matrix
@@ -23,30 +25,58 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PixelFormat
 import android.graphics.Rect
+import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.Drawable
 import androidx.core.graphics.PathParser
+import androidx.core.graphics.withSave
+import com.android.wallpaper.R
 
 /**
- * Drawable that draws a shape tile with a given path.
+ * Drawable that draws a shape tile with a given path. If given an icon, it will also draw the icon
+ * within the shape path.
  *
  * @param path Path of the shape assuming drawing on a 100x100 canvas.
+ * @param icon The adaptive icon to draw within the path, or null if no icon should be drawn.
+ * @param isThemed Whether the adaptive icon should be drawn in monochrome.
  */
-class ShapeTileDrawable(path: String) : Drawable() {
+class ShapeTileDrawable(
+    context: Context,
+    path: String,
+    private val icon: AdaptiveIconDrawable? = null,
+    private val isThemed: Boolean = false,
+) : Drawable() {
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val path = PathParser.createPathFromPathData(path)
     // The path scaled with regard to the update of drawable bounds
     private val scaledPath = Path(this.path)
     private val scaleMatrix = Matrix()
+    private var backgroundColor = context.getColor(R.color.themed_icon_background_color)
+    private var foregroundColor = context.getColor(R.color.themed_icon_color)
 
     override fun onBoundsChange(bounds: Rect) {
         super.onBoundsChange(bounds)
         scaleMatrix.setScale(bounds.width() / PATH_SIZE, bounds.height() / PATH_SIZE)
         path.transform(scaleMatrix, scaledPath)
+        icon?.bounds = bounds
     }
 
     override fun draw(canvas: Canvas) {
+        canvas.clipPath(scaledPath)
         canvas.drawPath(scaledPath, paint)
+        canvas.withSave {
+            if (isThemed) {
+                if (icon?.monochrome != null) {
+                    canvas.drawColor(backgroundColor)
+                    icon.monochrome?.setTint(foregroundColor)
+                    icon.monochrome?.draw(this)
+                }
+                // TODO (b/402161932): explore whether we need to handle case of icon w/o monochrome
+            } else {
+                icon?.background?.draw(this)
+                icon?.foreground?.draw(this)
+            }
+        }
     }
 
     override fun setAlpha(alpha: Int) {
@@ -55,6 +85,16 @@ class ShapeTileDrawable(path: String) : Drawable() {
 
     override fun setColorFilter(colorFilter: ColorFilter?) {
         paint.setColorFilter(colorFilter)
+    }
+
+    fun setThemedIconBackgroundColor(@ColorInt backgroundColor: Int) {
+        this.backgroundColor = backgroundColor
+        invalidateSelf()
+    }
+
+    fun setThemedIconForegroundColor(@ColorInt foregroundColor: Int) {
+        this.foregroundColor = foregroundColor
+        invalidateSelf()
     }
 
     @Deprecated(
