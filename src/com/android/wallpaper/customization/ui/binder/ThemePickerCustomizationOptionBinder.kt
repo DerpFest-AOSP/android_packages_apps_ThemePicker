@@ -393,7 +393,6 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                                     view = optionColorsIcon,
                                     viewModel =
                                         ColorOptionIconViewModel.fromColorOption(colorOption),
-                                    darkTheme = view.resources.configuration.isNightModeActive,
                                     colorUpdateViewModel = colorUpdateViewModel,
                                     shouldAnimateColor = isOnMainScreen,
                                     lifecycleOwner = lifecycleOwner,

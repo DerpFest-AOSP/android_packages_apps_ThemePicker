@@ -15,6 +15,7 @@
  */
 package com.android.customization.picker.color.ui.view
 
+import android.animation.ArgbEvaluator
 import android.annotation.ColorInt
 import android.content.Context
 import android.graphics.Canvas
@@ -35,10 +36,20 @@ class ColorOptionIconView2(context: Context, attrs: AttributeSet) :
 
     private val path = Path()
 
-    private var color0 = DEFAULT_PLACEHOLDER_COLOR
-    private var color1 = DEFAULT_PLACEHOLDER_COLOR
-    private var color2 = DEFAULT_PLACEHOLDER_COLOR
-    private var color3 = DEFAULT_PLACEHOLDER_COLOR
+    // progress 0 is light theme and 1 is dark theme
+    var darkThemeProgress = 0f
+        private set
+
+    private val argbEvaluator = ArgbEvaluator()
+
+    private var lightThemeColor0 = DEFAULT_PLACEHOLDER_COLOR
+    private var lightThemeColor1 = DEFAULT_PLACEHOLDER_COLOR
+    private var lightThemeColor2 = DEFAULT_PLACEHOLDER_COLOR
+    private var lightThemeColor3 = DEFAULT_PLACEHOLDER_COLOR
+    private var darkThemeColor0 = DEFAULT_PLACEHOLDER_COLOR
+    private var darkThemeColor1 = DEFAULT_PLACEHOLDER_COLOR
+    private var darkThemeColor2 = DEFAULT_PLACEHOLDER_COLOR
+    private var darkThemeColor3 = DEFAULT_PLACEHOLDER_COLOR
     private var strokeColor = DEFAULT_PLACEHOLDER_COLOR
     private val strokeWidth =
         context.resources
@@ -55,15 +66,28 @@ class ColorOptionIconView2(context: Context, attrs: AttributeSet) :
      * @param color3 the color in the bottom right quadrant
      */
     fun bindColor(
-        @ColorInt color0: Int,
-        @ColorInt color1: Int,
-        @ColorInt color2: Int,
-        @ColorInt color3: Int,
+        @ColorInt lightThemeColor0: Int,
+        @ColorInt lightThemeColor1: Int,
+        @ColorInt lightThemeColor2: Int,
+        @ColorInt lightThemeColor3: Int,
+        @ColorInt darkThemeColor0: Int,
+        @ColorInt darkThemeColor1: Int,
+        @ColorInt darkThemeColor2: Int,
+        @ColorInt darkThemeColor3: Int,
     ) {
-        this.color0 = color0
-        this.color1 = color1
-        this.color2 = color2
-        this.color3 = color3
+        this.lightThemeColor0 = lightThemeColor0
+        this.lightThemeColor1 = lightThemeColor1
+        this.lightThemeColor2 = lightThemeColor2
+        this.lightThemeColor3 = lightThemeColor3
+        this.darkThemeColor0 = darkThemeColor0
+        this.darkThemeColor1 = darkThemeColor1
+        this.darkThemeColor2 = darkThemeColor2
+        this.darkThemeColor3 = darkThemeColor3
+        invalidate()
+    }
+
+    fun setDarkThemeProgress(progress: Float) {
+        this.darkThemeProgress = progress
         invalidate()
     }
 
@@ -100,16 +124,20 @@ class ColorOptionIconView2(context: Context, attrs: AttributeSet) :
         canvas.apply {
             paint.style = Paint.Style.FILL
             // top left
-            paint.color = color0
+            paint.color =
+                argbEvaluator.evaluate(darkThemeProgress, lightThemeColor0, darkThemeColor0) as Int
             drawRect(0f, 0f, width / 2, height / 2, paint)
             // top right
-            paint.color = color1
+            paint.color =
+                argbEvaluator.evaluate(darkThemeProgress, lightThemeColor1, darkThemeColor1) as Int
             drawRect(width / 2, 0f, width, height / 2, paint)
             // bottom left
-            paint.color = color2
+            paint.color =
+                argbEvaluator.evaluate(darkThemeProgress, lightThemeColor2, darkThemeColor2) as Int
             drawRect(0f, height / 2, width / 2, height, paint)
             // bottom right
-            paint.color = color3
+            paint.color =
+                argbEvaluator.evaluate(darkThemeProgress, lightThemeColor3, darkThemeColor3) as Int
             drawRect(width / 2, height / 2, width, height, paint)
         }
 
