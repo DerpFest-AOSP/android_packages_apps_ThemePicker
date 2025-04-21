@@ -52,12 +52,9 @@
     <string name="shape_and_grid_title" msgid="9092477491363761054">"ایپ کی شیپ اور لے آؤٹ"</string>
     <string name="grid_layout" msgid="370175667652663686">"لے آؤٹ"</string>
     <string name="app_icons_title" msgid="8953944517006998975">"آئیکنز"</string>
-    <!-- no translation found for app_icons_description (6616831372060467315) -->
-    <skip />
-    <!-- no translation found for app_icons_theme_default (4773453045331265070) -->
-    <skip />
-    <!-- no translation found for app_icons_theme_themed (6539464818104931856) -->
-    <skip />
+    <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>، <xliff:g id="ID_2">%2$s</xliff:g>"</string>
+    <string name="app_icons_theme_default" msgid="4773453045331265070">"ڈیفالٹ"</string>
+    <string name="app_icons_theme_themed" msgid="6539464818104931856">"تھیم والا"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"لاگو کریں"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"ترمیم کرنے کے لیے تھپتھپائيں"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"حالیہ وال پیپر رکھیں"</string>
@@ -123,7 +120,7 @@
     <string name="accessibility_clock_slider_description" msgid="8374135133110681332">"رنگ کی شدت"</string>
     <string name="mode_title" msgid="2394873501427436055">"گہری تھیم"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"بیٹری سیور کی وجہ سے عارضی طور پر غیر فعال ہے"</string>
-    <string name="themed_icon_title" msgid="7312460430471956558">"تھیم کردہ آئیکنز"</string>
+    <string name="themed_icon_title" msgid="7312460430471956558">"تھیم والے آئیکنز"</string>
     <string name="pack_theme_title" msgid="3052703041673623611">"تھیمز"</string>
     <string name="beta_title" msgid="8703819523760746458">"بی ٹا"</string>
     <string name="theme_packs_description" msgid="4647233199054882039">"‫Pixel تھیمز دریافت کریں"</string>
