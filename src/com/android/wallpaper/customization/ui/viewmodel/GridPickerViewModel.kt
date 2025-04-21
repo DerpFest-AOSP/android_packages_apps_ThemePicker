@@ -59,9 +59,10 @@ constructor(
     // If the overriding key is null, use the currently-set system grid option
     val previewingGridKey =
         combine(overridingGridKey, selectedGridOption) { overridingGridOptionKey, selectedGridOption
-            ->
-            overridingGridOptionKey ?: selectedGridOption.key.value
-        }
+                ->
+                overridingGridOptionKey ?: selectedGridOption.key.value
+            }
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     val gridOptions: Flow<List<OptionItemViewModel2<Drawable>>> =
         interactor.gridOptions
@@ -72,11 +73,7 @@ constructor(
     val onApply: Flow<(suspend () -> Unit)?> =
         combine(overridingGridKey, selectedGridOption) { overridingGridKey, selectedGridOption ->
             if (overridingGridKey != null && overridingGridKey != selectedGridOption.key.value) {
-                {
-                    interactor.applySelectedOption(
-                        overridingGridKey ?: selectedGridOption.key.value
-                    )
-                }
+                { interactor.applyGridOption(overridingGridKey) }
             } else {
                 null
             }

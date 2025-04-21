@@ -52,12 +52,9 @@
     <string name="shape_and_grid_title" msgid="9092477491363761054">"ઍપનો આકાર અને લેઆઉટ"</string>
     <string name="grid_layout" msgid="370175667652663686">"લેઆઉટ"</string>
     <string name="app_icons_title" msgid="8953944517006998975">"આઇકન"</string>
-    <!-- no translation found for app_icons_description (6616831372060467315) -->
-    <skip />
-    <!-- no translation found for app_icons_theme_default (4773453045331265070) -->
-    <skip />
-    <!-- no translation found for app_icons_theme_themed (6539464818104931856) -->
-    <skip />
+    <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>, <xliff:g id="ID_2">%2$s</xliff:g>"</string>
+    <string name="app_icons_theme_default" msgid="4773453045331265070">"ડિફૉલ્ટ"</string>
+    <string name="app_icons_theme_themed" msgid="6539464818104931856">"થીમ આધારિત છે"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"લાગુ કરો"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"ફેરફાર કરવા માટે ટૅપ કરો"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"હાલનું વૉલપેપર રાખો"</string>

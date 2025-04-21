@@ -30,6 +30,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -167,7 +168,7 @@ constructor(
                 null
             }
         }
-
+    private val isApplyInProgress: MutableStateFlow<Boolean> = MutableStateFlow(false)
     @OptIn(ExperimentalCoroutinesApi::class)
     val onApplyButtonClicked: Flow<((onComplete: () -> Unit) -> Unit)?> =
         selectedOption
@@ -204,8 +205,10 @@ constructor(
                         if (onApplyJob?.isActive != true) {
                             onApplyJob =
                                 viewModelScope.launch {
+                                    isApplyInProgress.value = true
                                     onApply()
                                     onComplete()
+                                    isApplyInProgress.value = false
                                     onApplyJob = null
                                 }
                         }
@@ -217,8 +220,10 @@ constructor(
             .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     val isApplyButtonEnabled: StateFlow<Boolean> =
-        onApplyButtonClicked
-            .map { it != null }
+        combine(isApplyInProgress, onApplyButtonClicked) { isApplyInProgress, onApplyButtonClicked
+                ->
+                !isApplyInProgress && onApplyButtonClicked != null
+            }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
     val isApplyButtonVisible: Flow<Boolean> = selectedOption.map { it != null }
