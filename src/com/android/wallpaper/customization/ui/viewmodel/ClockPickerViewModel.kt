@@ -472,10 +472,8 @@ constructor(
                 isClockColorEdited ||
                 isSliderProgressEdited
         }
-    private val onApplyClicked: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val onApply: Flow<(suspend () -> Unit)?> =
         combine(
-            onApplyClicked,
             isEdited,
             previewingClock,
             previewingClockSize,
@@ -483,17 +481,15 @@ constructor(
             previewingSliderProgress,
             previewingClockPresetIndexedStyle,
         ) { array ->
-            val onApplyClicked: Boolean = array[0] as Boolean
-            val isEdited: Boolean = array[1] as Boolean
-            val clock: ClockMetadataModel = array[2] as ClockMetadataModel
-            val size: ClockSize = array[3] as ClockSize
-            val previewingColorId: String = array[4] as String
-            val previewProgress: Int = array[5] as Int
+            val isEdited: Boolean = array[0] as Boolean
+            val clock: ClockMetadataModel = array[1] as ClockMetadataModel
+            val size: ClockSize = array[2] as ClockSize
+            val previewingColorId: String = array[3] as String
+            val previewProgress: Int = array[4] as Int
             val clockAxisStyle: ClockAxisStyle =
-                (array[6] as? IndexedStyle)?.style ?: ClockAxisStyle()
-            if (isEdited && !onApplyClicked) {
+                (array[5] as? IndexedStyle)?.style ?: ClockAxisStyle()
+            if (isEdited) {
                 {
-                    this.onApplyClicked.value = true
                     clockPickerInteractor.applyClock(
                         clockId = clock.clockId,
                         size = size,
@@ -521,7 +517,6 @@ constructor(
         overridingSliderProgress.value = null
         overridingClockPresetIndexedStyle.value = null
         _selectedTab.value = Tab.STYLE
-        onApplyClicked.value = false
     }
 
     suspend fun buildPreviewConfig(previewContext: Context): ClockPreviewConfig {
