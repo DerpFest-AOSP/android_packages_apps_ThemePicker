@@ -52,12 +52,9 @@
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Forme et mise en page"</string>
     <string name="grid_layout" msgid="370175667652663686">"Mise en page"</string>
     <string name="app_icons_title" msgid="8953944517006998975">"Icônes"</string>
-    <!-- no translation found for app_icons_description (6616831372060467315) -->
-    <skip />
-    <!-- no translation found for app_icons_theme_default (4773453045331265070) -->
-    <skip />
-    <!-- no translation found for app_icons_theme_themed (6539464818104931856) -->
-    <skip />
+    <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>, <xliff:g id="ID_2">%2$s</xliff:g>"</string>
+    <string name="app_icons_theme_default" msgid="4773453045331265070">"par défaut"</string>
+    <string name="app_icons_theme_themed" msgid="6539464818104931856">"à thème"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"Appliquer"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"Appuyer pour modifier"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Conserver le fond d\'écran actuel"</string>
@@ -154,9 +151,9 @@
     <string name="keyguard_quick_affordance_two_selected_template" msgid="1757099194522296363">"<xliff:g id="FIRST">%1$s</xliff:g>, <xliff:g id="SECOND">%2$s</xliff:g>"</string>
     <string name="keyguard_quick_affordance_none_selected" msgid="8494127020144112003">"Aucun"</string>
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"Afficher les notifications sur l\'écran de verrouillage"</string>
-    <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"Sur l\'écran de verrouillage"</string>
-    <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Gérez l\'affichage des notifications et leur contenu"</string>
-    <string name="more_settings_section_title" msgid="6854797937797818510">"Autres param. écran verrouillage"</string>
+    <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"Notifications sur l\'écran de verrouillage"</string>
+    <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Gérer l\'affichage des notifications et leur contenu"</string>
+    <string name="more_settings_section_title" msgid="6854797937797818510">"Autres paramètres de l\'écran de verrouillage"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"Confidentialité, En écoute et plus"</string>
     <string name="more_colors" msgid="3191071655353004591">"Autres couleurs"</string>
     <string name="content_description_dynamic_color_option" msgid="2191721655642529886">"Thème dynamique primaire"</string>
