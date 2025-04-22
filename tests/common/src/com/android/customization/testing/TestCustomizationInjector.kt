@@ -19,6 +19,7 @@ import com.android.wallpaper.module.PartnerProvider
 import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.network.Requester
+import com.android.wallpaper.picker.broadcast.BroadcastDispatcher
 import com.android.wallpaper.picker.category.wrapper.WallpaperCategoryWrapper
 import com.android.wallpaper.picker.customization.data.repository.WallpaperColorsRepository
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
@@ -48,6 +49,7 @@ constructor(
     testStatusNotifier: TestPackageStatusNotifier,
     currentWallpaperInfoFactory: FakeCurrentWallpaperInfoFactory,
     wallpaperRefresher: FakeWallpaperRefresher,
+    broadcastDispatcher: BroadcastDispatcher,
 ) :
     TestInjector(
         themesUserEventLogger,
@@ -62,6 +64,7 @@ constructor(
         testStatusNotifier,
         currentWallpaperInfoFactory,
         wallpaperRefresher,
+        broadcastDispatcher,
     ),
     CustomizationInjector {
     /////////////////

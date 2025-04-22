@@ -19,6 +19,7 @@ package com.android.customization.model.picker.quickaffordance.ui.viewmodel
 
 import android.content.Context
 import android.content.Intent
+import android.os.Looper
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.filters.SmallTest
 import com.android.customization.module.logging.TestThemesUserEventLogger
@@ -36,6 +37,7 @@ import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.module.NetworkStatusNotifier
 import com.android.wallpaper.module.PartnerProvider
 import com.android.wallpaper.network.Requester
+import com.android.wallpaper.picker.broadcast.BroadcastDispatcher
 import com.android.wallpaper.picker.category.wrapper.WallpaperCategoryWrapper
 import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
@@ -93,6 +95,7 @@ class KeyguardQuickAffordancePickerViewModelTest {
         val prefs = TestWallpaperPreferences()
         val refresher = FakeWallpaperRefresher(prefs)
         val wallpaperInfoFactory = FakeCurrentWallpaperInfoFactory(refresher)
+        val broadcastDispatcher = BroadcastDispatcher(context, Looper.getMainLooper())
 
         quickAffordanceInteractor =
             KeyguardQuickAffordancePickerInteractor(
@@ -112,6 +115,7 @@ class KeyguardQuickAffordancePickerViewModelTest {
                         client = FakeWallpaperClient(),
                         wallpaperPreferences = prefs,
                         backgroundDispatcher = testDispatcher,
+                        broadcastDispatcher = broadcastDispatcher,
                     )
             )
         testPackageStatusNotifier = TestPackageStatusNotifier()
@@ -129,6 +133,7 @@ class KeyguardQuickAffordancePickerViewModelTest {
                 testPackageStatusNotifier,
                 wallpaperInfoFactory,
                 refresher,
+                broadcastDispatcher,
             )
         )
         underTest =
