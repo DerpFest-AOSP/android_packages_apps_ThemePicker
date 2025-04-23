@@ -40,5 +40,25 @@ class PackThemeViewModel @Inject constructor(private val interactor: PackThemeIn
                 null
             }
         }
+    val startSuggestedThemePackActivityIntent: Flow<Intent?> =
+        interactor.packThemeData.map { data ->
+            if (
+                data.launchingPackageName.isNotEmpty() &&
+                    data.launchingDetailActivityClass.isNotEmpty()
+            ) {
+                val componentName =
+                    ComponentName(data.launchingPackageName, data.launchingDetailActivityClass)
+                Intent().apply {
+                    component = componentName
+                    putExtra(THEME_ID, data.suggestedChipThemePackInfo.themeId)
+                }
+            } else {
+                null
+            }
+        }
     val packThemeData: Flow<PackThemeData> = interactor.packThemeData
+
+    private companion object {
+        const val THEME_ID = "themeId"
+    }
 }
