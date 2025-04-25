@@ -189,7 +189,7 @@ constructor(
     private fun initClockController(clockId: String): ClockController? {
         val isWallpaperDark = isLockscreenWallpaperDark()
         return registry.createExampleClock(activity, clockId)?.also { controller ->
-            controller.initialize(isWallpaperDark, 0f, 0f, null)
+            controller.initialize(isWallpaperDark, 0f, 0f)
 
             // Initialize large clock
             controller.largeClock.events.onFontSettingChanged(
