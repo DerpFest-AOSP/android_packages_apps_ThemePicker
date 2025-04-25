@@ -75,8 +75,16 @@ constructor(
         appIconPickerViewModelFactory.create(viewModelScope = viewModelScope)
 
     override val customizationOptionsData: Flow<CustomizationOptionsData> =
-        gridPickerViewModel.isGridCustomizationAvailable.map {
-            ThemePickerCustomizationOptionsData(isGridCustomizationAvailable = it)
+        combine(
+            gridPickerViewModel.isGridCustomizationAvailable,
+            appIconPickerViewModel.isThemedIconAvailable,
+            appIconPickerViewModel.shapeOptions,
+        ) { isGridCustomizationAvailable, isThemedIconAvailable, shapeOptions ->
+            ThemePickerCustomizationOptionsData(
+                isGridCustomizationAvailable = isGridCustomizationAvailable,
+                isThemedIconAvailable = isThemedIconAvailable,
+                isShapeAvailable = shapeOptions.size > 1,
+            )
         }
 
     private var onApplyJob: Job? = null

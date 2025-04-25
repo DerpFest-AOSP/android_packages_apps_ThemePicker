@@ -28,6 +28,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
+import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -111,11 +112,18 @@ constructor(
             AppIconPickerSummaryViewModel(
                 description =
                     Text.Loaded(
-                        applicationContext.getString(
-                            R.string.app_icons_description,
-                            selectedShapeString,
-                            appIconThemeString,
-                        )
+                        if (selectedShapeString.isEmpty()) {
+                            appIconThemeString.replaceFirstChar {
+                                if (it.isLowerCase()) it.titlecase(Locale.getDefault())
+                                else it.toString()
+                            }
+                        } else {
+                            applicationContext.getString(
+                                R.string.app_icons_description,
+                                selectedShapeString,
+                                appIconThemeString,
+                            )
+                        }
                     ),
                 iconShape = selectedShape.payload,
                 isThemed = isThemedIconEnabled,

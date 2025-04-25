@@ -17,11 +17,13 @@
 
 package com.android.customization.picker.grid.domain.interactor
 
+import com.android.customization.model.grid.ShapeOptionModel
 import com.android.customization.picker.grid.data.repository.ShapeRepository
 import com.android.customization.picker.themedicon.data.repository.ThemedIconRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 @Singleton
 class AppIconInteractor
@@ -33,7 +35,11 @@ constructor(
 
     val shapeOptions = shapeRepository.shapeOptions
 
-    val selectedShapeOption = shapeRepository.selectedShapeOption
+    private val defaultShape =
+        ShapeOptionModel("default", "", shapeRepository.defaultShapePath, true)
+
+    val selectedShapeOption =
+        shapeRepository.selectedShapeOption.map { shapeOption -> shapeOption ?: defaultShape }
 
     val isThemedIconAvailable: Flow<Boolean> = themedIconRepository.isAvailable
 

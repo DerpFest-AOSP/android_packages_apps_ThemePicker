@@ -102,7 +102,7 @@ constructor(
             }
         }
 
-    override suspend fun getShapeOptions(): List<ShapeOptionModel>? =
+    override suspend fun getShapeOptions(): List<ShapeOptionModel> =
         withContext(bgDispatcher) {
             if (previewUtils.supportsPreview()) {
                 context.contentResolver
@@ -142,9 +142,9 @@ constructor(
                                 }
                                 list
                             }
-                    }
+                    } ?: emptyList()
             } else {
-                null
+                emptyList()
             }
         }
 
