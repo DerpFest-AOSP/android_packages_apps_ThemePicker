@@ -120,7 +120,7 @@
     <string name="accessibility_clock_slider_description" msgid="8374135133110681332">"Färgintensitet"</string>
     <string name="mode_title" msgid="2394873501427436055">"Mörkt tema"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Tillfälligt inaktiverat i batterisparläge"</string>
-    <string name="themed_icon_title" msgid="7312460430471956558">"Ikoner med tema"</string>
+    <string name="themed_icon_title" msgid="7312460430471956558">"Temaikoner"</string>
     <string name="pack_theme_title" msgid="3052703041673623611">"Teman"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
     <string name="theme_packs_description" msgid="4647233199054882039">"Upptäck Pixel-teman"</string>
