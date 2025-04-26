@@ -16,11 +16,9 @@
 
 package com.android.wallpaper.customization.ui.binder
 
-import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.Toolbar
 import androidx.core.graphics.ColorUtils
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isInvisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -37,6 +35,10 @@ import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomization
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.binder.DefaultToolbarBinder
 import com.android.wallpaper.picker.customization.ui.binder.ToolbarBinder
+import com.android.wallpaper.picker.customization.ui.view.ApplyButton
+import com.android.wallpaper.picker.customization.ui.view.ApplyButton.ApplyButtonState.APPLY_BUTTON_DISABLED
+import com.android.wallpaper.picker.customization.ui.view.ApplyButton.ApplyButtonState.APPLY_BUTTON_ENABLED
+import com.android.wallpaper.picker.customization.ui.view.ApplyButton.ApplyButtonState.APPLY_BUTTON_IN_PROGRESS
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import javax.inject.Inject
@@ -52,7 +54,7 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
     override fun bind(
         navButton: FrameLayout,
         toolbar: Toolbar,
-        applyButton: Button,
+        applyButton: ApplyButton,
         viewModel: CustomizationOptionsViewModel,
         colorUpdateViewModel: ColorUpdateViewModel,
         lifecycleOwner: LifecycleOwner,
@@ -75,26 +77,28 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
         }
 
         ColorUpdateBinder.bind(
-            setColor = { color ->
-                DrawableCompat.setTint(DrawableCompat.wrap(applyButton.background), color)
-            },
+            setColor = { color -> applyButton.setApplyButtonBackgroundColor(color) },
             color = colorUpdateViewModel.colorPrimary,
             shouldAnimate = { true },
             lifecycleOwner = lifecycleOwner,
         )
 
         ColorUpdateBinder.bind(
-            setColor = { color -> applyButton.setTextColor(color) },
+            setColor = { color ->
+                applyButton.setApplyButtonTextColor(color)
+                applyButton.setIndicatorColor(color)
+            },
             color =
                 combine(
-                    viewModel.isApplyButtonEnabled,
+                    viewModel.applyButtonState,
                     colorUpdateViewModel.colorOnPrimary,
                     colorUpdateViewModel.colorOnSurface,
-                ) { enabled, onPrimary, onSurface ->
-                    if (enabled) {
-                        onPrimary
-                    } else {
-                        ColorUtils.setAlphaComponent(onSurface, 97) // 97 for 38% transparent
+                ) { state, onPrimary, onSurface ->
+                    when (state) {
+                        APPLY_BUTTON_ENABLED -> onPrimary
+                        APPLY_BUTTON_DISABLED ->
+                            ColorUtils.setAlphaComponent(onSurface, 97) // 97 for 38% transparent
+                        APPLY_BUTTON_IN_PROGRESS -> onPrimary
                     }
                 },
             shouldAnimate = { false },
@@ -112,11 +116,7 @@ constructor(private val defaultToolbarBinder: DefaultToolbarBinder) : ToolbarBin
                 launch { viewModel.isApplyButtonVisible.collect { applyButton.isInvisible = !it } }
 
                 launch {
-                    viewModel.isApplyButtonEnabled.collect {
-                        applyButton.isEnabled = it
-                        applyButton.background.alpha =
-                            if (it) 255 else 31 // 255 for 100%, 31 for 12% transparent
-                    }
+                    viewModel.applyButtonState.collect { applyButton.setApplyButtonState(it) }
                 }
 
                 launch {

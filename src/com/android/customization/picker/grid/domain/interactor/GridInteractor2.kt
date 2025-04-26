@@ -31,7 +31,7 @@ class GridInteractor2 @Inject constructor(private val repository: GridRepository
 
     val selectedGridOption = repository.selectedGridOption
 
-    suspend fun applySelectedOption(gridKey: String) = repository.applySelectedOption(gridKey)
+    suspend fun applyGridOption(gridKey: String) = repository.applyGridOption(gridKey)
 
     fun getGridOptionDrawable(iconId: Int): Drawable? = repository.getGridOptionDrawable(iconId)
 }

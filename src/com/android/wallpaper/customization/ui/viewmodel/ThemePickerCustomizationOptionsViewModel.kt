@@ -18,6 +18,10 @@ package com.android.wallpaper.customization.ui.viewmodel
 
 import com.android.customization.picker.mode.ui.viewmodel.DarkModeViewModel
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil
+import com.android.wallpaper.picker.customization.ui.view.ApplyButton
+import com.android.wallpaper.picker.customization.ui.view.ApplyButton.ApplyButtonState.APPLY_BUTTON_DISABLED
+import com.android.wallpaper.picker.customization.ui.view.ApplyButton.ApplyButtonState.APPLY_BUTTON_ENABLED
+import com.android.wallpaper.picker.customization.ui.view.ApplyButton.ApplyButtonState.APPLY_BUTTON_IN_PROGRESS
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsData
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModelFactory
@@ -30,6 +34,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -82,7 +87,7 @@ constructor(
         defaultCustomizationOptionsViewModel.discardChangesDialogViewModel
 
     override fun handleBackPressed(): Boolean {
-        if (isApplyButtonEnabled.value) {
+        if (applyButtonState.value == APPLY_BUTTON_ENABLED) {
             defaultCustomizationOptionsViewModel.showDiscardChangesDialogViewModel()
             return true
         }
@@ -167,7 +172,7 @@ constructor(
                 null
             }
         }
-
+    private val isApplyInProgress: MutableStateFlow<Boolean> = MutableStateFlow(false)
     @OptIn(ExperimentalCoroutinesApi::class)
     val onApplyButtonClicked: Flow<((onComplete: () -> Unit) -> Unit)?> =
         selectedOption
@@ -204,8 +209,10 @@ constructor(
                         if (onApplyJob?.isActive != true) {
                             onApplyJob =
                                 viewModelScope.launch {
+                                    isApplyInProgress.value = true
                                     onApply()
                                     onComplete()
+                                    isApplyInProgress.value = false
                                     onApplyJob = null
                                 }
                         }
@@ -216,10 +223,18 @@ constructor(
             }
             .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    val isApplyButtonEnabled: StateFlow<Boolean> =
-        onApplyButtonClicked
-            .map { it != null }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+    val applyButtonState: StateFlow<ApplyButton.ApplyButtonState> =
+        combine(isApplyInProgress, onApplyButtonClicked) { isApplyInProgress, onApplyButtonClicked
+                ->
+                if (isApplyInProgress) {
+                    APPLY_BUTTON_IN_PROGRESS
+                } else if (onApplyButtonClicked == null) {
+                    APPLY_BUTTON_DISABLED
+                } else {
+                    APPLY_BUTTON_ENABLED
+                }
+            }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), APPLY_BUTTON_DISABLED)
 
     val isApplyButtonVisible: Flow<Boolean> = selectedOption.map { it != null }
 

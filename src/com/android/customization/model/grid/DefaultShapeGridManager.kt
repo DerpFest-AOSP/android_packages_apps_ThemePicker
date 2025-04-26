@@ -150,7 +150,7 @@ constructor(
 
     override fun applyGridOption(gridKey: String) {
         context.contentResolver.update(
-            previewUtils.getUri(SHAPE_GRID),
+            previewUtils.getUri(SET_GRID),
             ContentValues().apply { put(COL_GRID_KEY, gridKey) },
             null,
             null,
@@ -189,7 +189,7 @@ constructor(
         const val TAG = "DefaultShapeGridManager"
         const val SHAPE_OPTIONS: String = "shape_options"
         const val GRID_OPTIONS: String = "list_options"
-        const val SHAPE_GRID: String = "default_grid"
+        const val SET_GRID: String = "default_grid"
         const val SET_SHAPE: String = "shape"
         const val COL_SHAPE_KEY: String = "shape_key"
         const val COL_GRID_KEY: String = "name"

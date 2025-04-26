@@ -52,12 +52,9 @@
     <string name="shape_and_grid_title" msgid="9092477491363761054">"యాప్ షేప్ &amp; లేఅవుట్"</string>
     <string name="grid_layout" msgid="370175667652663686">"లేఅవుట్"</string>
     <string name="app_icons_title" msgid="8953944517006998975">"చిహ్నాలు"</string>
-    <!-- no translation found for app_icons_description (6616831372060467315) -->
-    <skip />
-    <!-- no translation found for app_icons_theme_default (4773453045331265070) -->
-    <skip />
-    <!-- no translation found for app_icons_theme_themed (6539464818104931856) -->
-    <skip />
+    <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>, <xliff:g id="ID_2">%2$s</xliff:g>"</string>
+    <string name="app_icons_theme_default" msgid="4773453045331265070">"డిఫాల్ట్"</string>
+    <string name="app_icons_theme_themed" msgid="6539464818104931856">"థీమ్ ఆధారితం"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"వర్తింపజేయి"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"ఎడిట్ చేయడానికి నొక్కండి"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"ప్రస్తుత వాల్‌పేపర్‌ను అలాగే ఉంచండి"</string>
@@ -137,7 +134,7 @@
     <string name="color_changed" msgid="7029571720331641235">"రంగు మార్చబడింది"</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"డైనమిక్"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"సిస్టమ్ కలర్స్‌"</string>
-    <string name="system_colors_title" msgid="8011422955674152731">"రంగులు"</string>
+    <string name="system_colors_title" msgid="8011422955674152731">"కలర్స్"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"ఎడమ షార్ట్‌కట్"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"కుడి షార్ట్‌కట్"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"ఏదీ లేదు"</string>

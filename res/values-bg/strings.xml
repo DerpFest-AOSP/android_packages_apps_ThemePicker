@@ -52,12 +52,9 @@
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Оформление и форма"</string>
     <string name="grid_layout" msgid="370175667652663686">"Оформление"</string>
     <string name="app_icons_title" msgid="8953944517006998975">"Икони"</string>
-    <!-- no translation found for app_icons_description (6616831372060467315) -->
-    <skip />
-    <!-- no translation found for app_icons_theme_default (4773453045331265070) -->
-    <skip />
-    <!-- no translation found for app_icons_theme_themed (6539464818104931856) -->
-    <skip />
+    <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>: <xliff:g id="ID_2">%2$s</xliff:g>"</string>
+    <string name="app_icons_theme_default" msgid="4773453045331265070">"по подразбиране"</string>
+    <string name="app_icons_theme_themed" msgid="6539464818104931856">"с тема"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"Прилагане"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"Докоснете, за да редактирате"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Запазване на текущия тапет"</string>
@@ -156,7 +153,7 @@
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"Показване на известията на заключения екран"</string>
     <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"Известия на заключения екран"</string>
     <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Управлявайте как да се показват известията и какво да съдържат"</string>
-    <string name="more_settings_section_title" msgid="6854797937797818510">"Още настр. за заключения екран"</string>
+    <string name="more_settings_section_title" msgid="6854797937797818510">"Още настройки за заключен екран"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"Поверителност, „Сега слушате“ и др."</string>
     <string name="more_colors" msgid="3191071655353004591">"Още цветове"</string>
     <string name="content_description_dynamic_color_option" msgid="2191721655642529886">"Динамичен цвят от основната тема"</string>

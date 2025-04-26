@@ -87,7 +87,7 @@ class GridRepository2Test {
                 )
             val gridOptions = collectLastValue(underTest.gridOptions)
 
-            underTest.applySelectedOption("practical")
+            underTest.applyGridOption("practical")
 
             assertThat(gridOptions())
                 .isEqualTo(
@@ -123,7 +123,7 @@ class GridRepository2Test {
                 )
             val selectedGridOption = collectLastValue(underTest.selectedGridOption)
 
-            underTest.applySelectedOption("practical")
+            underTest.applyGridOption("practical")
 
             assertThat(selectedGridOption())
                 .isEqualTo(FakeShapeGridManager.DEFAULT_GRID_OPTION_LIST[1].copy(isCurrent = true))
