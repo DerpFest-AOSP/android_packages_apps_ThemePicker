@@ -165,14 +165,18 @@ constructor(
                                 false,
                             )
                     )
-                    add(
-                        ThemePickerHomeCustomizationOption.APP_ICONS to
-                            layoutInflater.inflate(
-                                R.layout.customization_option_entry_app_icons,
-                                optionContainer,
-                                false,
-                            )
+                    if (
+                        customizationOptionsData.isThemedIconAvailable ||
+                            customizationOptionsData.isShapeAvailable
                     )
+                        add(
+                            ThemePickerHomeCustomizationOption.APP_ICONS to
+                                layoutInflater.inflate(
+                                    R.layout.customization_option_entry_app_icons,
+                                    optionContainer,
+                                    false,
+                                )
+                        )
                     if (customizationOptionsData.isGridCustomizationAvailable) {
                         add(
                             ThemePickerHomeCustomizationOption.GRID to

@@ -18,5 +18,10 @@ package com.android.wallpaper.customization.ui.viewmodel
 
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsData
 
-class ThemePickerCustomizationOptionsData(val isGridCustomizationAvailable: Boolean) :
-    CustomizationOptionsData {}
+class ThemePickerCustomizationOptionsData(
+    val isGridCustomizationAvailable: Boolean,
+    val isThemedIconAvailable: Boolean,
+    val isShapeAvailable: Boolean,
+) : CustomizationOptionsData {
+    val isIconCustomizationAvailable = isThemedIconAvailable || isShapeAvailable
+}

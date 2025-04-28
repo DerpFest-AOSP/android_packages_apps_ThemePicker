@@ -50,6 +50,7 @@ class AppIconPickerViewModelTest {
     @get:Rule var hiltRule = HiltAndroidRule(this)
     @Inject lateinit var testScope: TestScope
     @Inject lateinit var interactor: AppIconInteractor
+    @Inject lateinit var shapeManager: FakeShapeGridManager
     @Inject @ApplicationContext lateinit var appContext: Context
 
     private lateinit var underTest: AppIconPickerViewModel
@@ -58,6 +59,7 @@ class AppIconPickerViewModelTest {
     fun setUp() {
         hiltRule.inject()
         underTest = AppIconPickerViewModel(appContext, interactor, testScope.backgroundScope)
+        shapeManager.setShapeOptions(FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST)
     }
 
     @After
@@ -297,6 +299,17 @@ class AppIconPickerViewModelTest {
                     )
                 )
             assertThat(currentSummary?.isThemed).isEqualTo(true)
+        }
+    }
+
+    @Test
+    fun summary_shouldOnlyShowTheme_ifNoShapes() {
+        testScope.runTest {
+            shapeManager.setShapeOptions(emptyList())
+            interactor.applyShape("")
+            val summary = collectLastValue(underTest.summary)
+            val currentSummary = summary()
+            assertThat(currentSummary?.description?.asString(appContext)).doesNotMatch(".+,.+")
         }
     }
 
