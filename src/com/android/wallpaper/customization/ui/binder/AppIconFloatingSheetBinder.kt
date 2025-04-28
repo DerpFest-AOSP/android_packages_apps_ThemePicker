@@ -21,6 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -79,11 +80,13 @@ object AppIconFloatingSheetBinder {
             }
 
         val themedIconsSwitch = view.requireViewById<MaterialSwitch>(R.id.themed_icon_toggle)
+        val themedIconEntry = view.requireViewById<ViewGroup>(R.id.themed_icon_toggle_entry)
 
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.shapeOptions.collect { options ->
+                        shapeOptionList.isVisible = options.size > 1
                         shapeOptionListAdapter.setItems(options) {
                             val indexToFocus =
                                 options.indexOfFirst { it.isSelected.value }.coerceAtLeast(0)
@@ -96,6 +99,7 @@ object AppIconFloatingSheetBinder {
 
                 launch {
                     viewModel.isThemedIconAvailable.collect { isAvailable ->
+                        themedIconEntry.isVisible = isAvailable
                         themedIconsSwitch.isEnabled = isAvailable
                     }
                 }

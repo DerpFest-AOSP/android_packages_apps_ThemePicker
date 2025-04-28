@@ -18,6 +18,8 @@
 package com.android.customization.picker.grid.data.repository
 
 import android.content.Context
+import android.content.res.Resources
+import com.android.customization.model.ResourceConstants
 import com.android.customization.model.grid.ShapeGridManager
 import com.android.customization.model.grid.ShapeOptionModel
 import com.android.wallpaper.R
@@ -52,6 +54,16 @@ constructor(
         PreviewUtils(context, authorityMetadataKey, Screen.HOME_SCREEN)
 
     private val _shapeOptions = MutableStateFlow<List<ShapeOptionModel>?>(null)
+
+    val defaultShapePath =
+        context.resources.getString(
+            Resources.getSystem()
+                .getIdentifier(
+                    ResourceConstants.CONFIG_ICON_MASK,
+                    "string",
+                    ResourceConstants.ANDROID_PACKAGE,
+                )
+        )
 
     init {
         bgScope.launch { _shapeOptions.value = shapeGridManager.getShapeOptions() }
