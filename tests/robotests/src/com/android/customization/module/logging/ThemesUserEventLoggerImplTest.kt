@@ -19,10 +19,20 @@ import android.app.WallpaperManager
 import android.content.Intent
 import android.graphics.Color
 import android.stats.style.StyleEnums
+import android.stats.style.StyleEnums.SCREEN_CLOCK
+import android.stats.style.StyleEnums.SCREEN_COLORS
+import android.stats.style.StyleEnums.SCREEN_ICONS
+import android.stats.style.StyleEnums.SCREEN_LAYOUT
+import android.stats.style.StyleEnums.SCREEN_SHORTCUTS
 import android.stats.style.StyleEnums.SNAPSHOT
 import androidx.test.filters.SmallTest
 import com.android.customization.model.color.ColorCustomizationManager
 import com.android.customization.model.grid.GridOption
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.APP_ICONS
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.GRID
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.CLOCK
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.SHORTCUTS
 import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.util.LaunchSourceUtils
 import com.google.common.truth.Truth.assertThat
@@ -455,12 +465,26 @@ class ThemesUserEventLoggerImplTest {
 
     @Test
     fun logEnterScreen() {
-        underTest.logEnterScreen(StyleEnums.SCREEN_CLOCK)
+        underTest.logEnterScreen(SCREEN_CLOCK)
 
         assertThat(fakeStatsLogger.action).isEqualTo(StyleEnums.ENTER_SCREEN)
         assertThat(fakeStatsLogger.logCalled).isTrue()
         assertThat(fakeStatsLogger.appSessionId).isEqualTo(FakeAppSessionId.TEST_APP_SESSION_ID)
-        assertThat(fakeStatsLogger.customizationPickerScreen).isEqualTo(StyleEnums.SCREEN_CLOCK)
+        assertThat(fakeStatsLogger.customizationPickerScreen).isEqualTo(SCREEN_CLOCK)
+    }
+
+    @Test
+    fun transformCustomizationOptionToScreenForLogging() {
+        assertThat(underTest.transformCustomizationOptionToScreenForLogging(COLORS))
+            .isEqualTo(SCREEN_COLORS)
+        assertThat(underTest.transformCustomizationOptionToScreenForLogging(APP_ICONS))
+            .isEqualTo(SCREEN_ICONS)
+        assertThat(underTest.transformCustomizationOptionToScreenForLogging(GRID))
+            .isEqualTo(SCREEN_LAYOUT)
+        assertThat(underTest.transformCustomizationOptionToScreenForLogging(CLOCK))
+            .isEqualTo(SCREEN_CLOCK)
+        assertThat(underTest.transformCustomizationOptionToScreenForLogging(SHORTCUTS))
+            .isEqualTo(SCREEN_SHORTCUTS)
     }
 
     companion object {
