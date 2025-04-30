@@ -29,6 +29,21 @@
         android:clipToPadding="false"
         android:clipChildren="false">
 
+        <!--
+        This is an invisible placeholder put in place so that the parent keeps its height
+        stable as the RecyclerView updates from 0 items to N items. Keeping it stable allows
+        the layout logic to keep the size of the preview container stable as well, which
+        bodes well for setting up the SurfaceView for remote rendering without changing its
+        size after the content is loaded into the RecyclerView.
+
+        It's critical for any TextViews inside the included layout to have text.
+        -->
+        <include
+            layout="@layout/quick_affordance_list_item_placeholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/quick_affordance_horizontal_list"
             android:layout_width="wrap_content"
