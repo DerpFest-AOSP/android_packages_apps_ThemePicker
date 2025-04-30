@@ -62,6 +62,8 @@ import com.android.wallpaper.picker.common.preview.ui.binder.ThemePickerWorkspac
 import com.android.wallpaper.picker.common.preview.ui.binder.WorkspaceCallbackBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.DefaultCustomizationOptionsBinder
+import com.android.wallpaper.picker.customization.ui.binder.DefaultPackThemeSuggestedEntryBinder
+import com.android.wallpaper.picker.customization.ui.binder.PackThemeSuggestedEntryBinder
 import com.android.wallpaper.picker.customization.ui.binder.ToolbarBinder
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.di.modules.MainDispatcher
@@ -115,6 +117,12 @@ abstract class ThemePickerTestModule {
     @Binds
     @Singleton
     abstract fun bindCustomizationInjector(impl: TestCustomizationInjector): CustomizationInjector
+
+    @Binds
+    @Singleton
+    abstract fun bindPackThemeSuggestedEntryBinder(
+        impl: DefaultPackThemeSuggestedEntryBinder
+    ): PackThemeSuggestedEntryBinder
 
     @Binds
     @Singleton
