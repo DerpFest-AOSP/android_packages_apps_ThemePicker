@@ -18,6 +18,7 @@ package com.android.wallpaper.customization.ui.viewmodel
 
 import android.content.Context
 import com.android.customization.model.grid.ShapeOptionModel
+import com.android.customization.module.logging.ThemesUserEventLogger
 import com.android.customization.picker.grid.domain.interactor.AppIconInteractor
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
 import com.android.themepicker.R
@@ -48,6 +49,7 @@ class AppIconPickerViewModel
 constructor(
     @ApplicationContext private val applicationContext: Context,
     interactor: AppIconInteractor,
+    private val logger: ThemesUserEventLogger,
     @Assisted private val viewModelScope: CoroutineScope,
 ) {
     //// Shape
@@ -149,7 +151,10 @@ constructor(
             if (shapeNeedsUpdate || themedIconNeedsUpdate) {
                 {
                     if (shapeNeedsUpdate) {
-                        overridingShapeKey?.let { interactor.applyShape(it) }
+                        overridingShapeKey?.let {
+                            interactor.applyShape(it)
+                            logger.logShapeApplied(it)
+                        }
                     }
                     if (themedIconNeedsUpdate) {
                         coroutineScope {
@@ -161,6 +166,7 @@ constructor(
                             isThemedIconEnabled.drop(1).take(1).collect {
                                 return@collect
                             }
+                            overridingIsThemedIconEnabled?.let { logger.logThemedIconApplied(it) }
                         }
                     }
                 }

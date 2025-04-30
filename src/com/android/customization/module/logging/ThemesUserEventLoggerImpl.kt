@@ -57,7 +57,7 @@ import android.stats.style.StyleEnums.WALLPAPER_EFFECT_PROBE
 import android.stats.style.StyleEnums.WALLPAPER_EXPLORE
 import android.text.TextUtils
 import com.android.customization.model.color.ColorCustomizationManager
-import com.android.customization.model.grid.GridOption
+import com.android.customization.model.grid.GridOptionModel
 import com.android.customization.module.logging.ThemesUserEventLogger.ClockSize
 import com.android.customization.module.logging.ThemesUserEventLogger.ColorSource
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.APP_ICONS
@@ -197,7 +197,7 @@ constructor(
             .log()
     }
 
-    override fun logGridApplied(grid: GridOption) {
+    override fun logGridApplied(grid: GridOptionModel) {
         sysUiStatsLoggerFactory
             .get(GRID_APPLIED)
             .setAppSessionId(appSessionId.getId())
@@ -296,7 +296,7 @@ constructor(
      * The grid integer depends on the column and row numbers. For example: 4x5 is 405 13x37 is 1337
      * The upper limit for the column / row count is 99.
      */
-    private fun GridOption.getLauncherGridInt(): Int {
+    private fun GridOptionModel.getLauncherGridInt(): Int {
         return cols * 100 + rows
     }
 

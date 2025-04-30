@@ -27,7 +27,7 @@ import android.stats.style.StyleEnums.SCREEN_SHORTCUTS
 import android.stats.style.StyleEnums.SNAPSHOT
 import androidx.test.filters.SmallTest
 import com.android.customization.model.color.ColorCustomizationManager
-import com.android.customization.model.grid.GridOption
+import com.android.customization.model.grid.GridOptionModel
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.APP_ICONS
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.GRID
@@ -342,7 +342,14 @@ class ThemesUserEventLoggerImplTest {
     @Test
     fun logGridApplied() {
         val gridOption =
-            GridOption("TestGrid", "TestGrid", true, 6, 4, android.net.Uri.EMPTY, 1, "", 0)
+            GridOptionModel(
+                key = "TestGrid",
+                title = "TestGrid",
+                isCurrent = true,
+                rows = 6,
+                cols = 4,
+                iconId = 0,
+            )
 
         underTest.logGridApplied(gridOption)
 
