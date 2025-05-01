@@ -20,6 +20,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.test.filters.SmallTest
 import com.android.customization.model.grid.FakeShapeGridManager
+import com.android.customization.module.logging.ThemesUserEventLogger
 import com.android.customization.picker.grid.domain.interactor.GridInteractor2
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
@@ -52,13 +53,14 @@ class GridPickerViewModelTest {
     @Inject lateinit var gridOptionsManager: FakeShapeGridManager
     @Inject lateinit var interactor: GridInteractor2
     @Inject @ApplicationContext lateinit var appContext: Context
+    @Inject lateinit var logger: ThemesUserEventLogger
 
     private lateinit var underTest: GridPickerViewModel
 
     @Before
     fun setUp() {
         hiltRule.inject()
-        underTest = GridPickerViewModel(appContext, interactor, testScope.backgroundScope)
+        underTest = GridPickerViewModel(appContext, interactor, logger, testScope.backgroundScope)
     }
 
     @After
@@ -86,7 +88,7 @@ class GridPickerViewModelTest {
     fun selectedGridOption_shouldUpdate_afterOnApply() =
         testScope.runTest {
             val selectedGridOption = collectLastValue(underTest.selectedGridOption)
-            val optionItems = collectLastValue(underTest.gridOptions)
+            val optionItems = collectLastValue(underTest.gridOptionListItems)
             val onApply = collectLastValue(underTest.onApply)
             val onPracticalOptionClick =
                 optionItems()?.get(1)?.onClicked?.let { collectLastValue(it) }
@@ -109,7 +111,7 @@ class GridPickerViewModelTest {
     @Test
     fun optionItems() =
         testScope.runTest {
-            val optionItems = collectLastValue(underTest.gridOptions)
+            val optionItems = collectLastValue(underTest.gridOptionListItems)
 
             assertGridItem(
                 optionItem = optionItems()?.get(0),
@@ -134,7 +136,7 @@ class GridPickerViewModelTest {
     @Test
     fun optionItems_whenClickOnPracticalOption() =
         testScope.runTest {
-            val optionItems = collectLastValue(underTest.gridOptions)
+            val optionItems = collectLastValue(underTest.gridOptionListItems)
             val onPracticalOptionClick =
                 optionItems()?.get(1)?.onClicked?.let { collectLastValue(it) }
             checkNotNull(onPracticalOptionClick)

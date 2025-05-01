@@ -18,6 +18,7 @@ package com.android.wallpaper.customization.ui.viewmodel
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
+import android.stats.style.StyleEnums
 import androidx.core.graphics.ColorUtils
 import com.android.customization.model.color.ColorOption
 import com.android.customization.model.color.ColorOptionImpl
@@ -490,20 +491,30 @@ constructor(
                 (array[5] as? IndexedStyle)?.style ?: ClockAxisStyle()
             if (isEdited) {
                 {
+                    val clockId: String = clock.clockId
+                    val seedColor: Int? =
+                        colorMap[previewingColorId]?.let {
+                            blendColorWithTone(
+                                color = it.color,
+                                colorTone = it.getColorTone(previewProgress),
+                            )
+                        }
                     clockPickerInteractor.applyClock(
-                        clockId = clock.clockId,
+                        clockId = clockId,
                         size = size,
                         selectedColorId = previewingColorId,
                         colorToneProgress = previewProgress,
-                        seedColor =
-                            colorMap[previewingColorId]?.let {
-                                blendColorWithTone(
-                                    color = it.color,
-                                    colorTone = it.getColorTone(previewProgress),
-                                )
-                            },
+                        seedColor = seedColor,
                         axisSettings = clockAxisStyle,
                     )
+                    logger.logClockApplied(clockId)
+                    logger.logClockSizeApplied(
+                        when (size) {
+                            ClockSize.SMALL -> StyleEnums.CLOCK_SIZE_SMALL
+                            ClockSize.DYNAMIC -> StyleEnums.CLOCK_SIZE_DYNAMIC
+                        }
+                    )
+                    seedColor?.let { logger.logClockColorApplied(it) }
                 }
             } else {
                 null
