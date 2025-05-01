@@ -17,7 +17,7 @@ package com.android.customization.module.logging
 
 import android.stats.style.StyleEnums
 import androidx.annotation.IntDef
-import com.android.customization.model.grid.GridOption
+import com.android.customization.model.grid.GridOptionModel
 import com.android.wallpaper.module.logging.UserEventLogger
 
 /** Extension of [UserEventLogger] that adds ThemePicker specific events. */
@@ -25,7 +25,7 @@ interface ThemesUserEventLogger : UserEventLogger {
 
     fun logThemeColorApplied(@ColorSource source: Int, style: Int, seedColor: Int)
 
-    fun logGridApplied(grid: GridOption)
+    fun logGridApplied(grid: GridOptionModel)
 
     fun logClockApplied(clockId: String)
 
