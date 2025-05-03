@@ -73,12 +73,14 @@ constructor(
             .map { shapeOptions -> shapeOptions.map { toShapeOptionItemViewModel(it) } }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
+    val isShapeOptionsAvailable: Flow<Boolean> = shapeOptions.map { it.size > 1 }
+
     //// Themed icons enabled
     val isThemedIconAvailable =
         interactor.isThemedIconAvailable.shareIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
-            replay = 1,
+            replay = 0,
         )
 
     private val overridingIsThemedIconEnabled = MutableStateFlow<Boolean?>(null)
@@ -103,8 +105,12 @@ constructor(
         }
 
     val summary: Flow<AppIconPickerSummaryViewModel> =
-        combine(selectedShape, isThemedIconEnabled) { selectedShape, isThemedIconEnabled ->
-            val selectedShapeString = selectedShape.text.asString(applicationContext)
+        combine(selectedShape, isThemedIconEnabled, isShapeOptionsAvailable) {
+            selectedShape,
+            isThemedIconEnabled,
+            isShapeOptionsAvailable ->
+            val selectedShapeString =
+                if (isShapeOptionsAvailable) selectedShape.text.asString(applicationContext) else ""
             val appIconThemeString =
                 if (isThemedIconEnabled) {
                     applicationContext.getString(R.string.app_icons_theme_themed)

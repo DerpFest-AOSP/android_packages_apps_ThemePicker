@@ -316,6 +316,35 @@ class AppIconPickerViewModelTest {
         }
     }
 
+    @Test
+    fun summary_shouldOnlyShowTheme_ifOnlyOneShape() {
+        testScope.runTest {
+            shapeManager.setShapeOptions(shapeManager.getShapeOptions().subList(0, 1))
+            interactor.applyShape("")
+            val summary = collectLastValue(underTest.summary)
+            val currentSummary = summary()
+            assertThat(currentSummary?.description?.asString(appContext)).doesNotMatch(".+,.+")
+        }
+    }
+
+    @Test
+    fun shapeOptionsAvailable_isTrueOnlyIfMoreThanOneOption() {
+        testScope.runTest {
+            val isAvailable = collectLastValue(underTest.isShapeOptionsAvailable)
+
+            // setUp fills the shape options with DEFAULT_SHAPE_OPTION_LIST which has 5 items
+            assertThat(isAvailable()).isEqualTo(true)
+
+            shapeManager.setShapeOptions(shapeManager.getShapeOptions().subList(0, 1))
+            interactor.applyShape("")
+            assertThat(isAvailable()).isEqualTo(false)
+
+            shapeManager.setShapeOptions(emptyList())
+            interactor.applyShape("")
+            assertThat(isAvailable()).isEqualTo(false)
+        }
+    }
+
     private fun TestScope.assertShapeItem(
         optionItem: OptionItemViewModel2<ShapeIconViewModel>?,
         key: String,

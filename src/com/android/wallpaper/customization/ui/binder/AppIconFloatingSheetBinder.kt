@@ -66,6 +66,7 @@ object AppIconFloatingSheetBinder {
             shouldAnimate = isFloatingSheetActive,
             lifecycleOwner = lifecycleOwner,
         )
+        val shapeSection = view.requireViewById<View>(R.id.app_shape_container)
 
         val shapeOptionListAdapter =
             createShapeOptionItemAdapter(
@@ -85,14 +86,19 @@ object AppIconFloatingSheetBinder {
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.shapeOptions.collect { options ->
-                        shapeOptionList.isVisible = options.size > 1
-                        shapeOptionListAdapter.setItems(options) {
-                            val indexToFocus =
-                                options.indexOfFirst { it.isSelected.value }.coerceAtLeast(0)
-                            (shapeOptionList.layoutManager as LinearLayoutManager).scrollToPosition(
-                                indexToFocus
-                            )
+                    viewModel.isShapeOptionsAvailable.collect { shapeAvailable ->
+                        shapeSection.isVisible = shapeAvailable
+                        if (shapeAvailable) {
+                            viewModel.shapeOptions.collect { options ->
+                                shapeOptionListAdapter.setItems(options) {
+                                    val indexToFocus =
+                                        options
+                                            .indexOfFirst { it.isSelected.value }
+                                            .coerceAtLeast(0)
+                                    (shapeOptionList.layoutManager as LinearLayoutManager)
+                                        .scrollToPosition(indexToFocus)
+                                }
+                            }
                         }
                     }
                 }

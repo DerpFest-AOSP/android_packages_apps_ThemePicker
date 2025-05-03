@@ -40,6 +40,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -95,11 +96,7 @@ constructor(
 
     override val isAvailable: Flow<Boolean> =
         uri.map { it != null }
-            .stateIn(
-                scope = backgroundScope,
-                started = SharingStarted.WhileSubscribed(),
-                initialValue = false,
-            )
+            .shareIn(scope = backgroundScope, started = SharingStarted.WhileSubscribed())
 
     override val isActivated: Flow<Boolean> =
         callbackFlow {

@@ -78,12 +78,12 @@ constructor(
         combine(
             gridPickerViewModel.isGridCustomizationAvailable,
             appIconPickerViewModel.isThemedIconAvailable,
-            appIconPickerViewModel.shapeOptions,
-        ) { isGridCustomizationAvailable, isThemedIconAvailable, shapeOptions ->
+            appIconPickerViewModel.isShapeOptionsAvailable,
+        ) { isGridCustomizationAvailable, isThemedIconAvailable, isShapeOptionsAvailable ->
             ThemePickerCustomizationOptionsData(
                 isGridCustomizationAvailable = isGridCustomizationAvailable,
                 isThemedIconAvailable = isThemedIconAvailable,
-                isShapeAvailable = shapeOptions.size > 1,
+                isShapeAvailable = isShapeOptionsAvailable,
             )
         }
 
