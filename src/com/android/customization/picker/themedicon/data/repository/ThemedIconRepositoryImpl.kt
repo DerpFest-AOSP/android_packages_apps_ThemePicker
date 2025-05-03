@@ -23,6 +23,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.ContentObserver
 import android.net.Uri
+import android.util.Log
 import com.android.customization.module.CustomizationPreferences
 import com.android.themepicker.R
 import com.android.wallpaper.module.InjectorProvider
@@ -39,6 +40,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -60,11 +62,11 @@ constructor(
                     homeIntent,
                     PackageManager.MATCH_DEFAULT_ONLY or PackageManager.GET_META_DATA,
                 )
-            val providerAuthority =
-                resolveInfo
-                    ?.activityInfo
-                    ?.metaData
-                    ?.getString(appContext.getString(R.string.themed_icon_metadata_key))
+            val metadataKey = appContext.getString(R.string.themed_icon_metadata_key)
+            val providerAuthority = resolveInfo?.activityInfo?.metaData?.getString(metadataKey)
+            if (providerAuthority == null) {
+                Log.i(TAG, "Couldn't resolve $metadataKey from $homeIntent")
+            }
             val providerInfo =
                 providerAuthority?.let { authority ->
                     val info = packageManager.resolveContentProvider(authority, 0)
@@ -76,6 +78,7 @@ constructor(
                             } else true
                         } ?: true
                     if (!hasPermission) {
+                        Log.i(TAG, "No permission to query authority $authority")
                         null
                     } else {
                         info
@@ -93,11 +96,7 @@ constructor(
 
     override val isAvailable: Flow<Boolean> =
         uri.map { it != null }
-            .stateIn(
-                scope = backgroundScope,
-                started = SharingStarted.WhileSubscribed(),
-                initialValue = false,
-            )
+            .shareIn(scope = backgroundScope, started = SharingStarted.WhileSubscribed())
 
     override val isActivated: Flow<Boolean> =
         callbackFlow {
@@ -170,5 +169,6 @@ constructor(
         private const val ICON_THEMED = "icon_themed"
         private const val COL_ICON_THEMED_VALUE = "boolean_value"
         private const val ENABLED = 1
+        private const val TAG = "ThemedIconRepositoryImpl"
     }
 }

@@ -18,6 +18,7 @@ package com.android.wallpaper.customization.ui.viewmodel
 
 import android.content.Context
 import com.android.customization.model.grid.ShapeOptionModel
+import com.android.customization.module.logging.ThemesUserEventLogger
 import com.android.customization.picker.grid.domain.interactor.AppIconInteractor
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
 import com.android.themepicker.R
@@ -28,6 +29,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
+import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -47,6 +49,7 @@ class AppIconPickerViewModel
 constructor(
     @ApplicationContext private val applicationContext: Context,
     interactor: AppIconInteractor,
+    private val logger: ThemesUserEventLogger,
     @Assisted private val viewModelScope: CoroutineScope,
 ) {
     //// Shape
@@ -70,12 +73,14 @@ constructor(
             .map { shapeOptions -> shapeOptions.map { toShapeOptionItemViewModel(it) } }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
+    val isShapeOptionsAvailable: Flow<Boolean> = shapeOptions.map { it.size > 1 }
+
     //// Themed icons enabled
     val isThemedIconAvailable =
         interactor.isThemedIconAvailable.shareIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
-            replay = 1,
+            replay = 0,
         )
 
     private val overridingIsThemedIconEnabled = MutableStateFlow<Boolean?>(null)
@@ -100,8 +105,12 @@ constructor(
         }
 
     val summary: Flow<AppIconPickerSummaryViewModel> =
-        combine(selectedShape, isThemedIconEnabled) { selectedShape, isThemedIconEnabled ->
-            val selectedShapeString = selectedShape.text.asString(applicationContext)
+        combine(selectedShape, isThemedIconEnabled, isShapeOptionsAvailable) {
+            selectedShape,
+            isThemedIconEnabled,
+            isShapeOptionsAvailable ->
+            val selectedShapeString =
+                if (isShapeOptionsAvailable) selectedShape.text.asString(applicationContext) else ""
             val appIconThemeString =
                 if (isThemedIconEnabled) {
                     applicationContext.getString(R.string.app_icons_theme_themed)
@@ -111,11 +120,18 @@ constructor(
             AppIconPickerSummaryViewModel(
                 description =
                     Text.Loaded(
-                        applicationContext.getString(
-                            R.string.app_icons_description,
-                            selectedShapeString,
-                            appIconThemeString,
-                        )
+                        if (selectedShapeString.isEmpty()) {
+                            appIconThemeString.replaceFirstChar {
+                                if (it.isLowerCase()) it.titlecase(Locale.getDefault())
+                                else it.toString()
+                            }
+                        } else {
+                            applicationContext.getString(
+                                R.string.app_icons_description,
+                                selectedShapeString,
+                                appIconThemeString,
+                            )
+                        }
                     ),
                 iconShape = selectedShape.payload,
                 isThemed = isThemedIconEnabled,
@@ -141,7 +157,10 @@ constructor(
             if (shapeNeedsUpdate || themedIconNeedsUpdate) {
                 {
                     if (shapeNeedsUpdate) {
-                        overridingShapeKey?.let { interactor.applyShape(it) }
+                        overridingShapeKey?.let {
+                            interactor.applyShape(it)
+                            logger.logShapeApplied(it)
+                        }
                     }
                     if (themedIconNeedsUpdate) {
                         coroutineScope {
@@ -153,6 +172,7 @@ constructor(
                             isThemedIconEnabled.drop(1).take(1).collect {
                                 return@collect
                             }
+                            overridingIsThemedIconEnabled?.let { logger.logThemedIconApplied(it) }
                         }
                     }
                 }

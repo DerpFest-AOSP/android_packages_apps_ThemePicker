@@ -30,22 +30,26 @@ class FakeShapeGridManager @Inject constructor() : ShapeGridManager {
 
     private var gridOptions: List<GridOptionModel> = DEFAULT_GRID_OPTION_LIST
 
-    private var shapeOptions: List<ShapeOptionModel>? = DEFAULT_SHAPE_OPTION_LIST
+    private var shapeOptions: List<ShapeOptionModel> = DEFAULT_SHAPE_OPTION_LIST
 
     fun setGridOptions(gridOptions: List<GridOptionModel>) {
         this.gridOptions = gridOptions
     }
 
+    fun setShapeOptions(shapeOptions: List<ShapeOptionModel>) {
+        this.shapeOptions = shapeOptions
+    }
+
     override suspend fun getGridOptions(): List<GridOptionModel> = gridOptions
 
-    override suspend fun getShapeOptions(): List<ShapeOptionModel>? = shapeOptions
+    override suspend fun getShapeOptions(): List<ShapeOptionModel> = shapeOptions
 
     override fun applyGridOption(gridKey: String) {
         gridOptions = gridOptions.map { it.copy(isCurrent = it.key == gridKey) }
     }
 
     override fun applyShapeOption(shapeKey: String): Int {
-        shapeOptions = shapeOptions?.map { it.copy(isCurrent = it.key == shapeKey) }
+        shapeOptions = shapeOptions.map { it.copy(isCurrent = it.key == shapeKey) }
         return 0
     }
 

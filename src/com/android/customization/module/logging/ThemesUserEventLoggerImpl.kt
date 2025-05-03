@@ -36,6 +36,12 @@ import android.stats.style.StyleEnums.LAUNCHED_SUW
 import android.stats.style.StyleEnums.LAUNCHED_TIPS
 import android.stats.style.StyleEnums.LOCK_SCREEN_NOTIFICATION_APPLIED
 import android.stats.style.StyleEnums.RESET_APPLIED
+import android.stats.style.StyleEnums.SCREEN_CLOCK
+import android.stats.style.StyleEnums.SCREEN_COLORS
+import android.stats.style.StyleEnums.SCREEN_ICONS
+import android.stats.style.StyleEnums.SCREEN_LAYOUT
+import android.stats.style.StyleEnums.SCREEN_SHORTCUTS
+import android.stats.style.StyleEnums.SCREEN_UNSPECIFIED
 import android.stats.style.StyleEnums.SHAPE_APPLIED
 import android.stats.style.StyleEnums.SHORTCUT_APPLIED
 import android.stats.style.StyleEnums.SNAPSHOT
@@ -51,15 +57,21 @@ import android.stats.style.StyleEnums.WALLPAPER_EFFECT_PROBE
 import android.stats.style.StyleEnums.WALLPAPER_EXPLORE
 import android.text.TextUtils
 import com.android.customization.model.color.ColorCustomizationManager
-import com.android.customization.model.grid.GridOption
+import com.android.customization.model.grid.GridOptionModel
 import com.android.customization.module.logging.ThemesUserEventLogger.ClockSize
 import com.android.customization.module.logging.ThemesUserEventLogger.ColorSource
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.APP_ICONS
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.GRID
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.CLOCK
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.SHORTCUTS
 import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.module.logging.UserEventLogger.CustomizationPickerScreen
 import com.android.wallpaper.module.logging.UserEventLogger.EffectStatus
 import com.android.wallpaper.module.logging.UserEventLogger.LaunchedPreference
 import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.module.logging.UserEventLogger.WallpaperDestination
+import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
 import com.android.wallpaper.util.LaunchSourceUtils
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -185,7 +197,7 @@ constructor(
             .log()
     }
 
-    override fun logGridApplied(grid: GridOption) {
+    override fun logGridApplied(grid: GridOptionModel) {
         sysUiStatsLoggerFactory
             .get(GRID_APPLIED)
             .setAppSessionId(appSessionId.getId())
@@ -266,11 +278,25 @@ constructor(
             .log()
     }
 
+    @CustomizationPickerScreen
+    override fun transformCustomizationOptionToScreenForLogging(
+        customizationOption: CustomizationOption
+    ): Int {
+        return when (customizationOption) {
+            COLORS -> SCREEN_COLORS
+            APP_ICONS -> SCREEN_ICONS
+            GRID -> SCREEN_LAYOUT
+            CLOCK -> SCREEN_CLOCK
+            SHORTCUTS -> SCREEN_SHORTCUTS
+            else -> SCREEN_UNSPECIFIED
+        }
+    }
+
     /**
      * The grid integer depends on the column and row numbers. For example: 4x5 is 405 13x37 is 1337
      * The upper limit for the column / row count is 99.
      */
-    private fun GridOption.getLauncherGridInt(): Int {
+    private fun GridOptionModel.getLauncherGridInt(): Int {
         return cols * 100 + rows
     }
 

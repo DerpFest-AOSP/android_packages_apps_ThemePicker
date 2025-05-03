@@ -19,6 +19,7 @@ package com.android.wallpaper.customization.ui.viewmodel
 import android.content.Context
 import androidx.test.filters.SmallTest
 import com.android.customization.model.grid.FakeShapeGridManager
+import com.android.customization.module.logging.ThemesUserEventLogger
 import com.android.customization.picker.grid.domain.interactor.AppIconInteractor
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
@@ -50,14 +51,18 @@ class AppIconPickerViewModelTest {
     @get:Rule var hiltRule = HiltAndroidRule(this)
     @Inject lateinit var testScope: TestScope
     @Inject lateinit var interactor: AppIconInteractor
+    @Inject lateinit var shapeManager: FakeShapeGridManager
     @Inject @ApplicationContext lateinit var appContext: Context
+    @Inject lateinit var logger: ThemesUserEventLogger
 
     private lateinit var underTest: AppIconPickerViewModel
 
     @Before
     fun setUp() {
         hiltRule.inject()
-        underTest = AppIconPickerViewModel(appContext, interactor, testScope.backgroundScope)
+        underTest =
+            AppIconPickerViewModel(appContext, interactor, logger, testScope.backgroundScope)
+        shapeManager.setShapeOptions(FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST)
     }
 
     @After
@@ -297,6 +302,46 @@ class AppIconPickerViewModelTest {
                     )
                 )
             assertThat(currentSummary?.isThemed).isEqualTo(true)
+        }
+    }
+
+    @Test
+    fun summary_shouldOnlyShowTheme_ifNoShapes() {
+        testScope.runTest {
+            shapeManager.setShapeOptions(emptyList())
+            interactor.applyShape("")
+            val summary = collectLastValue(underTest.summary)
+            val currentSummary = summary()
+            assertThat(currentSummary?.description?.asString(appContext)).doesNotMatch(".+,.+")
+        }
+    }
+
+    @Test
+    fun summary_shouldOnlyShowTheme_ifOnlyOneShape() {
+        testScope.runTest {
+            shapeManager.setShapeOptions(shapeManager.getShapeOptions().subList(0, 1))
+            interactor.applyShape("")
+            val summary = collectLastValue(underTest.summary)
+            val currentSummary = summary()
+            assertThat(currentSummary?.description?.asString(appContext)).doesNotMatch(".+,.+")
+        }
+    }
+
+    @Test
+    fun shapeOptionsAvailable_isTrueOnlyIfMoreThanOneOption() {
+        testScope.runTest {
+            val isAvailable = collectLastValue(underTest.isShapeOptionsAvailable)
+
+            // setUp fills the shape options with DEFAULT_SHAPE_OPTION_LIST which has 5 items
+            assertThat(isAvailable()).isEqualTo(true)
+
+            shapeManager.setShapeOptions(shapeManager.getShapeOptions().subList(0, 1))
+            interactor.applyShape("")
+            assertThat(isAvailable()).isEqualTo(false)
+
+            shapeManager.setShapeOptions(emptyList())
+            interactor.applyShape("")
+            assertThat(isAvailable()).isEqualTo(false)
         }
     }
 

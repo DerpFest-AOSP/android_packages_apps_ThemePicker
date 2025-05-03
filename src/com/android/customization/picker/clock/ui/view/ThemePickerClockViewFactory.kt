@@ -19,6 +19,7 @@ import android.app.Activity
 import android.app.WallpaperColors
 import android.app.WallpaperManager
 import android.graphics.Rect
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import androidx.annotation.ColorInt
@@ -187,22 +188,31 @@ constructor(
     }
 
     private fun initClockController(clockId: String): ClockController? {
-        val isWallpaperDark = isLockscreenWallpaperDark()
-        return registry.createExampleClock(activity, clockId)?.also { controller ->
-            controller.initialize(isWallpaperDark, 0f, 0f)
+        try {
+            val isWallpaperDark = isLockscreenWallpaperDark()
+            return registry.createExampleClock(activity, clockId)?.also { controller ->
+                controller.initialize(isWallpaperDark, 0f, 0f)
 
-            // Initialize large clock
-            controller.largeClock.events.onFontSettingChanged(
-                resources.getDimensionPixelSize(clocksR.dimen.large_clock_text_size).toFloat()
-            )
-            controller.largeClock.events.onTargetRegionChanged(getLargeClockRegion())
+                // Initialize large clock
+                controller.largeClock.events.onFontSettingChanged(
+                    resources.getDimensionPixelSize(clocksR.dimen.large_clock_text_size).toFloat()
+                )
+                controller.largeClock.events.onTargetRegionChanged(getLargeClockRegion())
 
-            // Initialize small clock
-            controller.smallClock.events.onFontSettingChanged(
-                resources.getDimensionPixelSize(clocksR.dimen.small_clock_text_size).toFloat()
+                // Initialize small clock
+                controller.smallClock.events.onFontSettingChanged(
+                    resources.getDimensionPixelSize(clocksR.dimen.small_clock_text_size).toFloat()
+                )
+                controller.smallClock.events.onTargetRegionChanged(getSmallClockRegion())
+                controller.events.onWeatherDataChanged(WeatherData.getPlaceholderWeatherData())
+            }
+        } catch (e: Exception) {
+            Log.e(
+                "ThemePickerClockViewFactory",
+                "caught clock init exception, proceeding without clocks",
+                e,
             )
-            controller.smallClock.events.onTargetRegionChanged(getSmallClockRegion())
-            controller.events.onWeatherDataChanged(WeatherData.getPlaceholderWeatherData())
+            return null
         }
     }
 

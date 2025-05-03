@@ -80,7 +80,7 @@ object GridFloatingSheetBinder {
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.gridOptions.collect { options ->
+                    viewModel.gridOptionListItems.collect { options ->
                         gridOptionListAdapter.setItems(options) {
                             val indexToFocus =
                                 options.indexOfFirst { it.isSelected.value }.coerceAtLeast(0)

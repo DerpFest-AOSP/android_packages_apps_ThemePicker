@@ -93,7 +93,6 @@ public class GridOptionsManager implements CustomizationManager<GridOption> {
     public void apply(GridOption option, Callback callback) {
         int updated = mProvider.applyGrid(option.name);
         if (updated == 1) {
-            mEventLogger.logGridApplied(option);
             callback.onSuccess();
         } else {
             callback.onError(null);

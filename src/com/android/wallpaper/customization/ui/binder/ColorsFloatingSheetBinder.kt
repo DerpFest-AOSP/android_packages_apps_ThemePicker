@@ -58,7 +58,6 @@ object ColorsFloatingSheetBinder {
         ColorUpdateBinder.bind(
             setColor = { color ->
                 view.requireViewById<TextView>(R.id.color_type_tab_subhead).setTextColor(color)
-                view.requireViewById<TextView>(R.id.dark_mode_toggle_title).setTextColor(color)
             },
             color = colorUpdateViewModel.colorOnSurface,
             shouldAnimate = isFloatingSheetActive,

@@ -57,7 +57,7 @@
     <string name="app_icons_theme_themed" msgid="6539464818104931856">"موضوعی"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"اعمال"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"برای ویرایش تک‌ضرب بزنید"</string>
-    <string name="keep_my_wallpaper" msgid="8012385376769568517">"حفظ کاغذدیواری فعلی"</string>
+    <string name="keep_my_wallpaper" msgid="8012385376769568517">"حفظ کاغذدیواری کنونی"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"پیش‌نمایش سبک"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"پیش‌نمایش جدول"</string>
     <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"پیش‌نمایش زمینه"</string>

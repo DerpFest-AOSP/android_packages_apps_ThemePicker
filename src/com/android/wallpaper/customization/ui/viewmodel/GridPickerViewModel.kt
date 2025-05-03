@@ -21,6 +21,7 @@ import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import com.android.customization.model.ResourceConstants
 import com.android.customization.model.grid.GridOptionModel
+import com.android.customization.module.logging.ThemesUserEventLogger
 import com.android.customization.picker.grid.domain.interactor.GridInteractor2
 import com.android.customization.widget.GridTileDrawable
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
@@ -45,6 +46,7 @@ class GridPickerViewModel
 constructor(
     @ApplicationContext private val context: Context,
     private val interactor: GridInteractor2,
+    private val logger: ThemesUserEventLogger,
     @Assisted private val viewModelScope: CoroutineScope,
 ) {
     val isGridCustomizationAvailable = interactor.isGridCustomizationAvailable
@@ -63,17 +65,27 @@ constructor(
                 overridingGridOptionKey ?: selectedGridOption.key.value
             }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
-
-    val gridOptions: Flow<List<OptionItemViewModel2<Drawable>>> =
+    private val gridOptions: Flow<List<GridOptionModel>> =
         interactor.gridOptions
             .filterNotNull()
+            .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
+    val gridOptionListItems: Flow<List<OptionItemViewModel2<Drawable>>> =
+        gridOptions
             .map { gridOptions -> gridOptions.map { toGridOptionItemViewModel(it) } }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     val onApply: Flow<(suspend () -> Unit)?> =
-        combine(overridingGridKey, selectedGridOption) { overridingGridKey, selectedGridOption ->
+        combine(overridingGridKey, selectedGridOption, gridOptions) {
+            overridingGridKey,
+            selectedGridOption,
+            gridOptions ->
             if (overridingGridKey != null && overridingGridKey != selectedGridOption.key.value) {
-                { interactor.applyGridOption(overridingGridKey) }
+                {
+                    interactor.applyGridOption(overridingGridKey)
+                    gridOptions
+                        .find { it.key == overridingGridKey }
+                        ?.let { logger.logGridApplied(it) }
+                }
             } else {
                 null
             }

@@ -26,7 +26,7 @@ interface ShapeGridManager {
      */
     suspend fun getGridOptions(): List<GridOptionModel>
 
-    suspend fun getShapeOptions(): List<ShapeOptionModel>?
+    suspend fun getShapeOptions(): List<ShapeOptionModel>
 
     fun applyGridOption(gridKey: String)
 
