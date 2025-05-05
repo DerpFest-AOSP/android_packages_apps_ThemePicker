@@ -25,6 +25,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -45,6 +46,7 @@ import com.android.wallpaper.customization.ui.viewmodel.ClockFloatingSheetHeight
 import com.android.wallpaper.customization.ui.viewmodel.ClockPickerViewModel.ClockStyleModel
 import com.android.wallpaper.customization.ui.viewmodel.ClockPickerViewModel.Tab
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
+import com.android.wallpaper.picker.category.ui.binder.SectionsBinder.removeItemDecorations
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.view.FloatingToolbar
 import com.android.wallpaper.picker.customization.ui.view.adapter.FloatingToolbarTabAdapter
@@ -350,10 +352,29 @@ object ClockFloatingSheetBinder {
                 launch {
                     viewModel.clockStyleOptions.collect { styleOptions ->
                         clockStyleAdapter.setItems(styleOptions) {
+                            val dividerIndex =
+                                styleOptions.indexOfLast { it.payload?.hasPresets ?: false }
                             var indexToFocus = styleOptions.indexOfFirst { it.isSelected.value }
                             indexToFocus = if (indexToFocus < 0) 0 else indexToFocus
                             (clockStyleList.layoutManager as LinearLayoutManager)
                                 .scrollToPositionWithOffset(indexToFocus, 0)
+                            clockStyleList.removeItemDecorations()
+                            clockStyleList.addItemDecoration(
+                                SingleRowListItemSpacing(
+                                    view.context.resources.getDimensionPixelSize(
+                                        R.dimen.floating_sheet_content_horizontal_padding
+                                    ),
+                                    view.context.resources.getDimensionPixelSize(
+                                        R.dimen.floating_sheet_list_item_horizontal_space
+                                    ),
+                                    dividerIndex = dividerIndex,
+                                    dividerDrawable =
+                                        ContextCompat.getDrawable(
+                                            view.context,
+                                            R.drawable.option_list_grouping_divider,
+                                        ),
+                                )
+                            )
                         }
                     }
                 }
@@ -466,16 +487,6 @@ object ClockFloatingSheetBinder {
     ) {
         this.adapter = adapter
         layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        addItemDecoration(
-            SingleRowListItemSpacing(
-                context.resources.getDimensionPixelSize(
-                    R.dimen.floating_sheet_content_horizontal_padding
-                ),
-                context.resources.getDimensionPixelSize(
-                    R.dimen.floating_sheet_list_item_horizontal_space
-                ),
-            )
-        )
     }
 
     private fun createClockColorOptionItemAdapter(

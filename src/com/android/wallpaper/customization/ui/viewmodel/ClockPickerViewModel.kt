@@ -149,11 +149,11 @@ constructor(
             overridingClock != null && overridingClock.clockId != selectedClock.clockId
         }
 
-    suspend fun getIsShadeLayoutWide() = clockPickerInteractor.getIsShadeLayoutWide()
+    private suspend fun getIsShadeLayoutWide() = clockPickerInteractor.getIsShadeLayoutWide()
 
-    suspend fun getUdfpsLocation() = clockPickerInteractor.getUdfpsLocation()
+    private suspend fun getUdfpsLocation() = clockPickerInteractor.getUdfpsLocation()
 
-    data class ClockStyleModel(val thumbnail: Drawable)
+    data class ClockStyleModel(val thumbnail: Drawable, val hasPresets: Boolean)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val clockStyleOptions: StateFlow<List<OptionItemViewModel2<ClockStyleModel>>> =
@@ -163,8 +163,8 @@ constructor(
                 delay(CLOCKS_EVENT_UPDATE_DELAY_MILLIS)
                 val allClockMap = allClocks.groupBy { it.axisPresetConfig != null }
                 buildList {
-                    allClockMap[true]?.map { add(it.toOption(resources)) }
-                    allClockMap[false]?.map { add(it.toOption(resources)) }
+                    allClockMap[true]?.map { add(it.toOption(resources, true)) }
+                    allClockMap[false]?.map { add(it.toOption(resources, false)) }
                 }
             }
             // makes sure that the operations above this statement are executed on I/O dispatcher
@@ -250,14 +250,15 @@ constructor(
         }
 
     private suspend fun ClockMetadataModel.toOption(
-        resources: Resources
+        resources: Resources,
+        hasPresets: Boolean,
     ): OptionItemViewModel2<ClockStyleModel> {
         val isSelectedFlow = previewingClock.map { it.clockId == clockId }.stateIn(viewModelScope)
         val contentDescription =
             resources.getString(R.string.select_clock_action_description, description)
         return OptionItemViewModel2<ClockStyleModel>(
             key = MutableStateFlow(clockId) as StateFlow<String>,
-            payload = ClockStyleModel(thumbnail = thumbnail),
+            payload = ClockStyleModel(thumbnail = thumbnail, hasPresets = hasPresets),
             text = Text.Loaded(contentDescription),
             isTextUserVisible = false,
             isSelected = isSelectedFlow,
