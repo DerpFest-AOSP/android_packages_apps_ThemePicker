@@ -96,10 +96,14 @@ constructor(
 
     override fun handleBackPressed(): Boolean {
         if (applyButtonState.value == APPLY_BUTTON_ENABLED) {
-            defaultCustomizationOptionsViewModel.showDiscardChangesDialogViewModel()
+            defaultCustomizationOptionsViewModel.showDiscardChangesDialogViewModel(
+                // Hide the picker's clock when we start the transition back to the primary screen.
+                onDiscard = { clockPickerViewModel.setShowPickerClockControllerView(false) }
+            )
             return true
         }
-
+        // Hide the picker's clock when we start the transition back to the primary screen.
+        clockPickerViewModel.setShowPickerClockControllerView(false)
         return defaultCustomizationOptionsViewModel.handleBackPressed()
     }
 
@@ -110,8 +114,23 @@ constructor(
         gridPickerViewModel.resetPreview()
         appIconPickerViewModel.resetPreview()
         clockPickerViewModel.resetPreview()
+        // resetPreview happens when transition back to the primary screen ends. Show the keyguard
+        // preview renderer's smartspace and the clock.
+        clockPickerViewModel.setShowKeyguardPreviewRendererSmartspace(true)
         colorPickerViewModel2.resetPreview()
         darkModeViewModel.resetPreview()
+    }
+
+    override fun onTransitionToSecondaryScreenComplete() {
+        defaultCustomizationOptionsViewModel.onTransitionToSecondaryScreenComplete()
+        if (
+            selectedOption.value ==
+                ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.CLOCK
+        ) {
+            // Show the picker's clock when we complete the transition to land on the secondary
+            // clock customization screen.
+            clockPickerViewModel.setShowPickerClockControllerView(true)
+        }
     }
 
     val onCustomizeClockClicked: Flow<(() -> Unit)?> =
@@ -121,6 +140,11 @@ constructor(
                     defaultCustomizationOptionsViewModel.selectOption(
                         ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.CLOCK
                     )
+                    // When we are about to transition to the clock customization screen, hide the
+                    // keyguard preview renderer's smartspace as well as the clock. Because, we will
+                    // show the picker's clock controller view clock when the transition ends.
+                    // Please also see clockPickerViewModel.setShowPickerClockControllerView().
+                    clockPickerViewModel.setShowKeyguardPreviewRendererSmartspace(false)
                 }
             } else {
                 null
