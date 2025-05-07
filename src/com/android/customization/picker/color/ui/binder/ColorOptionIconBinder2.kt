@@ -17,17 +17,12 @@
 
 package com.android.customization.picker.color.ui.binder
 
-import android.animation.Animator
-import android.animation.ValueAnimator
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.android.customization.picker.color.ui.view.ColorOptionIconView2
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
+import com.android.wallpaper.picker.customization.ui.binder.DarkModeUpdateBinder
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
-import kotlinx.coroutines.launch
 
 object ColorOptionIconBinder2 {
 
@@ -43,7 +38,7 @@ object ColorOptionIconBinder2 {
         shouldAnimateColor: () -> Boolean,
         lifecycleOwner: LifecycleOwner,
     ): Binding {
-        val binding =
+        val colorBinding =
             ColorUpdateBinder.bind(
                 setColor = { color -> view.bindStrokeColor(color) },
                 color = colorUpdateViewModel.colorPrimary,
@@ -60,40 +55,17 @@ object ColorOptionIconBinder2 {
             viewModel.darkThemeColor2,
             viewModel.darkThemeColor3,
         )
-        var animator: Animator? = null
-        val job =
-            lifecycleOwner.lifecycleScope.launch {
-                lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    var currentDarkMode: Boolean? = null
-                    colorUpdateViewModel.isDarkMode.collect { isDarkMode ->
-                        animator?.end()
-                        val previousDarkMode = currentDarkMode
-                        if (previousDarkMode != null) {
-                            animator =
-                                ValueAnimator.ofFloat(
-                                        if (previousDarkMode) 1f else 0f,
-                                        if (isDarkMode) 1f else 0f,
-                                    )
-                                    .apply {
-                                        duration = ColorUpdateBinder.COLOR_ANIMATION_DURATION_MILLIS
-                                        addUpdateListener {
-                                            val progress = it.animatedValue as Float
-                                            view.setDarkThemeProgress(progress)
-                                        }
-                                    }
-                                    .also { it.start() }
-                        } else {
-                            view.setDarkThemeProgress(if (isDarkMode) 1f else 0f)
-                        }
-                        currentDarkMode = isDarkMode
-                    }
-                }
-            }
+        val darkModeBinding =
+            DarkModeUpdateBinder.bind(
+                onProgressChange = { progress -> view.setDarkThemeProgress(progress) },
+                colorUpdateViewModel = colorUpdateViewModel,
+                shouldAnimate = shouldAnimateColor,
+                lifecycleOwner = lifecycleOwner,
+            )
         return object : Binding {
             override fun destroy() {
-                binding.destroy()
-                job.cancel()
-                animator?.cancel()
+                colorBinding.destroy()
+                darkModeBinding.destroy()
             }
         }
     }
