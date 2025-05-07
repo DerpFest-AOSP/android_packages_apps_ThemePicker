@@ -80,7 +80,7 @@ constructor(
         interactor.isThemedIconAvailable.shareIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
-            replay = 0,
+            replay = 1,
         )
 
     private val overridingIsThemedIconEnabled = MutableStateFlow<Boolean?>(null)
