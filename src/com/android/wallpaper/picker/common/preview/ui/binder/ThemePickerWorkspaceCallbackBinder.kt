@@ -148,28 +148,20 @@ constructor(
 
                         launch {
                             combine(
-                                    viewModel.clockPickerViewModel.previewingClock,
                                     viewModel.clockPickerViewModel.previewingClockSize,
+                                    viewModel.clockPickerViewModel
+                                        .showKeyguardPreviewRendererSmartspace,
                                     ::Pair,
                                 )
-                                .collect { (previewingClock, previewingClockSize) ->
-                                    val hideSmartspace =
-                                        clockViewFactory
-                                            .getController(previewingClock.clockId)
-                                            ?.let {
-                                                when (previewingClockSize) {
-                                                    ClockSize.DYNAMIC ->
-                                                        it.largeClock.config
-                                                            .hasCustomWeatherDataDisplay
-                                                    ClockSize.SMALL ->
-                                                        it.smallClock.config
-                                                            .hasCustomWeatherDataDisplay
-                                                }
-                                            } ?: false
+                                .collect {
+                                    (previewingClockSize, showKeyguardPreviewRendererSmartspace) ->
                                     workspaceCallback.sendMessage(
                                         MESSAGE_ID_HIDE_SMART_SPACE,
                                         Bundle().apply {
-                                            putBoolean(KEY_HIDE_SMART_SPACE, hideSmartspace)
+                                            putBoolean(
+                                                KEY_HIDE_SMART_SPACE,
+                                                !showKeyguardPreviewRendererSmartspace,
+                                            )
                                         },
                                     )
 
