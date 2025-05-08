@@ -29,6 +29,7 @@ import com.android.systemui.customization.clocks.R as clocksR
 import com.android.systemui.plugins.clocks.ClockAxisStyle
 import com.android.systemui.plugins.clocks.ClockController
 import com.android.systemui.plugins.clocks.ClockFaceController.Companion.updateTheme
+import com.android.systemui.plugins.clocks.TimeFormatKind
 import com.android.systemui.plugins.clocks.WeatherData
 import com.android.systemui.shared.Flags
 import com.android.systemui.shared.clocks.ClockRegistry
@@ -151,9 +152,8 @@ constructor(
     }
 
     override fun updateTimeFormat(clockId: String) {
-        getController(clockId)
-            ?.events
-            ?.onTimeFormatChanged(android.text.format.DateFormat.is24HourFormat(appContext))
+        val formatKind = TimeFormatKind.getFromContext(appContext)
+        getController(clockId)?.events?.onTimeFormatChanged(formatKind)
     }
 
     override fun registerTimeTicker(owner: LifecycleOwner) {
