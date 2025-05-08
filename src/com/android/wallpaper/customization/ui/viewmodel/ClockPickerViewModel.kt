@@ -149,6 +149,34 @@ constructor(
             overridingClock != null && overridingClock.clockId != selectedClock.clockId
         }
 
+    // Represents show and hide of the clock view provided by the picker side.
+    private val _showPickerClockControllerView: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val showClockControllerView: Flow<Boolean> = _showPickerClockControllerView.asStateFlow()
+
+    /**
+     * Set show or hide to [_showPickerClockControllerView]. We should set show when transition to
+     * the secondary clock customization screen ends, and hide when we just start the transition
+     * back to the primary screen. See also [setShowKeyguardPreviewRendererSmartspace].
+     */
+    fun setShowPickerClockControllerView(show: Boolean) {
+        _showPickerClockControllerView.value = show
+    }
+
+    // Represents show and hide of the clock view and the smartspace at the keygard renderer side.
+    private val _showKeyguardPreviewRendererSmartspace: MutableStateFlow<Boolean> =
+        MutableStateFlow(false)
+    val showKeyguardPreviewRendererSmartspace: Flow<Boolean> =
+        _showKeyguardPreviewRendererSmartspace.asStateFlow()
+
+    /**
+     * Set show or hide to [_showKeyguardPreviewRendererSmartspace]. We should set show when
+     * transition back to the primary screen ends, and hide when we just start the transition to the
+     * secondary screen of clock customization. See also [setShowPickerClockControllerView].
+     */
+    fun setShowKeyguardPreviewRendererSmartspace(show: Boolean) {
+        _showKeyguardPreviewRendererSmartspace.value = show
+    }
+
     private suspend fun getIsShadeLayoutWide() = clockPickerInteractor.getIsShadeLayoutWide()
 
     private suspend fun getUdfpsLocation() = clockPickerInteractor.getUdfpsLocation()
