@@ -133,7 +133,7 @@ constructor(
                 initialValue = false,
             )
 
-    private fun getThemedIconEnabled(uri: Uri): Boolean {
+    fun getThemedIconEnabled(uri: Uri): Boolean {
         val cursor =
             contentResolver.query(
                 uri,
