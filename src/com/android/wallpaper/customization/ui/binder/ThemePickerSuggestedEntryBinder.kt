@@ -17,6 +17,7 @@
 package com.android.wallpaper.customization.ui.binder
 
 import android.content.Intent
+import android.view.View
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -64,6 +65,10 @@ class ThemePickerSuggestedEntryBinder @Inject constructor() : PackThemeSuggested
                 }
                 launch {
                     optionsViewModel.packThemeViewModel.packThemeData.collect { packThemeData ->
+                        if (packThemeData.suggestedChipThemePackInfo.title.isNotEmpty()) {
+                            view.visibility = View.VISIBLE
+                            view.hideSuggestedChip = false
+                        }
                         view.suggestedChipText.text = packThemeData.suggestedChipThemePackInfo.title
                     }
                 }
