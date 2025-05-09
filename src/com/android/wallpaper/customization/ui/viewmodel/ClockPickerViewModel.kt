@@ -151,7 +151,7 @@ constructor(
 
     // Represents show and hide of the clock view provided by the picker side.
     private val _showPickerClockControllerView: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val showClockControllerView: Flow<Boolean> = _showPickerClockControllerView.asStateFlow()
+    val showPickerClockControllerView: Flow<Boolean> = _showPickerClockControllerView.asStateFlow()
 
     /**
      * Set show or hide to [_showPickerClockControllerView]. We should set show when transition to
@@ -164,7 +164,7 @@ constructor(
 
     // Represents show and hide of the clock view and the smartspace at the keygard renderer side.
     private val _showKeyguardPreviewRendererSmartspace: MutableStateFlow<Boolean> =
-        MutableStateFlow(false)
+        MutableStateFlow(true)
     val showKeyguardPreviewRendererSmartspace: Flow<Boolean> =
         _showKeyguardPreviewRendererSmartspace.asStateFlow()
 

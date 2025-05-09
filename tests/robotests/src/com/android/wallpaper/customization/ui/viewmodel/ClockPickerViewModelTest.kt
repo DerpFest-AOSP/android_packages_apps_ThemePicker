@@ -262,6 +262,22 @@ class ClockPickerViewModelTest {
         assertThat(option1OnClicked()).isNull()
     }
 
+    @Test
+    fun showPickerClockControllerView_false_by_default() = runTest {
+        val showPickerClockControllerView =
+            collectLastValue(underTest.showPickerClockControllerView)
+
+        assertThat(showPickerClockControllerView()).isFalse()
+    }
+
+    @Test
+    fun showKeyguardPreviewRendererSmartspace_true_by_default() = runTest {
+        val showKeyguardPreviewRendererSmartspace =
+            collectLastValue(underTest.showKeyguardPreviewRendererSmartspace)
+
+        assertThat(showKeyguardPreviewRendererSmartspace()).isTrue()
+    }
+
     //// Clock font
     @Test
     fun previewingClockPresetIndexedStyle_whenInitialState() = runTest {
