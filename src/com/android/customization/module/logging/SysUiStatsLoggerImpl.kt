@@ -15,6 +15,7 @@
  */
 package com.android.customization.module.logging
 
+import android.stats.style.StyleEnums.APP_ICON_STYLE_UNSPECIFIED
 import android.stats.style.StyleEnums.CLOCK_SIZE_UNSPECIFIED
 import android.stats.style.StyleEnums.COLOR_SOURCE_UNSPECIFIED
 import android.stats.style.StyleEnums.DATE_PREFERENCE_UNSPECIFIED
@@ -28,6 +29,7 @@ import com.android.customization.module.logging.ThemesUserEventLogger.ClockSize
 import com.android.customization.module.logging.ThemesUserEventLogger.ColorSource
 import com.android.systemui.shared.system.SysUiStatsLog
 import com.android.systemui.shared.system.SysUiStatsLog.STYLE_UI_CHANGED
+import com.android.wallpaper.module.logging.UserEventLogger.AppIconStyle
 import com.android.wallpaper.module.logging.UserEventLogger.CustomizationPickerScreen
 import com.android.wallpaper.module.logging.UserEventLogger.DatePreference
 import com.android.wallpaper.module.logging.UserEventLogger.EffectStatus
@@ -72,6 +74,8 @@ class SysUiStatsLoggerImpl(val action: Int) : SysUiStatsLogger {
     private var lockEffectIdHash = 0
     private var clockSeedColor = 0
     @CustomizationPickerScreen private var customizationPickerScreen = SCREEN_UNSPECIFIED
+    @AppIconStyle private var appIconStyle = APP_ICON_STYLE_UNSPECIFIED
+    private var useClockCustomization = false
 
     override fun setColorPackageHash(colorPackageHash: Int) = apply {
         this.colorPackageHash = colorPackageHash
@@ -191,6 +195,15 @@ class SysUiStatsLoggerImpl(val action: Int) : SysUiStatsLogger {
         @CustomizationPickerScreen customizationPickerScreen: Int
     ) = apply { this.customizationPickerScreen = customizationPickerScreen }
 
+    override fun setAppIconStyle(@AppIconStyle appIconStyle: Int): SysUiStatsLogger = apply {
+        this.appIconStyle = appIconStyle
+    }
+
+    override fun setUseClockCustomization(useClockCustomization: Boolean): SysUiStatsLogger =
+        apply {
+            this.useClockCustomization = useClockCustomization
+        }
+
     override fun log() {
         SysUiStatsLog.write(
             STYLE_UI_CHANGED,
@@ -228,6 +241,8 @@ class SysUiStatsLoggerImpl(val action: Int) : SysUiStatsLogger {
             lockEffectIdHash,
             clockSeedColor,
             customizationPickerScreen,
+            appIconStyle,
+            useClockCustomization,
         )
     }
 }

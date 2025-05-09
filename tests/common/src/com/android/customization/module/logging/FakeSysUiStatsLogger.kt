@@ -18,6 +18,7 @@ package com.android.customization.module.logging
 
 import com.android.customization.module.logging.ThemesUserEventLogger.ClockSize
 import com.android.customization.module.logging.ThemesUserEventLogger.ColorSource
+import com.android.wallpaper.module.logging.UserEventLogger.AppIconStyle
 import com.android.wallpaper.module.logging.UserEventLogger.CustomizationPickerScreen
 import com.android.wallpaper.module.logging.UserEventLogger.DatePreference
 import com.android.wallpaper.module.logging.UserEventLogger.EffectStatus
@@ -60,6 +61,8 @@ class FakeSysUiStatsLogger(val action: Int) : SysUiStatsLogger {
     var lockEffectIdHash: Int? = null
     var clockSeedColor: Int? = null
     @CustomizationPickerScreen var customizationPickerScreen: Int? = null
+    @AppIconStyle var appIconStyle: Int? = null
+    var useClockCustomization: Boolean? = null
 
     // --- Property to track if log() was called ---
     var logCalled: Boolean = false
@@ -203,6 +206,15 @@ class FakeSysUiStatsLogger(val action: Int) : SysUiStatsLogger {
     override fun setCustomizationPickerScreen(
         @CustomizationPickerScreen customizationPickerScreen: Int
     ): SysUiStatsLogger = apply { this.customizationPickerScreen = customizationPickerScreen }
+
+    override fun setAppIconStyle(@AppIconStyle appIconStyle: Int): SysUiStatsLogger = apply {
+        this.appIconStyle = appIconStyle
+    }
+
+    override fun setUseClockCustomization(useClockCustomization: Boolean): SysUiStatsLogger =
+        apply {
+            this.useClockCustomization = useClockCustomization
+        }
 
     override fun log() {
         this.logCalled = true
