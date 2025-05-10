@@ -15,15 +15,27 @@
  */
 package com.android.customization.picker.common.ui.view
 
+import android.graphics.Canvas
 import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
-/** Item spacing used by the horizontal RecyclerView with only 1 row. */
+/**
+ * Item spacing used by the horizontal RecyclerView with only 1 row.
+ *
+ * @param dividerIndex Index of the item that a divider will be drawn on the right.
+ */
 class SingleRowListItemSpacing(
     private val edgeItemSpacePx: Int,
     private val itemHorizontalSpacePx: Int,
+    private val dividerIndex: Int = -1,
+    private val dividerDrawable: Drawable? = null,
 ) : RecyclerView.ItemDecoration() {
+
+    private val dividerWidth = dividerDrawable?.intrinsicWidth ?: 0
+    private val dividerHeight = dividerDrawable?.intrinsicHeight ?: 0
+
     override fun getItemOffsets(
         outRect: Rect,
         view: View,
@@ -33,18 +45,58 @@ class SingleRowListItemSpacing(
         val itemIndex = parent.getChildAdapterPosition(view)
         val itemCount = parent.adapter?.itemCount ?: 0
         val isRtl = parent.layoutManager?.layoutDirection == View.LAYOUT_DIRECTION_RTL
-        when (itemIndex) {
-            0 -> {
-                outRect.left = if (!isRtl) edgeItemSpacePx else itemHorizontalSpacePx
-                outRect.right = if (isRtl) edgeItemSpacePx else itemHorizontalSpacePx
-            }
-            itemCount - 1 -> {
-                outRect.right = if (!isRtl) edgeItemSpacePx else itemHorizontalSpacePx
-                outRect.left = if (isRtl) edgeItemSpacePx else itemHorizontalSpacePx
-            }
-            else -> {
-                outRect.left = itemHorizontalSpacePx
-                outRect.right = itemHorizontalSpacePx
+
+        val isFirstItem = itemIndex == 0
+        val startSpace = if (isFirstItem) edgeItemSpacePx else 0
+
+        val isLastItem = itemIndex == itemCount - 1
+        val isDivider = itemIndex == dividerIndex && dividerDrawable != null && dividerHeight > 0
+        val itemSpaceWithDividerConsideration =
+            if (isDivider) itemHorizontalSpacePx * 2 + dividerWidth else itemHorizontalSpacePx
+        val endSpace = if (isLastItem) edgeItemSpacePx else itemSpaceWithDividerConsideration
+
+        if (isRtl) {
+            outRect.right = startSpace
+            outRect.left = endSpace
+        } else {
+            outRect.left = startSpace
+            outRect.right = endSpace
+        }
+    }
+
+    override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+        super.onDrawOver(c, parent, state)
+
+        if (dividerDrawable == null || dividerHeight <= 0) return
+
+        val parentPaddedHeight = parent.height - parent.paddingTop - parent.paddingBottom
+        val actualDrawableHeight = minOf(dividerHeight, parentPaddedHeight)
+        val dividerTop = parent.paddingTop + (parentPaddedHeight - actualDrawableHeight) / 2
+        val dividerBottom = dividerTop + actualDrawableHeight
+
+        val isRtl = parent.layoutManager?.layoutDirection == View.LAYOUT_DIRECTION_RTL
+
+        for (i in 0 until parent.childCount) {
+            val child = parent.getChildAt(i)
+            val position = parent.getChildAdapterPosition(child)
+
+            if (position == RecyclerView.NO_POSITION) continue
+
+            if (position == dividerIndex) {
+                val params = child.layoutParams as RecyclerView.LayoutParams
+                val dividerLeft: Int
+                val dividerRight: Int
+                if (isRtl) {
+                    dividerRight = child.left - params.leftMargin - itemHorizontalSpacePx
+                    dividerLeft = dividerRight - dividerWidth
+                } else {
+                    dividerLeft = child.right + params.rightMargin + itemHorizontalSpacePx
+                    dividerRight = dividerLeft + dividerWidth
+                }
+                dividerDrawable.setBounds(dividerLeft, dividerTop, dividerRight, dividerBottom)
+                dividerDrawable.draw(c)
+                // Break as we only want to draw one such divider.
+                break
             }
         }
     }

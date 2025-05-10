@@ -149,11 +149,39 @@ constructor(
             overridingClock != null && overridingClock.clockId != selectedClock.clockId
         }
 
-    suspend fun getIsShadeLayoutWide() = clockPickerInteractor.getIsShadeLayoutWide()
+    // Represents show and hide of the clock view provided by the picker side.
+    private val _showPickerClockControllerView: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val showPickerClockControllerView: Flow<Boolean> = _showPickerClockControllerView.asStateFlow()
 
-    suspend fun getUdfpsLocation() = clockPickerInteractor.getUdfpsLocation()
+    /**
+     * Set show or hide to [_showPickerClockControllerView]. We should set show when transition to
+     * the secondary clock customization screen ends, and hide when we just start the transition
+     * back to the primary screen. See also [setShowKeyguardPreviewRendererSmartspace].
+     */
+    fun setShowPickerClockControllerView(show: Boolean) {
+        _showPickerClockControllerView.value = show
+    }
 
-    data class ClockStyleModel(val thumbnail: Drawable)
+    // Represents show and hide of the clock view and the smartspace at the keygard renderer side.
+    private val _showKeyguardPreviewRendererSmartspace: MutableStateFlow<Boolean> =
+        MutableStateFlow(true)
+    val showKeyguardPreviewRendererSmartspace: Flow<Boolean> =
+        _showKeyguardPreviewRendererSmartspace.asStateFlow()
+
+    /**
+     * Set show or hide to [_showKeyguardPreviewRendererSmartspace]. We should set show when
+     * transition back to the primary screen ends, and hide when we just start the transition to the
+     * secondary screen of clock customization. See also [setShowPickerClockControllerView].
+     */
+    fun setShowKeyguardPreviewRendererSmartspace(show: Boolean) {
+        _showKeyguardPreviewRendererSmartspace.value = show
+    }
+
+    private suspend fun getIsShadeLayoutWide() = clockPickerInteractor.getIsShadeLayoutWide()
+
+    private suspend fun getUdfpsLocation() = clockPickerInteractor.getUdfpsLocation()
+
+    data class ClockStyleModel(val thumbnail: Drawable, val hasPresets: Boolean)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val clockStyleOptions: StateFlow<List<OptionItemViewModel2<ClockStyleModel>>> =
@@ -163,8 +191,8 @@ constructor(
                 delay(CLOCKS_EVENT_UPDATE_DELAY_MILLIS)
                 val allClockMap = allClocks.groupBy { it.axisPresetConfig != null }
                 buildList {
-                    allClockMap[true]?.map { add(it.toOption(resources)) }
-                    allClockMap[false]?.map { add(it.toOption(resources)) }
+                    allClockMap[true]?.map { add(it.toOption(resources, true)) }
+                    allClockMap[false]?.map { add(it.toOption(resources, false)) }
                 }
             }
             // makes sure that the operations above this statement are executed on I/O dispatcher
@@ -250,14 +278,15 @@ constructor(
         }
 
     private suspend fun ClockMetadataModel.toOption(
-        resources: Resources
+        resources: Resources,
+        hasPresets: Boolean,
     ): OptionItemViewModel2<ClockStyleModel> {
         val isSelectedFlow = previewingClock.map { it.clockId == clockId }.stateIn(viewModelScope)
         val contentDescription =
             resources.getString(R.string.select_clock_action_description, description)
         return OptionItemViewModel2<ClockStyleModel>(
             key = MutableStateFlow(clockId) as StateFlow<String>,
-            payload = ClockStyleModel(thumbnail = thumbnail),
+            payload = ClockStyleModel(thumbnail = thumbnail, hasPresets = hasPresets),
             text = Text.Loaded(contentDescription),
             isTextUserVisible = false,
             isSelected = isSelectedFlow,

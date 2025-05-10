@@ -20,11 +20,12 @@ import android.content.Context
 import android.content.res.Configuration
 import android.provider.Settings
 import android.util.Log
-import android.util.SparseIntArray
 import com.android.customization.model.ResourceConstants
 import com.android.systemui.monet.ColorScheme
+import com.android.systemui.monet.DynamicColors
 import com.android.systemui.monet.Style
 import com.android.systemui.shared.settings.data.repository.SecureSettingsRepository
+import com.google.ux.material.libmonet.dynamiccolor.DynamicColor
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -42,14 +43,59 @@ constructor(
     @ApplicationContext private val applicationContext: Context,
     private val secureSettingsRepository: SecureSettingsRepository,
 ) {
-    private fun addShades(shades: List<Int>, resources: IntArray, output: SparseIntArray) {
-        if (shades.size != resources.size) {
-            Log.e(TAG, "The number of shades computed doesn't match the number of resources.")
-            return
+    private fun addDynamicColors(
+        lightColorScheme: ColorScheme,
+        darkColorScheme: ColorScheme,
+        colors: MutableList<android.util.Pair<String, DynamicColor>>,
+        isFixed: Boolean,
+        isDarkMode: Boolean,
+    ): Map<Int, Int> = buildMap {
+        for (p in colors) {
+            val color = p.second as DynamicColor
+            val name = p.first
+            if (isFixed) {
+                put(
+                    applicationContext.resources.getIdentifier(
+                        "android:color/system_$name",
+                        null,
+                        null,
+                    ),
+                    // -0x1000000 is equivalent to 0xff000000 which doesn't fit in a Kotlin Int
+                    -0x1000000 or color.getArgb(lightColorScheme.materialScheme),
+                )
+            } else {
+                put(
+                    applicationContext.resources.getIdentifier(
+                        "android:color/system_$name",
+                        null,
+                        null,
+                    ),
+                    -0x1000000 or
+                        color.getArgb(
+                            (if (isDarkMode) darkColorScheme else lightColorScheme).materialScheme
+                        ),
+                )
+                put(
+                    applicationContext.resources.getIdentifier(
+                        "android:color/system_${name}_dark",
+                        null,
+                        null,
+                    ),
+                    // -0x1000000 is equivalent to 0xff000000 which doesn't fit in a Kotlin Int
+                    -0x1000000 or color.getArgb(darkColorScheme.materialScheme),
+                )
+                put(
+                    applicationContext.resources.getIdentifier(
+                        "android:color/system_${name}_light",
+                        null,
+                        null,
+                    ),
+                    -0x1000000 or color.getArgb(lightColorScheme.materialScheme),
+                )
+            }
         }
-        for (i in resources.indices) {
-            output.put(resources[i], 0xff000000.toInt() or shades[i])
-        }
+        remove(0)
+        remove(-1)
     }
 
     /**
@@ -61,8 +107,11 @@ constructor(
         val isDarkMode =
             (applicationContext.resources.configuration.uiMode and
                 Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val colorScheme = ColorScheme(colors, isDarkMode, fetchThemeStyleFromSetting())
-        return generate(colorScheme)
+        return generate(
+            ColorScheme(colors, false, fetchThemeStyleFromSetting()),
+            ColorScheme(colors, true, fetchThemeStyleFromSetting()),
+            isDarkMode,
+        )
     }
 
     /**
@@ -70,28 +119,78 @@ constructor(
      *
      * @return a list of color resource IDs and a corresponding list of their color values
      */
-    fun generate(colorSeed: Int, @Style.Type style: Int): Pair<IntArray, IntArray> {
+    fun generate(
+        colorSeed: Int,
+        @Style.Type style: Int,
+        useDarkMode: Boolean?,
+    ): Pair<IntArray, IntArray> {
         val isDarkMode =
-            (applicationContext.resources.configuration.uiMode and
-                Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val colorScheme = ColorScheme(colorSeed, isDarkMode, style)
-        return generate(colorScheme)
+            useDarkMode
+                ?: ((applicationContext.resources.configuration.uiMode and
+                    Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES)
+        return generate(
+            ColorScheme(colorSeed, false, style),
+            ColorScheme(colorSeed, true, style),
+            isDarkMode,
+        )
     }
 
-    private fun generate(colorScheme: ColorScheme): Pair<IntArray, IntArray> {
-        val allNeutralColors: MutableList<Int> = ArrayList()
-        allNeutralColors.addAll(colorScheme.neutral1.allShades)
-        allNeutralColors.addAll(colorScheme.neutral2.allShades)
+    private fun generate(
+        lightColorScheme: ColorScheme,
+        darkColorScheme: ColorScheme,
+        isDarkMode: Boolean,
+    ): Pair<IntArray, IntArray> {
+        val colorMap: MutableMap<Int, Int> = mutableMapOf()
 
-        val allAccentColors: MutableList<Int> = ArrayList()
-        allAccentColors.addAll(colorScheme.accent1.allShades)
-        allAccentColors.addAll(colorScheme.accent2.allShades)
-        allAccentColors.addAll(colorScheme.accent3.allShades)
+        colorMap.apply {
+            putAll(
+                addDynamicColors(
+                    lightColorScheme,
+                    darkColorScheme,
+                    DynamicColors.getAllNeutralPalette(),
+                    false,
+                    isDarkMode,
+                )
+            )
+            putAll(
+                addDynamicColors(
+                    lightColorScheme,
+                    darkColorScheme,
+                    DynamicColors.getAllAccentPalette(),
+                    false,
+                    isDarkMode,
+                )
+            )
+            putAll(
+                addDynamicColors(
+                    lightColorScheme,
+                    darkColorScheme,
+                    DynamicColors.getAllDynamicColorsMapped(),
+                    false,
+                    isDarkMode,
+                )
+            )
+            putAll(
+                addDynamicColors(
+                    lightColorScheme,
+                    darkColorScheme,
+                    DynamicColors.getFixedColorsMapped(),
+                    true,
+                    isDarkMode,
+                )
+            )
+            putAll(
+                addDynamicColors(
+                    lightColorScheme,
+                    darkColorScheme,
+                    DynamicColors.getCustomColorsMapped(),
+                    false,
+                    isDarkMode,
+                )
+            )
+        }
 
-        return Pair(
-            NEUTRAL_RESOURCES + ACCENT_RESOURCES,
-            (allNeutralColors + allAccentColors).toIntArray(),
-        )
+        return Pair(colorMap.keys.toIntArray(), colorMap.values.toIntArray())
     }
 
     @Style.Type
@@ -116,77 +215,5 @@ constructor(
 
     companion object {
         private const val TAG = "MaterialColorsGenerator"
-
-        private val ACCENT_RESOURCES =
-            intArrayOf(
-                android.R.color.system_accent1_0,
-                android.R.color.system_accent1_10,
-                android.R.color.system_accent1_50,
-                android.R.color.system_accent1_100,
-                android.R.color.system_accent1_200,
-                android.R.color.system_accent1_300,
-                android.R.color.system_accent1_400,
-                android.R.color.system_accent1_500,
-                android.R.color.system_accent1_600,
-                android.R.color.system_accent1_700,
-                android.R.color.system_accent1_800,
-                android.R.color.system_accent1_900,
-                android.R.color.system_accent1_1000,
-                android.R.color.system_accent2_0,
-                android.R.color.system_accent2_10,
-                android.R.color.system_accent2_50,
-                android.R.color.system_accent2_100,
-                android.R.color.system_accent2_200,
-                android.R.color.system_accent2_300,
-                android.R.color.system_accent2_400,
-                android.R.color.system_accent2_500,
-                android.R.color.system_accent2_600,
-                android.R.color.system_accent2_700,
-                android.R.color.system_accent2_800,
-                android.R.color.system_accent2_900,
-                android.R.color.system_accent2_1000,
-                android.R.color.system_accent3_0,
-                android.R.color.system_accent3_10,
-                android.R.color.system_accent3_50,
-                android.R.color.system_accent3_100,
-                android.R.color.system_accent3_200,
-                android.R.color.system_accent3_300,
-                android.R.color.system_accent3_400,
-                android.R.color.system_accent3_500,
-                android.R.color.system_accent3_600,
-                android.R.color.system_accent3_700,
-                android.R.color.system_accent3_800,
-                android.R.color.system_accent3_900,
-                android.R.color.system_accent3_1000,
-            )
-        private val NEUTRAL_RESOURCES =
-            intArrayOf(
-                android.R.color.system_neutral1_0,
-                android.R.color.system_neutral1_10,
-                android.R.color.system_neutral1_50,
-                android.R.color.system_neutral1_100,
-                android.R.color.system_neutral1_200,
-                android.R.color.system_neutral1_300,
-                android.R.color.system_neutral1_400,
-                android.R.color.system_neutral1_500,
-                android.R.color.system_neutral1_600,
-                android.R.color.system_neutral1_700,
-                android.R.color.system_neutral1_800,
-                android.R.color.system_neutral1_900,
-                android.R.color.system_neutral1_1000,
-                android.R.color.system_neutral2_0,
-                android.R.color.system_neutral2_10,
-                android.R.color.system_neutral2_50,
-                android.R.color.system_neutral2_100,
-                android.R.color.system_neutral2_200,
-                android.R.color.system_neutral2_300,
-                android.R.color.system_neutral2_400,
-                android.R.color.system_neutral2_500,
-                android.R.color.system_neutral2_600,
-                android.R.color.system_neutral2_700,
-                android.R.color.system_neutral2_800,
-                android.R.color.system_neutral2_900,
-                android.R.color.system_neutral2_1000,
-            )
     }
 }

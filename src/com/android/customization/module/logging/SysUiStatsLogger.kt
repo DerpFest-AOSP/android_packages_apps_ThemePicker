@@ -17,6 +17,7 @@ package com.android.customization.module.logging
 
 import com.android.customization.module.logging.ThemesUserEventLogger.ClockSize
 import com.android.customization.module.logging.ThemesUserEventLogger.ColorSource
+import com.android.wallpaper.module.logging.UserEventLogger.AppIconStyle
 import com.android.wallpaper.module.logging.UserEventLogger.CustomizationPickerScreen
 import com.android.wallpaper.module.logging.UserEventLogger.DatePreference
 import com.android.wallpaper.module.logging.UserEventLogger.EffectStatus
@@ -102,6 +103,10 @@ interface SysUiStatsLogger {
     fun setCustomizationPickerScreen(
         @CustomizationPickerScreen customizationPickerScreen: Int
     ): SysUiStatsLogger
+
+    fun setAppIconStyle(@AppIconStyle appIconStyle: Int): SysUiStatsLogger
+
+    fun setUseClockCustomization(useClockCustomization: Boolean): SysUiStatsLogger
 
     fun log()
 }

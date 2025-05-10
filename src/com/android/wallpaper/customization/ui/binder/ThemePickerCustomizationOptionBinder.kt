@@ -58,6 +58,7 @@ import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.DefaultCustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
+import com.android.wallpaper.picker.customization.ui.util.ViewAlphaAnimator.animateToAlpha
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsData
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
@@ -553,6 +554,9 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         }
     }
 
+    // Track the current show clock flag. If it turns from false to true, animate fade-in.
+    private var isClockCurrentlyShown: Boolean? = null
+
     override fun bindClockPreview(
         context: Context,
         clockHostView: View,
@@ -573,22 +577,30 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     combine(
                             clockPickerViewModel.previewingClock,
                             clockPickerViewModel.previewingClockSize,
-                        ) { clock, size ->
-                            clock to size
-                        }
-                        .collect { (clock, size) ->
+                            clockPickerViewModel.showPickerClockControllerView,
+                            ::Triple,
+                        )
+                        .collect { (clock, size, showClock) ->
                             clockHostView.removeAllViews()
                             // For new customization picker, we should get views from clocklayout
                             if (Flags.newCustomizationPickerUi()) {
-                                clockViewFactory.getController(clock.clockId)?.run {
-                                    val cs = ConstraintSet()
-                                    clockHostView.addClockViews(this, size, cs)
-                                    val cfg = clockPickerViewModel.buildPreviewConfig(context)
-                                    largeClock.layout.applyPreviewConstraints(cfg, cs)
-                                    smallClock.layout.applyPreviewConstraints(cfg, cs)
-                                    cs.applyTo(clockHostView)
+                                if (showClock) {
+                                    clockViewFactory.getController(clock.clockId)?.run {
+                                        val cs = ConstraintSet()
+                                        clockHostView.addClockViews(this, size, cs)
+                                        val cfg = clockPickerViewModel.buildPreviewConfig(context)
+                                        largeClock.layout.applyPreviewConstraints(cfg, cs)
+                                        smallClock.layout.applyPreviewConstraints(cfg, cs)
+                                        cs.applyTo(clockHostView)
+                                    }
+                                    clockViewFactory.updateTimeFormat(clock.clockId)
                                 }
-                                clockViewFactory.updateTimeFormat(clock.clockId)
+                                val shouldFadeIn = (isClockCurrentlyShown == false) && showClock
+                                if (shouldFadeIn) {
+                                    clockHostView.alpha = 0F
+                                    clockHostView.animateToAlpha(1F)
+                                }
+                                isClockCurrentlyShown = showClock
                             } else {
                                 val clockView =
                                     when (size) {
