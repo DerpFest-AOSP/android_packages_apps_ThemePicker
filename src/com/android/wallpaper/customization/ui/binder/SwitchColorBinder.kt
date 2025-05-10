@@ -66,7 +66,7 @@ object SwitchColorBinder {
                     setColor = { color ->
                         switch.thumbIconTintList = ColorStateList.valueOf(color)
                     },
-                    color = colorUpdateViewModel.colorOnPrimaryContainer,
+                    color = colorUpdateViewModel.colorPrimary,
                     shouldAnimate = shouldAnimateColor,
                     lifecycleOwner = lifecycleOwner,
                 )

@@ -577,7 +577,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     combine(
                             clockPickerViewModel.previewingClock,
                             clockPickerViewModel.previewingClockSize,
-                            clockPickerViewModel.showClockControllerView,
+                            clockPickerViewModel.showPickerClockControllerView,
                             ::Triple,
                         )
                         .collect { (clock, size, showClock) ->
