@@ -216,6 +216,7 @@ constructor(
                                                     materialColorsGenerator.generate(
                                                         colorOption.seedColor,
                                                         colorOption.style,
+                                                        darkMode,
                                                     )
                                                 putIntArray(KEY_COLOR_RESOURCE_IDS, ids)
                                                 putIntArray(KEY_COLOR_VALUES, colors)
