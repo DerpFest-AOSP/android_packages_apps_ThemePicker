@@ -17,10 +17,12 @@ package com.android.customization.module.logging
 
 import android.app.WallpaperManager
 import android.content.Intent
+import android.stats.style.StyleEnums
 import android.stats.style.StyleEnums.APP_LAUNCHED
 import android.stats.style.StyleEnums.CLOCK_APPLIED
 import android.stats.style.StyleEnums.CLOCK_COLOR_APPLIED
 import android.stats.style.StyleEnums.CLOCK_SIZE_APPLIED
+import android.stats.style.StyleEnums.CURATED_PHOTOS_RENDER_COMPLETE
 import android.stats.style.StyleEnums.DARK_THEME_APPLIED
 import android.stats.style.StyleEnums.ENTER_SCREEN
 import android.stats.style.StyleEnums.GRID_APPLIED
@@ -73,6 +75,7 @@ import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoi
 import com.android.wallpaper.module.logging.UserEventLogger.WallpaperDestination
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
 import com.android.wallpaper.util.LaunchSourceUtils
+import io.grpc.Status
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -267,6 +270,25 @@ constructor(
             .get(SHAPE_APPLIED)
             .setAppSessionId(appSessionId.getId())
             .setShapePackageHash(getIdHashCode(shapeId))
+            .log()
+    }
+
+    // We use the field toggle on to denote whether the event corresponds to a user selected photo
+    // or a default wallpaper
+    override fun logCuratedPhotosRendered(timeElapsedMillis: Long, userPhoto: Boolean) {
+        sysUiStatsLoggerFactory
+            .get(CURATED_PHOTOS_RENDER_COMPLETE)
+            .setAppSessionId(appSessionId.getId())
+            .setTimeElapsed(timeElapsedMillis)
+            .setToggleOn(userPhoto)
+            .log()
+    }
+
+    override fun logCuratedPhotosFetched(timeElapsedMillis: Long, status: Status) {
+        sysUiStatsLoggerFactory
+            .get(StyleEnums.CURATED_PHOTOS_FETCH_END)
+            .setAppSessionId(appSessionId.getId())
+            .setTimeElapsed(timeElapsedMillis)
             .log()
     }
 
