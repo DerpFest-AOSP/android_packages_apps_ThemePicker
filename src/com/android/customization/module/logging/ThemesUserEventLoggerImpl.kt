@@ -17,11 +17,15 @@ package com.android.customization.module.logging
 
 import android.app.WallpaperManager
 import android.content.Intent
-import android.stats.style.StyleEnums
+import android.stats.style.StyleEnums.APP_ICON_STYLE_THEMED
+import android.stats.style.StyleEnums.APP_ICON_STYLE_UNSPECIFIED
 import android.stats.style.StyleEnums.APP_LAUNCHED
 import android.stats.style.StyleEnums.CLOCK_APPLIED
 import android.stats.style.StyleEnums.CLOCK_COLOR_APPLIED
 import android.stats.style.StyleEnums.CLOCK_SIZE_APPLIED
+import android.stats.style.StyleEnums.CLOCK_SIZE_DYNAMIC
+import android.stats.style.StyleEnums.CLOCK_SIZE_SMALL
+import android.stats.style.StyleEnums.CURATED_PHOTOS_FETCH_END
 import android.stats.style.StyleEnums.CURATED_PHOTOS_RENDER_COMPLETE
 import android.stats.style.StyleEnums.DARK_THEME_APPLIED
 import android.stats.style.StyleEnums.ENTER_SCREEN
@@ -58,10 +62,18 @@ import android.stats.style.StyleEnums.WALLPAPER_EFFECT_FG_DOWNLOAD
 import android.stats.style.StyleEnums.WALLPAPER_EFFECT_PROBE
 import android.stats.style.StyleEnums.WALLPAPER_EXPLORE
 import android.text.TextUtils
+import android.util.Log
 import com.android.customization.model.color.ColorCustomizationManager
 import com.android.customization.model.grid.GridOptionModel
+import com.android.customization.model.grid.ShapeGridManager
+import com.android.customization.model.grid.ShapeOptionModel
 import com.android.customization.module.logging.ThemesUserEventLogger.ClockSize
 import com.android.customization.module.logging.ThemesUserEventLogger.ColorSource
+import com.android.customization.picker.clock.data.repository.ClockPickerRepository
+import com.android.customization.picker.clock.shared.ClockSize.DYNAMIC
+import com.android.customization.picker.clock.shared.ClockSize.SMALL
+import com.android.customization.picker.themedicon.data.repository.ThemedIconRepository
+import com.android.systemui.shared.customization.data.content.CustomizationProviderClient
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.APP_ICONS
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.GRID
@@ -78,6 +90,7 @@ import com.android.wallpaper.util.LaunchSourceUtils
 import io.grpc.Status
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.first
 
 /** StatsLog-backed implementation of [ThemesUserEventLogger]. */
 @Singleton
@@ -86,12 +99,17 @@ class ThemesUserEventLoggerImpl
 constructor(
     private val preferences: WallpaperPreferences,
     private val colorManager: ColorCustomizationManager,
+    private val shapeGridManager: ShapeGridManager,
+    private val themedIconRepository: ThemedIconRepository,
+    private val clockPickerRepository: ClockPickerRepository,
+    private val customizationProviderClient: CustomizationProviderClient,
     private val appSessionId: AppSessionId,
     private val sysUiStatsLoggerFactory: SysUiStatsLoggerFactory,
 ) : ThemesUserEventLogger {
 
-    override fun logSnapshot() {
-        // TODO(b/409336077): Log more customizable features, e.g. clock, grid, app icon shape, ...
+    override suspend fun logSnapshot() {
+        val selectedClockLoggingData = clockPickerRepository.getSelectedClockLoggingData()
+
         sysUiStatsLoggerFactory
             .get(SNAPSHOT)
             .setWallpaperCategoryHash(preferences.getHomeCategoryHash())
@@ -103,6 +121,14 @@ constructor(
             .setColorSource(colorManager.currentColorSourceForLogging)
             .setColorVariant(colorManager.currentStyleForLogging)
             .setSeedColor(colorManager.currentSeedColorForLogging)
+            .setShapePackageHash(shapeGridManager.getSelectedShapeIdHash())
+            .setAppIconStyle(themedIconRepository.getAppIconStyle())
+            .setLauncherGrid(shapeGridManager.getSelectedGridInt())
+            .setClockPackageHash(selectedClockLoggingData.clockIdHash)
+            .setClockSeedColor(selectedClockLoggingData.clockSeedColor)
+            .setUseClockCustomization(selectedClockLoggingData.useClockCustomization)
+            .setClockSize(selectedClockLoggingData.clockSize)
+            .setShortcut(customizationProviderClient.getSelectedShortcutsString())
             .log()
     }
 
@@ -286,7 +312,7 @@ constructor(
 
     override fun logCuratedPhotosFetched(timeElapsedMillis: Long, status: Status) {
         sysUiStatsLoggerFactory
-            .get(StyleEnums.CURATED_PHOTOS_FETCH_END)
+            .get(CURATED_PHOTOS_FETCH_END)
             .setAppSessionId(appSessionId.getId())
             .setTimeElapsed(timeElapsedMillis)
             .log()
@@ -319,6 +345,10 @@ constructor(
      * The upper limit for the column / row count is 99.
      */
     private fun GridOptionModel.getLauncherGridInt(): Int {
+        return getLauncherGridInt(cols, rows)
+    }
+
+    private fun getLauncherGridInt(cols: Int, rows: Int): Int {
         return cols * 100 + rows
     }
 
@@ -380,7 +410,61 @@ constructor(
         return getIdHashCode(getLockWallpaperEffects())
     }
 
+    private suspend fun ShapeGridManager.getSelectedShapeIdHash(): Int {
+        val selectedShape: ShapeOptionModel? =
+            try {
+                getShapeOptions().firstOrNull { it.isCurrent }
+            } catch (e: Exception) {
+                Log.e(TAG, "Fail to get shape options. Skip logging selected shape.", e)
+                null
+            }
+        return getIdHashCode(selectedShape?.key)
+    }
+
+    private suspend fun ShapeGridManager.getSelectedGridInt(): Int {
+        val selectedGrid: GridOptionModel? =
+            try {
+                getGridOptions().firstOrNull { it.isCurrent }
+            } catch (e: Exception) {
+                Log.e(TAG, "Fail to get grid options. Skip logging selected grid.", e)
+                null
+            }
+        return selectedGrid?.getLauncherGridInt() ?: 0
+    }
+
+    private suspend fun ThemedIconRepository.getAppIconStyle(): Int {
+        val isThemedIconActivated = isActivated.first()
+        return if (isThemedIconActivated) APP_ICON_STYLE_THEMED else APP_ICON_STYLE_UNSPECIFIED
+    }
+
+    private suspend fun ClockPickerRepository.getSelectedClockLoggingData():
+        SelectedClockLoggingData {
+        val selectedClock = selectedClock.first()
+        val selectedClockSize = selectedClockSize.first()
+        return SelectedClockLoggingData(
+            clockIdHash = getIdHashCode(selectedClock.clockId),
+            clockSeedColor = selectedClock.seedColor ?: 0,
+            useClockCustomization = selectedClock.axisPresetConfig?.current != null,
+            clockSize =
+                when (selectedClockSize) {
+                    SMALL -> CLOCK_SIZE_SMALL
+                    DYNAMIC -> CLOCK_SIZE_DYNAMIC
+                },
+        )
+    }
+
+    private suspend fun CustomizationProviderClient.getSelectedShortcutsString(): String {
+        val shortcutSelections = querySelections()
+        return shortcutSelections.joinToString(separator = ",") {
+            "${it.slotId}:${it.affordanceId}"
+        }
+    }
+
     private fun getIdHashCode(id: String?): Int {
         return id?.hashCode() ?: 0
+    }
+
+    companion object {
+        private const val TAG = "ThemesUserEventLoggerImpl"
     }
 }
