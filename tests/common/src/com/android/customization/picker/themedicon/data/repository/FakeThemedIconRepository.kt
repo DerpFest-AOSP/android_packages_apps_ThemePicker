@@ -23,12 +23,17 @@ import kotlinx.coroutines.flow.asStateFlow
 
 @Singleton
 class FakeThemedIconRepository @Inject constructor() : ThemedIconRepository {
-    override val isAvailable = MutableStateFlow(true).asStateFlow()
+    private val _isAvailable = MutableStateFlow(true)
+    override val isAvailable = _isAvailable.asStateFlow()
 
     private val _isActivated = MutableStateFlow(false)
     override val isActivated = _isActivated.asStateFlow()
 
     override suspend fun setThemedIconEnabled(enabled: Boolean) {
         _isActivated.value = enabled
+    }
+
+    fun setIsAvailable(isAvailable: Boolean) {
+        _isAvailable.value = isAvailable
     }
 }
