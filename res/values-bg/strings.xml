@@ -145,7 +145,7 @@
     <string name="keyguard_quick_affordance_title" msgid="4242813186995735584">"Преки пътища"</string>
     <string name="keyguard_quick_affordance_section_title" msgid="2806304242671717309">"Преки пътища"</string>
     <string name="color_contrast_section_title" msgid="7194809124718896091">"Контраст на цветовете"</string>
-    <string name="color_contrast_default_title" msgid="7954235103549276978">"Основно"</string>
+    <string name="color_contrast_default_title" msgid="7954235103549276978">"По подразбиране"</string>
     <string name="color_contrast_medium_title" msgid="8071574793250090215">"Средно"</string>
     <string name="color_contrast_high_title" msgid="5554685752479470200">"Високо"</string>
     <string name="keyguard_quick_affordance_two_selected_template" msgid="1757099194522296363">"<xliff:g id="FIRST">%1$s</xliff:g>, <xliff:g id="SECOND">%2$s</xliff:g>"</string>
