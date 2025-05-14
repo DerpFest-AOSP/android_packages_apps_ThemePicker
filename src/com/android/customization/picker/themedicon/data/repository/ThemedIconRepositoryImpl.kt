@@ -96,7 +96,11 @@ constructor(
 
     override val isAvailable: Flow<Boolean> =
         uri.map { it != null }
-            .shareIn(scope = backgroundScope, started = SharingStarted.WhileSubscribed())
+            .shareIn(
+                scope = backgroundScope,
+                started = SharingStarted.WhileSubscribed(),
+                replay = 1,
+            )
 
     override val isActivated: Flow<Boolean> =
         callbackFlow {
@@ -133,7 +137,7 @@ constructor(
                 initialValue = false,
             )
 
-    private fun getThemedIconEnabled(uri: Uri): Boolean {
+    fun getThemedIconEnabled(uri: Uri): Boolean {
         val cursor =
             contentResolver.query(
                 uri,
