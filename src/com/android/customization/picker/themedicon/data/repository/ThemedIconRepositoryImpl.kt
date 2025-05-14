@@ -96,7 +96,11 @@ constructor(
 
     override val isAvailable: Flow<Boolean> =
         uri.map { it != null }
-            .shareIn(scope = backgroundScope, started = SharingStarted.WhileSubscribed())
+            .shareIn(
+                scope = backgroundScope,
+                started = SharingStarted.WhileSubscribed(),
+                replay = 1,
+            )
 
     override val isActivated: Flow<Boolean> =
         callbackFlow {
