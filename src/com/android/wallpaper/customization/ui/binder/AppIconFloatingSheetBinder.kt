@@ -17,9 +17,11 @@
 package com.android.wallpaper.customization.ui.binder
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -82,6 +84,8 @@ object AppIconFloatingSheetBinder {
 
         val themedIconsSwitch = view.requireViewById<MaterialSwitch>(R.id.themed_icon_toggle)
         val themedIconEntry = view.requireViewById<ViewGroup>(R.id.themed_icon_toggle_entry)
+        val themedIconTitle = view.requireViewById<TextView>(R.id.themed_icon_toggle_title)
+        val themedIconBetaLabel = view.requireViewById<TextView>(R.id.themed_icon_beta_title)
 
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -111,11 +115,21 @@ object AppIconFloatingSheetBinder {
                 }
 
                 launch {
-                    var binding: SwitchColorBinder.Binding? = null
+                    var switchBinding: SwitchColorBinder.Binding? = null
+                    var titleBinding: ColorUpdateBinder.Binding? = null
                     viewModel.previewingIsThemeIconEnabled.collect {
                         themedIconsSwitch.isChecked = it
-                        binding?.destroy()
-                        binding =
+                        titleBinding?.destroy()
+                        titleBinding =
+                            bindTitleColor(
+                                themedIconTitle,
+                                themedIconBetaLabel,
+                                colorUpdateViewModel,
+                                isFloatingSheetActive,
+                                lifecycleOwner,
+                            )
+                        switchBinding?.destroy()
+                        switchBinding =
                             SwitchColorBinder.bind(
                                 switch = themedIconsSwitch,
                                 isChecked = it,
@@ -133,6 +147,45 @@ object AppIconFloatingSheetBinder {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun bindTitleColor(
+        title: TextView,
+        betaLabel: TextView,
+        colorUpdateViewModel: ColorUpdateViewModel,
+        shouldAnimateColor: () -> Boolean,
+        lifecycleOwner: LifecycleOwner,
+    ): ColorUpdateBinder.Binding {
+        val titleBinding =
+            ColorUpdateBinder.bind(
+                setColor = { color -> title.setTextColor(color) },
+                color = colorUpdateViewModel.colorOnSurface,
+                shouldAnimate = shouldAnimateColor,
+                lifecycleOwner = lifecycleOwner,
+            )
+        val labelBinding =
+            ColorUpdateBinder.bind(
+                setColor = { color -> betaLabel.setTextColor(color) },
+                color = colorUpdateViewModel.colorOnPrimaryContainer,
+                shouldAnimate = shouldAnimateColor,
+                lifecycleOwner = lifecycleOwner,
+            )
+        val labelBackgroundBinding =
+            ColorUpdateBinder.bind(
+                setColor = { color ->
+                    betaLabel.background.setTintList(ColorStateList.valueOf(color))
+                },
+                color = colorUpdateViewModel.colorPrimaryContainer,
+                shouldAnimate = shouldAnimateColor,
+                lifecycleOwner = lifecycleOwner,
+            )
+        return object : ColorUpdateBinder.Binding {
+            override fun destroy() {
+                titleBinding.destroy()
+                labelBinding.destroy()
+                labelBackgroundBinding.destroy()
             }
         }
     }
