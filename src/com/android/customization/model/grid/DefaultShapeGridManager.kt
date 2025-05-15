@@ -86,6 +86,11 @@ constructor(
                                 }
                             }
                             .let { list ->
+                                if (list.isEmpty()) {
+                                    throw IllegalStateException(
+                                        "Grid option list can not be empty. It needs to have at least one item."
+                                    )
+                                }
                                 // In this list, exactly one item should have isCurrent true.
                                 val isCurrentCount = list.count { it.isCurrent }
                                 if (isCurrentCount != 1) {
@@ -133,6 +138,11 @@ constructor(
                                 }
                             }
                             .let { list ->
+                                if (list.isEmpty()) {
+                                    throw IllegalStateException(
+                                        "Shape option list can not be empty. It needs to have at least one item."
+                                    )
+                                }
                                 // In this list, exactly one item should have isCurrent true.
                                 val isCurrentCount = list.count { it.isCurrent }
                                 if (isCurrentCount != 1) {

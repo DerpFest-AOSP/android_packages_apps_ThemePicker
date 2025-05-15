@@ -222,8 +222,10 @@ object ClockFloatingSheetBinder {
                     if (
                         clockStyleContent.height != 0 &&
                             axisPresetSlider.height != 0 &&
-                            _clockFloatingSheetHeights.value.axisPresetSliderHeight == null &&
-                            _clockFloatingSheetHeights.value.clockStyleContentHeight == null
+                            (_clockFloatingSheetHeights.value.clockStyleContentHeight !=
+                                clockSizeContent.height ||
+                                _clockFloatingSheetHeights.value.axisPresetSliderHeight !=
+                                    axisPresetSlider.height)
                     ) {
                         _clockFloatingSheetHeights.value =
                             _clockFloatingSheetHeights.value.copy(
@@ -241,7 +243,8 @@ object ClockFloatingSheetBinder {
                 override fun onGlobalLayout() {
                     if (
                         clockColorContent.height != 0 &&
-                            _clockFloatingSheetHeights.value.clockColorContentHeight == null
+                            _clockFloatingSheetHeights.value.clockColorContentHeight !=
+                                clockColorContent.height
                     ) {
                         _clockFloatingSheetHeights.value =
                             _clockFloatingSheetHeights.value.copy(
@@ -258,7 +261,8 @@ object ClockFloatingSheetBinder {
                 override fun onGlobalLayout() {
                     if (
                         clockSizeContent.height != 0 &&
-                            _clockFloatingSheetHeights.value.clockSizeContentHeight == null
+                            _clockFloatingSheetHeights.value.clockSizeContentHeight !=
+                                clockSizeContent.height
                     ) {
                         _clockFloatingSheetHeights.value =
                             _clockFloatingSheetHeights.value.copy(
