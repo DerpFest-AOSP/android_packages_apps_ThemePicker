@@ -405,6 +405,13 @@ object ClockFloatingSheetBinder {
                 }
 
                 launch {
+                    viewModel.previewingClockColorOptionIndex.collect { indexToFocus ->
+                        (clockColorList.layoutManager as LinearLayoutManager)
+                            .scrollToPositionWithOffset(indexToFocus, 0)
+                    }
+                }
+
+                launch {
                     var binding: SwitchColorBinder.Binding? = null
                     viewModel.previewingClockSize.collect { size ->
                         when (size) {

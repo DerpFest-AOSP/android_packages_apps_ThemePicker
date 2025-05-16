@@ -149,6 +149,9 @@ constructor(
             overridingClock != null && overridingClock.clockId != selectedClock.clockId
         }
 
+    val _previewingClockColorOptionIndex = MutableStateFlow<Int>(0)
+    val previewingClockColorOptionIndex = _previewingClockColorOptionIndex.asStateFlow()
+
     // Represents show and hide of the clock view provided by the picker side.
     private val _showPickerClockControllerView: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val showPickerClockControllerView: Flow<Boolean> = _showPickerClockControllerView.asStateFlow()
@@ -430,6 +433,7 @@ constructor(
                                         null
                                     } else {
                                         {
+                                            _previewingClockColorOptionIndex.value = index
                                             overridingClockColorId.value = colorModel.colorId
                                             overridingSliderProgress.value =
                                                 ClockMetadataModel.DEFAULT_COLOR_TONE_PROGRESS
