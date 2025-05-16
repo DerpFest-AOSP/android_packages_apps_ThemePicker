@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:layout_marginHorizontal="20dp"
+            android:layout_marginHorizontal="@dimen/floating_sheet_content_horizontal_padding"
             android:gravity="center"
             android:text="@string/wallpaper_color_subheader"
             android:textColor="@color/system_on_surface"
@@ -49,26 +49,17 @@
             android:clipChildren="false"
             android:clipToPadding="false" />
 
-        <LinearLayout
+        <com.google.android.material.materialswitch.MaterialSwitch
+            style="@style/SettingslibSwitchStyle.Expressive"
+            android:id="@+id/dark_mode_toggle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:gravity="center_vertical"
             android:layout_marginHorizontal="@dimen/floating_sheet_content_horizontal_padding"
-            android:orientation="horizontal">
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                style="@style/SettingslibSwitchStyle.Expressive"
-                android:id="@+id/dark_mode_toggle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:focusable="false"
-                android:minHeight="0dp"
-                android:text="@string/mode_title"
-                android:textAppearance="@style/SectionTitleTextStyle"
-                android:theme="@style/Theme.Material3.DynamicColors.DayNight" />
-        </LinearLayout>
+            android:background="@null"
+            android:minHeight="0dp"
+            android:text="@string/mode_title"
+            android:textAppearance="@style/SectionTitleTextStyle"
+            android:theme="@style/Theme.Material3.DynamicColors.DayNight" />
     </LinearLayout>
 
     <com.android.wallpaper.picker.customization.ui.view.FloatingToolbar
