@@ -15,6 +15,7 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/floating_sheet_content_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -57,27 +58,53 @@
             android:clipChildren="false" />
     </FrameLayout>
 
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/themed_icon_toggle_entry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:gravity="center_vertical"
-        android:layout_marginHorizontal="@dimen/floating_sheet_content_horizontal_padding"
-        android:orientation="horizontal">
+        android:paddingVertical="@dimen/floating_sheet_content_vertical_padding"
+        android:clipToPadding="false"
+        android:clipChildren="false">
+
+        <TextView
+            style="@style/CustomizationOptionEntryTitleTextStyle"
+            android:id="@+id/themed_icon_toggle_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/themed_icon_title"
+            android:layout_marginStart="@dimen/floating_sheet_content_horizontal_padding"
+            android:layout_marginEnd="@dimen/floating_sheet_clock_style_clock_size_text_margin_end"
+            android:importantForAccessibility="no"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/themed_icon_toggle"
+            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/themed_icon_beta_title" />
+
+        <TextView
+            style="@style/BetaTagTextStyle"
+            android:id="@+id/themed_icon_beta_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/floating_sheet_content_horizontal_padding"
+            android:layout_marginEnd="@dimen/floating_sheet_clock_style_clock_size_text_margin_end"
+            android:importantForAccessibility="no"
+            android:textColor="@color/text_color_on_accent"
+            android:text="@string/beta_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/themed_icon_toggle_title"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
             style="@style/SettingslibSwitchStyle.Expressive"
             android:id="@+id/themed_icon_toggle"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@null"
-            android:focusable="true"
+            android:layout_marginEnd="@dimen/floating_sheet_content_horizontal_padding"
+            android:contentDescription="@string/themed_icon_title"
             android:clickable="true"
-            android:minHeight="0dp"
-            android:text="@string/themed_icon_title"
-            android:textAppearance="@style/SectionTitleTextStyle"
+            app:layout_constraintTop_toTopOf="@+id/themed_icon_toggle_title"
+            app:layout_constraintBottom_toBottomOf="@+id/themed_icon_beta_title"
+            app:layout_constraintEnd_toEndOf="parent"
             android:theme="@style/Theme.Material3.DynamicColors.DayNight" />
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

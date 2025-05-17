@@ -149,6 +149,9 @@ constructor(
             overridingClock != null && overridingClock.clockId != selectedClock.clockId
         }
 
+    val _previewingClockColorOptionIndex = MutableStateFlow<Int>(0)
+    val previewingClockColorOptionIndex = _previewingClockColorOptionIndex.asStateFlow()
+
     // Represents show and hide of the clock view provided by the picker side.
     private val _showPickerClockControllerView: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val showPickerClockControllerView: Flow<Boolean> = _showPickerClockControllerView.asStateFlow()
@@ -252,6 +255,13 @@ constructor(
         }
     val axisPresetsSliderSelectedValue: Flow<Float> =
         previewingClockPresetIndexedStyle.map { it?.presetIndex?.toFloat() }.filterNotNull()
+
+    private val _showClockFacePresetGroupIndexUpdateToast: MutableStateFlow<Int?> =
+        MutableStateFlow(null)
+    // When it emits, show clock face style change toast. This is emitted when clock face is clicked
+    // and the clock style preset group index changes. The integer is the updated group index.
+    val showClockFacePresetGroupIndexUpdateToast: Flow<Int> =
+        _showClockFacePresetGroupIndexUpdateToast.asStateFlow().filterNotNull()
     val onClockFaceClicked: Flow<() -> Unit> =
         combine(groups, previewingClockPresetIndexedStyle) { groups, previewingIndexedStyle ->
             if (groups.isNullOrEmpty()) {
@@ -272,6 +282,7 @@ constructor(
                                 presetIndex = nextPresetIndex,
                                 style = nextGroup.presets[nextPresetIndex],
                             )
+                        _showClockFacePresetGroupIndexUpdateToast.value = nextGroupIndex
                     }
                 }
             }
@@ -422,6 +433,7 @@ constructor(
                                         null
                                     } else {
                                         {
+                                            _previewingClockColorOptionIndex.value = index
                                             overridingClockColorId.value = colorModel.colorId
                                             overridingSliderProgress.value =
                                                 ClockMetadataModel.DEFAULT_COLOR_TONE_PROGRESS

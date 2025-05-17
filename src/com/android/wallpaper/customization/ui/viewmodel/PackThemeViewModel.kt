@@ -35,7 +35,10 @@ class PackThemeViewModel @Inject constructor(private val interactor: PackThemeIn
             ) {
                 val componentName =
                     ComponentName(data.launchingPackageName, data.launchingDetailActivityClass)
-                Intent().apply { component = componentName }
+                Intent().apply {
+                    component = componentName
+                    putExtra(PACK_THEME_ACTIVITY_ENTRYPOINT, ENTRYPOINT_OPTION)
+                }
             } else {
                 null
             }
@@ -51,6 +54,7 @@ class PackThemeViewModel @Inject constructor(private val interactor: PackThemeIn
                 Intent().apply {
                     component = componentName
                     putExtra(THEME_ID, data.suggestedChipThemePackInfo.themeId)
+                    putExtra(PACK_THEME_ACTIVITY_ENTRYPOINT, ENTRYPOINT_SUGGESTED_CHIP)
                 }
             } else {
                 null
@@ -60,5 +64,9 @@ class PackThemeViewModel @Inject constructor(private val interactor: PackThemeIn
 
     private companion object {
         const val THEME_ID = "themeId"
+        const val PACK_THEME_ACTIVITY_ENTRYPOINT = "packThemeActivityEntrypoint"
+
+        const val ENTRYPOINT_OPTION = "entrypointOption"
+        const val ENTRYPOINT_SUGGESTED_CHIP = "entrypointSuggestedChip"
     }
 }

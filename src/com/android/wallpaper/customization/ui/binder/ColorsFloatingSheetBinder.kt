@@ -20,6 +20,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.get
+import androidx.core.view.isEmpty
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -133,10 +135,24 @@ object ColorsFloatingSheetBinder {
                     colorsViewModel.colorOptions.collect { colorOptions ->
                         colorsAdapter.setItems(colorOptions) {
                             var indexToFocus = colorOptions.indexOfFirst { it.isSelected.value }
+
                             indexToFocus = if (indexToFocus < 0) 0 else indexToFocus
                             (colorsList.layoutManager as LinearLayoutManager)
                                 .scrollToPositionWithOffset(indexToFocus, 0)
                         }
+                    }
+                }
+
+                launch {
+                    colorsViewModel.previewingColorOptionIndex.collect { indexToFocus ->
+                        val offset =
+                            if (colorsList != null && !colorsList.isEmpty()) {
+                                colorsList.get(0).width
+                            } else {
+                                0
+                            }
+                        (colorsList.layoutManager as LinearLayoutManager)
+                            .scrollToPositionWithOffset(indexToFocus, offset)
                     }
                 }
 

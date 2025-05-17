@@ -111,6 +111,15 @@
     <!-- Description for clock font editor axis revert button. [CHAR LIMIT=NONE] -->
     <string name="clock_font_editor_revert">Undo clock font changes</string>
 
+    <!-- Toast message to notify that the clock style is updated when they tap on the clock face. They can tap again to undo. [CHAR LIMIT=NONE] -->
+    <string name="clock_style_update_toast">Style changed to <xliff:g name="font_name">%1$s</xliff:g>. Tap again to undo.</string>
+
+    <!-- Clock font style of round. It is used in the style update toast message. [CHAR LIMIT=NONE] -->
+    <string name="clock_style_round">round</string>
+
+    <!-- Clock font style of sharp. It is used in the style update toast message. [CHAR LIMIT=NONE] -->
+    <string name="clock_style_sharp">sharp</string>
+
     <!-- Title of a section of the customization picker where the user can select a Grid size for
         the home screen. [CHAR LIMIT=15] -->
     <string name="grid_title">App grid</string>
@@ -366,6 +375,9 @@
 
     <!-- Title of a section of the customization where the user can select color override for icon. [CHAR LIMIT=30] -->
     <string name="themed_icon_title" msgid="4305612684940220645">Themed icons</string>
+
+    <!-- Title of a section of the customization where the user can select color override for icon. [CHAR LIMIT=40] -->
+    <string name="themed_icon_beta_title">Themed icons (beta)</string>
 
     <!-- Title of a section of the pack theme where the user enter the theme app. [CHAR LIMIT=30] -->
     <string name="pack_theme_title">Themes</string>

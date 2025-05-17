@@ -27,7 +27,15 @@ import android.stats.style.StyleEnums.SCREEN_SHORTCUTS
 import android.stats.style.StyleEnums.SNAPSHOT
 import androidx.test.filters.SmallTest
 import com.android.customization.model.color.ColorCustomizationManager
+import com.android.customization.model.grid.FakeShapeGridManager
 import com.android.customization.model.grid.GridOptionModel
+import com.android.customization.model.grid.ShapeGridManager
+import com.android.customization.picker.clock.data.repository.ClockPickerRepository
+import com.android.customization.picker.clock.data.repository.FakeClockPickerRepository
+import com.android.customization.picker.themedicon.data.repository.ThemedIconRepository
+import com.android.systemui.shared.customization.data.content.CustomizationProviderClient
+import com.android.systemui.shared.customization.data.content.FakeCustomizationProviderClient
+import com.android.systemui.shared.keyguard.shared.model.KeyguardQuickAffordanceSlots
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.APP_ICONS
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.GRID
@@ -39,6 +47,8 @@ import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import javax.inject.Inject
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -52,8 +62,23 @@ class ThemesUserEventLoggerImplTest {
 
     @get:Rule var hiltRule = HiltAndroidRule(this)
 
+    @Inject lateinit var testScope: TestScope
+
     @Inject lateinit var wallpaperPreferences: WallpaperPreferences
     @Inject lateinit var colorCustomizationManager: ColorCustomizationManager
+    @Inject lateinit var shapeGridManager: ShapeGridManager
+    @Inject lateinit var themedIconRepository: ThemedIconRepository
+    private val clockPickerRepository: ClockPickerRepository = FakeClockPickerRepository()
+    private var customizationProviderClient: CustomizationProviderClient =
+        FakeCustomizationProviderClient(
+            initialSelections =
+                mapOf(
+                    KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_START to
+                        listOf(FakeCustomizationProviderClient.AFFORDANCE_1),
+                    KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_END to
+                        listOf(FakeCustomizationProviderClient.AFFORDANCE_2),
+                )
+        )
     @Inject lateinit var appSessionId: AppSessionId
     @Inject lateinit var sysUiStatsLoggerFactory: SysUiStatsLoggerFactory
 
@@ -80,31 +105,56 @@ class ThemesUserEventLoggerImplTest {
             ThemesUserEventLoggerImpl(
                 wallpaperPreferences,
                 colorCustomizationManager,
+                shapeGridManager,
+                themedIconRepository,
+                clockPickerRepository,
+                customizationProviderClient,
                 appSessionId,
                 sysUiStatsLoggerFactory,
             )
     }
 
     @Test
-    fun logSnapshot_logsCorrectData() {
-        underTest.logSnapshot()
+    fun logSnapshot_logsCorrectData() =
+        testScope.runTest {
+            underTest.logSnapshot()
 
-        assertThat(fakeStatsLogger.action).isEqualTo(SNAPSHOT)
-        assertThat(fakeStatsLogger.logCalled).isTrue()
-        assertThat(fakeStatsLogger.wallpaperCategoryHash)
-            .isEqualTo(TEST_WALLPAPER_COLLECTION_ID.hashCode())
-        assertThat(fakeStatsLogger.wallpaperIdHash).isEqualTo(TEST_WALLPAPER_REMOTE_ID.hashCode())
-        assertThat(fakeStatsLogger.effectIdHash).isEqualTo(TEST_WALLPAPER_EFFECT.hashCode())
-        assertThat(fakeStatsLogger.lockWallpaperCategoryHash)
-            .isEqualTo(TEST_LOCK_WALLPAPER_COLLECTION_ID.hashCode())
-        assertThat(fakeStatsLogger.lockWallpaperIdHash)
-            .isEqualTo(TEST_LOCK_WALLPAPER_REMOTE_ID.hashCode())
-        assertThat(fakeStatsLogger.lockEffectIdHash)
-            .isEqualTo(TEST_LOCK_WALLPAPER_EFFECT.hashCode())
-        assertThat(fakeStatsLogger.colorSource).isEqualTo(0)
-        assertThat(fakeStatsLogger.colorVariant).isEqualTo(0)
-        assertThat(fakeStatsLogger.seedColor).isEqualTo(0)
-    }
+            assertThat(fakeStatsLogger.action).isEqualTo(SNAPSHOT)
+            assertThat(fakeStatsLogger.logCalled).isTrue()
+            assertThat(fakeStatsLogger.wallpaperCategoryHash)
+                .isEqualTo(TEST_WALLPAPER_COLLECTION_ID.hashCode())
+            assertThat(fakeStatsLogger.wallpaperIdHash)
+                .isEqualTo(TEST_WALLPAPER_REMOTE_ID.hashCode())
+            assertThat(fakeStatsLogger.effectIdHash).isEqualTo(TEST_WALLPAPER_EFFECT.hashCode())
+            assertThat(fakeStatsLogger.lockWallpaperCategoryHash)
+                .isEqualTo(TEST_LOCK_WALLPAPER_COLLECTION_ID.hashCode())
+            assertThat(fakeStatsLogger.lockWallpaperIdHash)
+                .isEqualTo(TEST_LOCK_WALLPAPER_REMOTE_ID.hashCode())
+            assertThat(fakeStatsLogger.lockEffectIdHash)
+                .isEqualTo(TEST_LOCK_WALLPAPER_EFFECT.hashCode())
+            assertThat(fakeStatsLogger.colorSource).isEqualTo(0)
+            assertThat(fakeStatsLogger.colorVariant).isEqualTo(0)
+            assertThat(fakeStatsLogger.seedColor).isEqualTo(0)
+            assertThat(fakeStatsLogger.shapePackageHash)
+                .isEqualTo(
+                    FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST.first { it.isCurrent }
+                        .key
+                        .hashCode()
+                )
+            assertThat(fakeStatsLogger.appIconStyle)
+                .isEqualTo(StyleEnums.APP_ICON_STYLE_UNSPECIFIED)
+            assertThat(fakeStatsLogger.launcherGrid)
+                .isEqualTo(
+                    FakeShapeGridManager.DEFAULT_GRID_OPTION_LIST.first { it.isCurrent }
+                        .let { it.cols * 100 + it.rows }
+                )
+            assertThat(fakeStatsLogger.clockPackageHash)
+                .isEqualTo(FakeClockPickerRepository.CLOCK_ID_0.hashCode())
+            assertThat(fakeStatsLogger.clockSeedColor).isEqualTo(0)
+            assertThat(fakeStatsLogger.clockSize).isEqualTo(StyleEnums.CLOCK_SIZE_DYNAMIC)
+            assertThat(fakeStatsLogger.shortcut)
+                .isEqualTo("bottom_start:affordance_1,bottom_end:affordance_2")
+        }
 
     @Test
     fun logAppLaunched_usesNewSessionIdAndCorrectSource() {

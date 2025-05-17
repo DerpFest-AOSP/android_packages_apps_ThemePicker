@@ -39,8 +39,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -54,6 +53,7 @@ constructor(
     @BackgroundDispatcher private val backgroundScope: CoroutineScope,
 ) : ThemedIconRepository {
     private val uri: MutableStateFlow<Uri?> = MutableStateFlow(null)
+    private val _isAvailable: MutableStateFlow<Boolean?> = MutableStateFlow(null)
     private var getUriJob: Job =
         backgroundScope.launch {
             val homeIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
@@ -92,11 +92,10 @@ constructor(
                         .appendPath(ICON_THEMED)
                         .build()
                 }
+            _isAvailable.value = uri.value != null
         }
 
-    override val isAvailable: Flow<Boolean> =
-        uri.map { it != null }
-            .shareIn(scope = backgroundScope, started = SharingStarted.WhileSubscribed())
+    override val isAvailable: Flow<Boolean> = _isAvailable.filterNotNull()
 
     override val isActivated: Flow<Boolean> =
         callbackFlow {
@@ -133,7 +132,7 @@ constructor(
                 initialValue = false,
             )
 
-    private fun getThemedIconEnabled(uri: Uri): Boolean {
+    fun getThemedIconEnabled(uri: Uri): Boolean {
         val cursor =
             contentResolver.query(
                 uri,
