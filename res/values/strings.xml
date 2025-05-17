@@ -376,6 +376,9 @@
     <!-- Title of a section of the customization where the user can select color override for icon. [CHAR LIMIT=30] -->
     <string name="themed_icon_title" msgid="4305612684940220645">Themed icons</string>
 
+    <!-- Title of a section of the customization where the user can select color override for icon. [CHAR LIMIT=40] -->
+    <string name="themed_icon_beta_title">Themed icons (beta)</string>
+
     <!-- Title of a section of the pack theme where the user enter the theme app. [CHAR LIMIT=30] -->
     <string name="pack_theme_title">Themes</string>
 
