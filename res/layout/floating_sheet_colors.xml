@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/floating_sheet_content_horizontal_padding"
             android:background="@null"
-            android:minHeight="0dp"
+            android:minHeight="@dimen/accessibility_min_height"
             android:text="@string/mode_title"
             android:textAppearance="@style/SectionTitleTextStyle"
             android:theme="@style/Theme.Material3.DynamicColors.DayNight" />
