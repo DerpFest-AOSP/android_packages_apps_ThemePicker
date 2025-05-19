@@ -27,6 +27,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.get
+import androidx.core.view.isEmpty
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -425,6 +427,19 @@ object ClockFloatingSheetBinder {
                     viewModel.previewingClockColorOptionIndex.collect { indexToFocus ->
                         (clockColorList.layoutManager as LinearLayoutManager)
                             .scrollToPositionWithOffset(indexToFocus, 0)
+                    }
+                }
+
+                launch {
+                    viewModel.previewingClockStyleOptionIndex.collect { indexToFocus ->
+                        val offset =
+                            if (!clockStyleList.isEmpty()) {
+                                clockStyleList.get(0).width
+                            } else {
+                                0
+                            }
+                        (clockStyleList.layoutManager as LinearLayoutManager)
+                            .scrollToPositionWithOffset(indexToFocus, offset)
                     }
                 }
 

@@ -153,6 +153,9 @@ constructor(
     val _previewingClockColorOptionIndex = MutableStateFlow<Int>(0)
     val previewingClockColorOptionIndex = _previewingClockColorOptionIndex.asStateFlow()
 
+    val _previewingClockStyleOptionIndex = MutableStateFlow<Int>(0)
+    val previewingClockStyleOptionIndex = _previewingClockStyleOptionIndex.asStateFlow()
+
     // Represents show and hide of the clock view provided by the picker side.
     private val _showPickerClockControllerView: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val showPickerClockControllerView: Flow<Boolean> = _showPickerClockControllerView.asStateFlow()
@@ -195,8 +198,9 @@ constructor(
                 delay(CLOCKS_EVENT_UPDATE_DELAY_MILLIS)
                 val allClockMap = allClocks.groupBy { it.axisPresetConfig != null }
                 buildList {
-                    allClockMap[true]?.map { add(it.toOption(resources, true)) }
-                    allClockMap[false]?.map { add(it.toOption(resources, false)) }
+                    var index = 0
+                    allClockMap[true]?.forEach { add(it.toOption(resources, true, index++)) }
+                    allClockMap[false]?.forEach { add(it.toOption(resources, false, index++)) }
                 }
             }
             // makes sure that the operations above this statement are executed on I/O dispatcher
@@ -292,6 +296,7 @@ constructor(
     private suspend fun ClockMetadataModel.toOption(
         resources: Resources,
         hasPresets: Boolean,
+        index: Int,
     ): OptionItemViewModel2<ClockStyleModel> {
         val isSelectedFlow = previewingClock.map { it.clockId == clockId }.stateIn(viewModelScope)
         val contentDescription =
@@ -308,6 +313,7 @@ constructor(
                         null
                     } else {
                         fun() {
+                            _previewingClockStyleOptionIndex.value = index
                             overridingClock.value = this
                         }
                     }
