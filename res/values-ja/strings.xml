@@ -48,6 +48,9 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"画面の隅に小さい時計を表示します"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"時計のフォント変更を適用"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"時計のフォント変更を元に戻す"</string>
+    <string name="clock_style_update_toast" msgid="6933583129162805444">"スタイルを <xliff:g id="ID_1">%1$s</xliff:g> に変更しました。元に戻すにはもう一度タップします。"</string>
+    <string name="clock_style_round" msgid="261319982647730366">"丸ゴシック"</string>
+    <string name="clock_style_sharp" msgid="453991773733285628">"角ゴシック"</string>
     <string name="grid_title" msgid="1688173478777254123">"アプリグリッド"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"アプリの形状とレイアウト"</string>
     <string name="grid_layout" msgid="370175667652663686">"レイアウト"</string>
@@ -121,6 +124,7 @@
     <string name="mode_title" msgid="2394873501427436055">"ダークモード"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"バッテリー セーバーにより一時的に無効になりました"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"テーマアイコン"</string>
+    <string name="themed_icon_beta_title" msgid="5433087142610402812">"テーマアイコン（ベータ版）"</string>
     <string name="pack_theme_title" msgid="3052703041673623611">"テーマ"</string>
     <string name="beta_title" msgid="8703819523760746458">"ベータ版"</string>
     <string name="theme_packs_description" msgid="4647233199054882039">"Google Pixel のテーマを探す"</string>
