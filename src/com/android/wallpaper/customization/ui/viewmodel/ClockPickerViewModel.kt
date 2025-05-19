@@ -570,6 +570,7 @@ constructor(
         overridingSliderProgress.value = null
         overridingClockPresetIndexedStyle.value = null
         _selectedTab.value = Tab.STYLE
+        _showClockFacePresetGroupIndexUpdateToast.value = null
     }
 
     suspend fun buildPreviewConfig(previewContext: Context): ClockPreviewConfig {
