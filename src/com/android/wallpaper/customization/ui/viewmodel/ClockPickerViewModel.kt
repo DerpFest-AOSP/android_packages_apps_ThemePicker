@@ -30,6 +30,7 @@ import com.android.customization.picker.clock.ui.viewmodel.ClockColorViewModel
 import com.android.customization.picker.color.domain.interactor.ColorPickerInteractor2
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.internal.policy.SystemBarUtils
+import com.android.systemui.customization.clocks.R as clocksR
 import com.android.systemui.plugins.clocks.AxisPresetConfig
 import com.android.systemui.plugins.clocks.AxisPresetConfig.IndexedStyle
 import com.android.systemui.plugins.clocks.ClockAxisStyle
@@ -579,6 +580,10 @@ constructor(
             statusBarHeight = SystemBarUtils.getStatusBarHeight(previewContext),
             splitShadeTopMargin = 0,
             clockTopMargin = 0,
+            statusViewMarginHorizontal =
+                previewContext.resources.getDimensionPixelSize(
+                    clocksR.dimen.status_view_margin_horizontal
+                ),
         )
     }
 
