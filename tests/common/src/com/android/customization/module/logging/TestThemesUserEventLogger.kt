@@ -57,7 +57,7 @@ class TestThemesUserEventLogger @Inject constructor() :
 
     override fun logGridApplied(grid: GridOptionModel) {}
 
-    override fun logClockApplied(clockId: String) {}
+    override fun logClockApplied(clockId: String, useClockCustomization: Boolean) {}
 
     override fun logClockColorApplied(seedColor: Int) {}
 

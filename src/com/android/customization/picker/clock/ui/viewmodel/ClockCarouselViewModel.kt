@@ -141,7 +141,7 @@ class ClockCarouselViewModel(
         setSelectedClockJob =
             viewModelScope.launch(backgroundDispatcher) {
                 interactor.setSelectedClock(clockId)
-                logger.logClockApplied(clockId)
+                logger.logClockApplied(clockId, false)
             }
     }
 
