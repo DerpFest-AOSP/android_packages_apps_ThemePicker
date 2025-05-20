@@ -471,12 +471,20 @@ object ClockFloatingSheetBinder {
                                 override fun onStartTrackingTouch(slider: Slider) {}
 
                                 override fun onStopTrackingTouch(slider: Slider) {
-                                    axisPresetsSliderViewModel.onSliderStopTrackingTouch(
-                                        slider.value
-                                    )
+                                    if (!optionsViewModel.isAccessibilityEnabled(slider.context)) {
+                                        axisPresetsSliderViewModel.onSliderStopTrackingTouch(
+                                            slider.value
+                                        )
+                                    }
                                 }
                             }
                         )
+                        axisPresetSlider.clearOnChangeListeners()
+                        axisPresetSlider.addOnChangeListener { slider, value, fromUser ->
+                            if (optionsViewModel.isAccessibilityEnabled(slider.context)) {
+                                axisPresetsSliderViewModel.onSliderStopTrackingTouch(value)
+                            }
+                        }
                     }
                 }
 
