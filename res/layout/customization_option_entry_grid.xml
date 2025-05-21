@@ -59,6 +59,7 @@
 
         <ImageView
             android:id="@+id/option_entry_icon"
+            android:importantForAccessibility="no"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/grid_preview_card_content_description" />
