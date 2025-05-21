@@ -27,6 +27,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.get
+import androidx.core.view.isEmpty
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -429,6 +431,19 @@ object ClockFloatingSheetBinder {
                 }
 
                 launch {
+                    viewModel.previewingClockStyleOptionIndex.collect { indexToFocus ->
+                        val offset =
+                            if (!clockStyleList.isEmpty()) {
+                                clockStyleList.get(0).width
+                            } else {
+                                0
+                            }
+                        (clockStyleList.layoutManager as LinearLayoutManager)
+                            .scrollToPositionWithOffset(indexToFocus, offset)
+                    }
+                }
+
+                launch {
                     var binding: SwitchColorBinder.Binding? = null
                     viewModel.previewingClockSize.collect { size ->
                         when (size) {
@@ -471,12 +486,20 @@ object ClockFloatingSheetBinder {
                                 override fun onStartTrackingTouch(slider: Slider) {}
 
                                 override fun onStopTrackingTouch(slider: Slider) {
-                                    axisPresetsSliderViewModel.onSliderStopTrackingTouch(
-                                        slider.value
-                                    )
+                                    if (!optionsViewModel.isAccessibilityEnabled(slider.context)) {
+                                        axisPresetsSliderViewModel.onSliderStopTrackingTouch(
+                                            slider.value
+                                        )
+                                    }
                                 }
                             }
                         )
+                        axisPresetSlider.clearOnChangeListeners()
+                        axisPresetSlider.addOnChangeListener { slider, value, fromUser ->
+                            if (optionsViewModel.isAccessibilityEnabled(slider.context)) {
+                                axisPresetsSliderViewModel.onSliderStopTrackingTouch(value)
+                            }
+                        }
                     }
                 }
 

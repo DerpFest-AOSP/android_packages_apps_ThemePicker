@@ -16,6 +16,8 @@
 
 package com.android.wallpaper.customization.ui.viewmodel
 
+import android.content.Context
+import android.view.accessibility.AccessibilityManager
 import com.android.customization.picker.mode.ui.viewmodel.DarkModeViewModel
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil
 import com.android.wallpaper.picker.customization.ui.view.ApplyButton
@@ -26,6 +28,7 @@ import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOpti
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModelFactory
 import com.android.wallpaper.picker.customization.ui.viewmodel.DefaultCustomizationOptionsViewModel
+import com.android.wallpaper.picker.preview.ui.util.AccessibilityUtil
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -269,6 +272,12 @@ constructor(
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), APPLY_BUTTON_DISABLED)
 
     val isApplyButtonVisible: Flow<Boolean> = selectedOption.map { it != null }
+
+    fun isAccessibilityEnabled(context: Context): Boolean {
+        return AccessibilityUtil.isAccessibilityEnabled(
+            context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+        )
+    }
 
     @ViewModelScoped
     @AssistedFactory
