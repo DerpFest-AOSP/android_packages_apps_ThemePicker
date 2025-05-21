@@ -354,19 +354,30 @@ constructor(
             overridingClockColorId ?: selectedColorId ?: DEFAULT_CLOCK_COLOR_ID
         }
 
-    // Clock color slider progress. Range is 0 - 100.
-    private val overridingSliderProgress = MutableStateFlow<Int?>(null)
+    // Clock color slider progress. Range is 0 - 100. It update as frequently as user drags the
+    // slider.
+    private val overridingColorSliderProgress = MutableStateFlow<Int?>(null)
+    // Clock color slider progress. Range is 0 - 100. It only update as user touches up the slider.
+    private val overridingColorSliderTouchUpProgress = MutableStateFlow<Int?>(null)
     private val isSliderProgressEdited =
-        combine(overridingSliderProgress, clockPickerInteractor.colorToneProgress) {
-            overridingSliderProgress,
+        combine(overridingColorSliderTouchUpProgress, clockPickerInteractor.colorToneProgress) {
+            overridingColorSliderTouchUpProgress,
             colorToneProgress ->
-            overridingSliderProgress != null && (overridingSliderProgress != colorToneProgress)
+            overridingColorSliderTouchUpProgress != null &&
+                (overridingColorSliderTouchUpProgress != colorToneProgress)
         }
-    val previewingSliderProgress: Flow<Int> =
-        combine(overridingSliderProgress, clockPickerInteractor.colorToneProgress) {
-            overridingSliderProgress,
+    // Note that this flow emits as frequently as user drags the slider.
+    val previewingColorSliderProgress: Flow<Int> =
+        combine(overridingColorSliderProgress, clockPickerInteractor.colorToneProgress) {
+            overridingColorSliderProgress,
             colorToneProgress ->
-            overridingSliderProgress ?: colorToneProgress
+            overridingColorSliderProgress ?: colorToneProgress
+        }
+    private val previewingColorSliderTouchUpProgress: Flow<Int> =
+        combine(overridingColorSliderTouchUpProgress, clockPickerInteractor.colorToneProgress) {
+            overridingColorSliderTouchUpProgress,
+            colorToneProgress ->
+            overridingColorSliderTouchUpProgress ?: colorToneProgress
         }
     val isSliderEnabled: Flow<Boolean> =
         combine(previewingClock, previewingClockColorId) { clock, clockColorId ->
@@ -375,11 +386,19 @@ constructor(
             .distinctUntilChanged()
 
     fun onSliderProgressChanged(progress: Int) {
-        overridingSliderProgress.value = progress
+        overridingColorSliderProgress.value = progress
     }
 
+    fun onSliderTouchUpProgressChanged(progress: Int) {
+        overridingColorSliderProgress.value = progress
+        overridingColorSliderTouchUpProgress.value = progress
+    }
+
+    // Note that this flow can emit as frequently as user drags the color slider.
     val previewingSeedColor: Flow<Int?> =
-        combine(previewingClockColorId, previewingSliderProgress) { clockColorId, sliderProgress ->
+        combine(previewingClockColorId, previewingColorSliderProgress) {
+            clockColorId,
+            colorSliderProgress ->
             val clockColorViewModel =
                 if (clockColorId == DEFAULT_CLOCK_COLOR_ID) null else colorMap[clockColorId]
             if (clockColorViewModel == null) {
@@ -387,7 +406,7 @@ constructor(
             } else {
                 blendColorWithTone(
                     color = clockColorViewModel.color,
-                    colorTone = clockColorViewModel.getColorTone(sliderProgress),
+                    colorTone = clockColorViewModel.getColorTone(colorSliderProgress),
                 )
             }
         }
@@ -436,7 +455,9 @@ constructor(
                                         {
                                             _previewingClockColorOptionIndex.value = index
                                             overridingClockColorId.value = colorModel.colorId
-                                            overridingSliderProgress.value =
+                                            overridingColorSliderProgress.value =
+                                                ClockMetadataModel.DEFAULT_COLOR_TONE_PROGRESS
+                                            overridingColorSliderTouchUpProgress.value =
                                                 ClockMetadataModel.DEFAULT_COLOR_TONE_PROGRESS
                                         }
                                     }
@@ -488,7 +509,9 @@ constructor(
                     } else {
                         {
                             overridingClockColorId.value = DEFAULT_CLOCK_COLOR_ID
-                            overridingSliderProgress.value =
+                            overridingColorSliderProgress.value =
+                                ClockMetadataModel.DEFAULT_COLOR_TONE_PROGRESS
+                            overridingColorSliderTouchUpProgress.value =
                                 ClockMetadataModel.DEFAULT_COLOR_TONE_PROGRESS
                         }
                     }
@@ -521,14 +544,14 @@ constructor(
             previewingClock,
             previewingClockSize,
             previewingClockColorId,
-            previewingSliderProgress,
+            previewingColorSliderTouchUpProgress,
             previewingClockPresetIndexedStyle,
         ) { array ->
             val isEdited: Boolean = array[0] as Boolean
             val clock: ClockMetadataModel = array[1] as ClockMetadataModel
             val size: ClockSize = array[2] as ClockSize
             val previewingColorId: String = array[3] as String
-            val previewProgress: Int = array[4] as Int
+            val previewingColorSliderProgress: Int = array[4] as Int
             val clockAxisStyle: ClockAxisStyle =
                 (array[5] as? IndexedStyle)?.style ?: ClockAxisStyle()
             if (isEdited) {
@@ -538,14 +561,14 @@ constructor(
                         colorMap[previewingColorId]?.let {
                             blendColorWithTone(
                                 color = it.color,
-                                colorTone = it.getColorTone(previewProgress),
+                                colorTone = it.getColorTone(previewingColorSliderProgress),
                             )
                         }
                     clockPickerInteractor.applyClock(
                         clockId = clockId,
                         size = size,
                         selectedColorId = previewingColorId,
-                        colorToneProgress = previewProgress,
+                        colorToneProgress = previewingColorSliderProgress,
                         seedColor = seedColor,
                         axisSettings = clockAxisStyle,
                     )
@@ -567,7 +590,8 @@ constructor(
         overridingClock.value = null
         overridingClockSize.value = null
         overridingClockColorId.value = null
-        overridingSliderProgress.value = null
+        overridingColorSliderProgress.value = null
+        overridingColorSliderTouchUpProgress.value = null
         overridingClockPresetIndexedStyle.value = null
         _selectedTab.value = Tab.STYLE
         _showClockFacePresetGroupIndexUpdateToast.value = null
