@@ -48,6 +48,12 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"ଆପଣଙ୍କ ସ୍କ୍ରିନର କୋଣରେ ଏକ ଛୋଟ ଘଣ୍ଟା ଦେଖାଯାଏ"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"ଘଡ଼ିର ଫଣ୍ଟରେ କରାଯାଇଥିବା ପରିବର୍ତ୍ତନକୁ ଲାଗୁ କରନ୍ତୁ"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"ଘଡ଼ିର ଫଣ୍ଟରେ କରାଯାଇଥିବା ପରିବର୍ତ୍ତନକୁ ଅନଡୁ କରନ୍ତୁ"</string>
+    <!-- no translation found for clock_style_update_toast (6933583129162805444) -->
+    <skip />
+    <!-- no translation found for clock_style_round (261319982647730366) -->
+    <skip />
+    <!-- no translation found for clock_style_sharp (453991773733285628) -->
+    <skip />
     <string name="grid_title" msgid="1688173478777254123">"ଆପ ଗ୍ରିଡ"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"ଆପ ଆକାର ଓ ଲେଆଉଟ"</string>
     <string name="grid_layout" msgid="370175667652663686">"ଲେଆଉଟ"</string>
@@ -121,6 +127,8 @@
     <string name="mode_title" msgid="2394873501427436055">"ଡାର୍କ ଥିମ"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"ବ୍ୟାଟେରୀ ସେଭର୍ ଯୋଗୁଁ ଅସ୍ଥାୟୀ ଭାବେ ଅକ୍ଷମ କରାଯାଇଛି"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"ଥିମ ଥିବା ଆଇକନ"</string>
+    <!-- no translation found for themed_icon_beta_title (5433087142610402812) -->
+    <skip />
     <string name="pack_theme_title" msgid="3052703041673623611">"ଥିମ"</string>
     <string name="beta_title" msgid="8703819523760746458">"ବିଟା"</string>
     <string name="theme_packs_description" msgid="4647233199054882039">"Pixel ଥିମ ଡିସ୍କଭର କରନ୍ତୁ"</string>
