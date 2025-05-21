@@ -645,11 +645,20 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                             ::Pair,
                         )
                         .collect { (selectedOption, onClockFaceClicked) ->
-                            clockFaceClickDelegateView.isVisible =
-                                selectedOption == ThemePickerLockCustomizationOption.CLOCK
-                            clockFaceClickDelegateView.setOnClickListener {
-                                onClockFaceClicked.invoke()
+                            if (
+                                selectedOption == ThemePickerLockCustomizationOption.CLOCK &&
+                                    onClockFaceClicked != null
+                            ) {
+                                clockFaceClickDelegateView.isVisible = true
+                                clockFaceClickDelegateView.setOnClickListener {
+                                    onClockFaceClicked.invoke()
+                                }
+                            } else {
+                                clockFaceClickDelegateView.isVisible = false
+                                clockFaceClickDelegateView.setOnClickListener(null)
                             }
+                            clockFaceClickDelegateView.contentDescription =
+                                context.getString(R.string.clock_style_round_clock)
                         }
                 }
 
