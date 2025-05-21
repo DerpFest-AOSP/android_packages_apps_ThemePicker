@@ -53,36 +53,49 @@ constructor(
                     ?.use { cursor ->
                         buildList {
                                 while (cursor.moveToNext()) {
-                                    val rows = cursor.getInt(cursor.getColumnIndex(COL_ROWS))
-                                    val cols = cursor.getInt(cursor.getColumnIndex(COL_COLS))
-                                    val title =
-                                        cursor.getString(cursor.getColumnIndex(COL_GRID_TITLE))
-                                            ?: context.getString(
-                                                com.android.themepicker.R.string.grid_title_pattern,
-                                                cols,
-                                                rows,
+                                    try {
+                                        val rows = cursor.getInt(cursor.getColumnIndex(COL_ROWS))
+                                        val cols = cursor.getInt(cursor.getColumnIndex(COL_COLS))
+                                        val titleIndex = cursor.getColumnIndex(COL_GRID_TITLE)
+                                        val title =
+                                            if (titleIndex != -1) {
+                                                cursor.getString(titleIndex)
+                                            } else {
+                                                context.getString(
+                                                    com.android.themepicker.R.string
+                                                        .grid_title_pattern,
+                                                    cols,
+                                                    rows,
+                                                )
+                                            }
+                                        add(
+                                            GridOptionModel(
+                                                key =
+                                                    cursor.getString(
+                                                        cursor.getColumnIndex(COL_GRID_KEY)
+                                                    ),
+                                                title = title,
+                                                isCurrent =
+                                                    cursor
+                                                        .getString(
+                                                            cursor.getColumnIndex(COL_IS_DEFAULT)
+                                                        )
+                                                        .toBoolean(),
+                                                rows = rows,
+                                                cols = cols,
+                                                iconId =
+                                                    cursor.getInt(
+                                                        cursor.getColumnIndex(KEY_GRID_ICON_ID)
+                                                    ),
                                             )
-                                    add(
-                                        GridOptionModel(
-                                            key =
-                                                cursor.getString(
-                                                    cursor.getColumnIndex(COL_GRID_KEY)
-                                                ),
-                                            title = title,
-                                            isCurrent =
-                                                cursor
-                                                    .getString(
-                                                        cursor.getColumnIndex(COL_IS_DEFAULT)
-                                                    )
-                                                    .toBoolean(),
-                                            rows = rows,
-                                            cols = cols,
-                                            iconId =
-                                                cursor.getInt(
-                                                    cursor.getColumnIndex(KEY_GRID_ICON_ID)
-                                                ),
                                         )
-                                    )
+                                    } catch (e: IllegalStateException) {
+                                        Log.e(
+                                            TAG,
+                                            "Fail to read from the cursor to build GridOptionModel",
+                                            e,
+                                        )
+                                    }
                                 }
                             }
                             .let { list ->
