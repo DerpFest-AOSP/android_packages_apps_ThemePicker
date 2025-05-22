@@ -25,6 +25,7 @@ import android.stats.style.StyleEnums.CLOCK_COLOR_APPLIED
 import android.stats.style.StyleEnums.CLOCK_SIZE_APPLIED
 import android.stats.style.StyleEnums.CLOCK_SIZE_DYNAMIC
 import android.stats.style.StyleEnums.CLOCK_SIZE_SMALL
+import android.stats.style.StyleEnums.CLOCK_SIZE_UNSPECIFIED
 import android.stats.style.StyleEnums.CURATED_PHOTOS_FETCH_END
 import android.stats.style.StyleEnums.CURATED_PHOTOS_RENDER_COMPLETE
 import android.stats.style.StyleEnums.DARK_THEME_APPLIED
@@ -91,6 +92,7 @@ import io.grpc.Status
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeoutOrNull
 
 /** StatsLog-backed implementation of [ThemesUserEventLogger]. */
 @Singleton
@@ -433,28 +435,48 @@ constructor(
     }
 
     private suspend fun ThemedIconRepository.getAppIconStyle(): Int {
-        val isThemedIconActivated = isActivated.first()
+        val isThemedIconActivated =
+            withTimeoutOrNull(TIMEOUT_MILLIS) { isActivated.first() } ?: false
         return if (isThemedIconActivated) APP_ICON_STYLE_THEMED else APP_ICON_STYLE_UNSPECIFIED
     }
 
     private suspend fun ClockPickerRepository.getSelectedClockLoggingData():
         SelectedClockLoggingData {
-        val selectedClock = selectedClock.first()
-        val selectedClockSize = selectedClockSize.first()
+        val selectedClock =
+            try {
+                withTimeoutOrNull(TIMEOUT_MILLIS) { selectedClock.first() }
+            } catch (e: Exception) {
+                Log.e(TAG, "Fail to get selected clock. Skip logging selected clock.", e)
+                null
+            }
+        val selectedClockSize =
+            try {
+                withTimeoutOrNull(TIMEOUT_MILLIS) { selectedClockSize.first() }
+            } catch (e: Exception) {
+                Log.e(TAG, "Fail to get selected clock size. Skip logging selected clock size.", e)
+                null
+            }
         return SelectedClockLoggingData(
-            clockIdHash = getIdHashCode(selectedClock.clockId),
-            clockSeedColor = selectedClock.seedColor ?: 0,
-            useClockCustomization = selectedClock.axisPresetConfig?.current != null,
+            clockIdHash = getIdHashCode(selectedClock?.clockId),
+            clockSeedColor = selectedClock?.seedColor ?: 0,
+            useClockCustomization = selectedClock?.axisPresetConfig?.current != null,
             clockSize =
                 when (selectedClockSize) {
                     SMALL -> CLOCK_SIZE_SMALL
                     DYNAMIC -> CLOCK_SIZE_DYNAMIC
+                    else -> CLOCK_SIZE_UNSPECIFIED
                 },
         )
     }
 
     private suspend fun CustomizationProviderClient.getSelectedShortcutsString(): String {
-        val shortcutSelections = querySelections()
+        val shortcutSelections =
+            try {
+                querySelections()
+            } catch (e: Exception) {
+                Log.e(TAG, "Fail to get selected shortcuts. Skip logging selected shortcuts.", e)
+                emptyList()
+            }
         return shortcutSelections.joinToString(separator = ",") {
             "${it.slotId}:${it.affordanceId}"
         }
@@ -466,5 +488,6 @@ constructor(
 
     companion object {
         private const val TAG = "ThemesUserEventLoggerImpl"
+        private const val TIMEOUT_MILLIS = 5000L
     }
 }
