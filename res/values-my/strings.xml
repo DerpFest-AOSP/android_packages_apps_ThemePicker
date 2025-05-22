@@ -48,12 +48,9 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"သင့်ဖန်သားပြင်ထောင့်တွင် ပြသထားသော နာရီအသေးတစ်ခု"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"နာရီဖောင့်အပြောင်းအလဲများ သုံးရန်"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"နာရီဖောင့် အပြောင်းအလဲများ နောက်ပြန်ရန်"</string>
-    <!-- no translation found for clock_style_update_toast (6933583129162805444) -->
-    <skip />
-    <!-- no translation found for clock_style_round (261319982647730366) -->
-    <skip />
-    <!-- no translation found for clock_style_sharp (453991773733285628) -->
-    <skip />
+    <string name="clock_style_update_toast" msgid="6933583129162805444">"ပုံစံကို <xliff:g id="ID_1">%1$s</xliff:g> သို့ ပြောင်းလိုက်သည်။ နောက်ပြန်ရန် ထပ်တို့ပါ။"</string>
+    <string name="clock_style_round" msgid="261319982647730366">"အဝိုင်း"</string>
+    <string name="clock_style_sharp" msgid="453991773733285628">"အချွန်"</string>
     <string name="grid_title" msgid="1688173478777254123">"အက်ပ်ဇယား"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"အက်ပ်ပုံစံ၊ အပြင်အဆင်"</string>
     <string name="grid_layout" msgid="370175667652663686">"အပြင်အဆင်"</string>

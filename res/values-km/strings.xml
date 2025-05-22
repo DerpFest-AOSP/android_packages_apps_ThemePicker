@@ -124,8 +124,7 @@
     <string name="mode_title" msgid="2394873501427436055">"ទម្រង់រចនាងងឹត"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"បានបិទ​ជា​បណ្តោះអាសន្ន ដោយសារ​មុខងារ​សន្សំ​ថ្ម"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"រូបតំណាងប្ដូរតាមទម្រង់រចនា"</string>
-    <!-- no translation found for themed_icon_beta_title (5433087142610402812) -->
-    <skip />
+    <string name="themed_icon_beta_title" msgid="5433087142610402812">"រូបតាមទម្រង់រចនា (បេតា)"</string>
     <string name="pack_theme_title" msgid="3052703041673623611">"ទម្រង់រចនា"</string>
     <string name="beta_title" msgid="8703819523760746458">"បេតា"</string>
     <string name="theme_packs_description" msgid="4647233199054882039">"ស្វែងយល់អំពីទម្រង់រចនា Pixel"</string>

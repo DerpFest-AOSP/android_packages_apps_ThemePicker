@@ -124,8 +124,7 @@
     <string name="mode_title" msgid="2394873501427436055">"ഡാർക്ക് തീം"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"ബാറ്ററി സേവർ കാരണം തൽക്കാലം പ്രവർത്തനരഹിതമാണ്"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"തീമുള്ള ഐക്കണുകൾ"</string>
-    <!-- no translation found for themed_icon_beta_title (5433087142610402812) -->
-    <skip />
+    <string name="themed_icon_beta_title" msgid="5433087142610402812">"തീം അധിഷ്ഠിത ഐക്കണുകൾ (ബീറ്റ)"</string>
     <string name="pack_theme_title" msgid="3052703041673623611">"തീമുകൾ"</string>
     <string name="beta_title" msgid="8703819523760746458">"ബീറ്റ"</string>
     <string name="theme_packs_description" msgid="4647233199054882039">"ഡിസ്‌ക്കവർ Pixel തീമുകൾ"</string>
