@@ -402,11 +402,22 @@ class ClockPickerViewModelTest {
     //// Clock color
     @Test
     fun sliderProgress_whenOnSliderProgressChanged() = runTest {
-        val sliderProgress = collectLastValue(underTest.previewingSliderProgress)
+        val sliderProgress = collectLastValue(underTest.previewingColorSliderProgress)
 
         assertThat(sliderProgress()).isEqualTo(ClockMetadataModel.DEFAULT_COLOR_TONE_PROGRESS)
 
         underTest.onSliderProgressChanged(87)
+
+        assertThat(sliderProgress()).isEqualTo(87)
+    }
+
+    @Test
+    fun sliderTouchUpProgress_whenOnSliderProgressChanged() = runTest {
+        val sliderProgress = collectLastValue(underTest.previewingColorSliderProgress)
+
+        assertThat(sliderProgress()).isEqualTo(ClockMetadataModel.DEFAULT_COLOR_TONE_PROGRESS)
+
+        underTest.onSliderTouchUpProgressChanged(87)
 
         assertThat(sliderProgress()).isEqualTo(87)
     }
@@ -608,7 +619,7 @@ class ClockPickerViewModelTest {
     fun apply_notNullWhenSliderProgressChanged() = runTest {
         val onApply = collectLastValue(underTest.onApply)
 
-        underTest.onSliderProgressChanged(87)
+        underTest.onSliderTouchUpProgressChanged(87)
 
         assertThat(onApply()).isNotNull()
     }
@@ -617,7 +628,7 @@ class ClockPickerViewModelTest {
     fun apply_nullAfterApplyingSliderProgress() = runTest {
         val onApply = collectLastValue(underTest.onApply)
 
-        underTest.onSliderProgressChanged(87)
+        underTest.onSliderTouchUpProgressChanged(87)
         onApply()?.invoke()
 
         assertThat(onApply()).isNull()

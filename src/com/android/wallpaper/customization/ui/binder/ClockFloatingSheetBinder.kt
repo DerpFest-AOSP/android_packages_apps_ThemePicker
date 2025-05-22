@@ -169,6 +169,17 @@ object ClockFloatingSheetBinder {
                     viewModel.onSliderProgressChanged(value.roundToInt())
                 }
             }
+            addOnSliderTouchListener(
+                object : OnSliderTouchListener {
+                    override fun onStartTrackingTouch(slider: Slider) {
+                        // Do nothing intended
+                    }
+
+                    override fun onStopTrackingTouch(slider: Slider) {
+                        viewModel.onSliderTouchUpProgressChanged(slider.value.roundToInt())
+                    }
+                }
+            )
         }
         val isClockColorActive = {
             isFloatingSheetActive() && viewModel.selectedTab.value == Tab.COLOR
@@ -410,7 +421,7 @@ object ClockFloatingSheetBinder {
                 }
 
                 launch {
-                    viewModel.previewingSliderProgress.collect { progress ->
+                    viewModel.previewingColorSliderProgress.collect { progress ->
                         clockColorSlider.value = progress.toFloat()
                     }
                 }
