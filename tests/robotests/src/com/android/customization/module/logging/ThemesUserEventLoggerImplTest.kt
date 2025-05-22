@@ -411,12 +411,13 @@ class ThemesUserEventLoggerImplTest {
 
     @Test
     fun logClockApplied() {
-        underTest.logClockApplied(TEST_CLOCK_ID)
+        underTest.logClockApplied(TEST_CLOCK_ID, true)
 
         assertThat(fakeStatsLogger.action).isEqualTo(StyleEnums.CLOCK_APPLIED)
         assertThat(fakeStatsLogger.logCalled).isTrue()
         assertThat(fakeStatsLogger.appSessionId).isEqualTo(FakeAppSessionId.TEST_APP_SESSION_ID)
         assertThat(fakeStatsLogger.clockPackageHash).isEqualTo(TEST_CLOCK_ID.hashCode())
+        assertThat(fakeStatsLogger.useClockCustomization).isTrue()
     }
 
     @Test
