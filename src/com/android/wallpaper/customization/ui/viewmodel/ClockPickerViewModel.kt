@@ -419,13 +419,7 @@ constructor(
                                     darkThemeColor2 = colorModel.color,
                                     darkThemeColor3 = colorModel.color,
                                 ),
-                            text =
-                                Text.Loaded(
-                                    context.getString(
-                                        R.string.content_description_color_option,
-                                        index,
-                                    )
-                                ),
+                            text = Text.Loaded(colorModel.colorName ?: ""),
                             isTextUserVisible = false,
                             isSelected = isSelectedFlow,
                             onClicked =
