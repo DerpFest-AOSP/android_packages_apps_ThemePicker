@@ -21,7 +21,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.get
-import androidx.core.view.isEmpty
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -145,14 +144,18 @@ object ColorsFloatingSheetBinder {
 
                 launch {
                     colorsViewModel.previewingColorOptionIndex.collect { indexToFocus ->
-                        val offset =
-                            if (colorsList != null && !colorsList.isEmpty()) {
-                                colorsList.get(0).width
-                            } else {
-                                0
+                        colorsList.post {
+                            val layoutManager =
+                                colorsList.layoutManager as? LinearLayoutManager ?: return@post
+                            val itemView = layoutManager.findViewByPosition(indexToFocus)
+
+                            if (itemView != null) {
+                                val parentCenter = colorsList.width / 2
+                                val itemCenter = itemView.left + itemView.width / 2
+                                val scrollBy = itemCenter - parentCenter
+                                colorsList.smoothScrollBy(scrollBy, 0)
                             }
-                        (colorsList.layoutManager as LinearLayoutManager)
-                            .scrollToPositionWithOffset(indexToFocus, offset)
+                        }
                     }
                 }
 
