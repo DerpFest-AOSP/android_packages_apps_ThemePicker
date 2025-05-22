@@ -234,11 +234,12 @@ constructor(
             .log()
     }
 
-    override fun logClockApplied(clockId: String) {
+    override fun logClockApplied(clockId: String, useClockCustomization: Boolean) {
         sysUiStatsLoggerFactory
             .get(CLOCK_APPLIED)
             .setAppSessionId(appSessionId.getId())
             .setClockPackageHash(getIdHashCode(clockId))
+            .setUseClockCustomization(useClockCustomization)
             .log()
     }
 

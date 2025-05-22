@@ -151,7 +151,7 @@ constructor(
             }
             .distinctUntilChanged()
 
-    val _previewingClockColorOptionIndex = MutableStateFlow<Int>(0)
+    private val _previewingClockColorOptionIndex = MutableStateFlow<Int>(0)
     val previewingClockColorOptionIndex = _previewingClockColorOptionIndex.asStateFlow()
 
     val _previewingClockStyleOptionIndex = MutableStateFlow<Int>(0)
@@ -318,6 +318,7 @@ constructor(
                         fun() {
                             _previewingClockStyleOptionIndex.value = index
                             overridingClock.value = this
+                            overridingClockPresetIndexedStyle.value = null
                         }
                     }
                 },
@@ -553,9 +554,7 @@ constructor(
             val size: ClockSize = array[6] as ClockSize
             val previewingColorId: String = array[7] as String
             val previewingColorSliderProgress: Int = array[8] as Int
-            val clockAxisStyle: ClockAxisStyle =
-                (array[9] as? IndexedStyle)?.style ?: ClockAxisStyle()
-
+            val clockAxisStyle: ClockAxisStyle? = (array[9] as? IndexedStyle)?.style
             val isEdited =
                 isClockEdited ||
                     isClockAxisStyleEdited ||
@@ -581,7 +580,10 @@ constructor(
                         axisSettings = clockAxisStyle,
                     )
                     if (isClockEdited) {
-                        logger.logClockApplied(clockId = clockId)
+                        logger.logClockApplied(
+                            clockId = clockId,
+                            useClockCustomization = isClockAxisStyleEdited,
+                        )
                     }
                     if (isClockSizeEdited) {
                         logger.logClockSizeApplied(
