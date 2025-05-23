@@ -124,8 +124,7 @@
     <string name="mode_title" msgid="2394873501427436055">"ಡಾರ್ಕ್ ಥೀಮ್"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"ಬ್ಯಾಟರಿ ಸೇವರ್‌ ಕಾರಣದಿಂದ ತಾತ್ಕಾಲಿಕವಾಗಿ ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"ಥೀಮ್ ಮಾಡಿದ ಐಕಾನ್‌ಗಳು"</string>
-    <!-- no translation found for themed_icon_beta_title (5433087142610402812) -->
-    <skip />
+    <string name="themed_icon_beta_title" msgid="5433087142610402812">"ಥೀಮ್ ಆಧಾರಿತ ಐಕಾನ್‌ಗಳು (ಬೀಟಾ)"</string>
     <string name="pack_theme_title" msgid="3052703041673623611">"ಥೀಮ್‌ಗಳು"</string>
     <string name="beta_title" msgid="8703819523760746458">"ಬೀಟಾ"</string>
     <string name="theme_packs_description" msgid="4647233199054882039">"Pixel ಥೀಮ್‌ಗಳನ್ನು ಅನ್ವೇಷಿಸಿ"</string>

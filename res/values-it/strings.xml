@@ -48,12 +48,9 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"Un piccolo orologio visualizzato nell\'angolo dello schermo"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Applica le modifiche al carattere dell\'orologio"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"Annulla le modifiche al carattere dell\'orologio"</string>
-    <!-- no translation found for clock_style_update_toast (6933583129162805444) -->
-    <skip />
-    <!-- no translation found for clock_style_round (261319982647730366) -->
-    <skip />
-    <!-- no translation found for clock_style_sharp (453991773733285628) -->
-    <skip />
+    <string name="clock_style_update_toast" msgid="6933583129162805444">"Stile modificato in <xliff:g id="ID_1">%1$s</xliff:g>. Tocca di nuovo per annullare."</string>
+    <string name="clock_style_round" msgid="261319982647730366">"arrotondato"</string>
+    <string name="clock_style_sharp" msgid="453991773733285628">"nitido"</string>
     <string name="grid_title" msgid="1688173478777254123">"Griglia di app"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Layout e forma app"</string>
     <string name="grid_layout" msgid="370175667652663686">"Layout"</string>
@@ -127,8 +124,7 @@
     <string name="mode_title" msgid="2394873501427436055">"Tema scuro"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Opzione disattivata temporaneamente per risparmio energetico"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Icone a tema"</string>
-    <!-- no translation found for themed_icon_beta_title (5433087142610402812) -->
-    <skip />
+    <string name="themed_icon_beta_title" msgid="5433087142610402812">"Icone a tema (beta)"</string>
     <string name="pack_theme_title" msgid="3052703041673623611">"Temi"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
     <string name="theme_packs_description" msgid="4647233199054882039">"Scopri i temi Pixel"</string>
