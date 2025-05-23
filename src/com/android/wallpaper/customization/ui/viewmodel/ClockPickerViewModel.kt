@@ -270,14 +270,14 @@ constructor(
     // and the clock style preset group index changes. The integer is the updated group index.
     val showClockFacePresetGroupIndexUpdateToast: Flow<Int> =
         _showClockFacePresetGroupIndexUpdateToast.asStateFlow().filterNotNull()
-    val onClockFaceClicked: Flow<() -> Unit> =
+    val onClockFaceClicked: Flow<(() -> Unit)?> =
         combine(groups, previewingClockPresetIndexedStyle) { groups, previewingIndexedStyle ->
             if (groups.isNullOrEmpty()) {
-                {}
+                null
             } else {
                 val groupCount = groups.size
                 if (groupCount == 1) {
-                    {}
+                    null
                 } else {
                     val currentGroupIndex = previewingIndexedStyle?.groupIndex ?: 0
                     val nextGroupIndex = (currentGroupIndex + 1) % groupCount
