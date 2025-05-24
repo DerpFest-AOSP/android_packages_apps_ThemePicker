@@ -207,7 +207,7 @@ constructor(
                 controller.events.onWeatherDataChanged(WeatherData.getPlaceholderWeatherData())
             }
         } catch (e: Exception) {
-            Log.e(
+            Log.wtf(
                 "ThemePickerClockViewFactory",
                 "caught clock init exception, proceeding without clocks",
                 e,

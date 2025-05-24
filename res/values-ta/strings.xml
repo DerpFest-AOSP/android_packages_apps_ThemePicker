@@ -48,12 +48,9 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"உங்கள் திரையின் மூலையில் ஒரு சிறிய கடிகாரம் காட்டப்படும்"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"கடிகார எழுத்து வடிவ மாற்றங்களைப் பயன்படுத்தும்"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"கடிகார எழுத்து வடிவ மாற்றங்களைச் செயல்தவிர்க்கும்"</string>
-    <!-- no translation found for clock_style_update_toast (6933583129162805444) -->
-    <skip />
-    <!-- no translation found for clock_style_round (261319982647730366) -->
-    <skip />
-    <!-- no translation found for clock_style_sharp (453991773733285628) -->
-    <skip />
+    <string name="clock_style_update_toast" msgid="6933583129162805444">"<xliff:g id="ID_1">%1$s</xliff:g> ஸ்டைலுக்கு மாற்றப்பட்டது. செயல்தவிர்க்க மீண்டும் தட்டவும்."</string>
+    <string name="clock_style_round" msgid="261319982647730366">"வட்ட"</string>
+    <string name="clock_style_sharp" msgid="453991773733285628">"கூர்மை"</string>
     <string name="grid_title" msgid="1688173478777254123">"ஆப்ஸ் கட்டம்"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"ஆப்ஸ் வடிவம் &amp; தளவமைப்பு"</string>
     <string name="grid_layout" msgid="370175667652663686">"தளவமைப்பு"</string>
@@ -127,8 +124,7 @@
     <string name="mode_title" msgid="2394873501427436055">"டார்க் தீம்"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"பேட்டரிச் சேமிப்பான் காரணமாகத் தற்காலிகமாக முடக்கப்பட்டுள்ளது"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"தீம் ஐகான்கள்"</string>
-    <!-- no translation found for themed_icon_beta_title (5433087142610402812) -->
-    <skip />
+    <string name="themed_icon_beta_title" msgid="5433087142610402812">"தீம் சார்ந்த ஐகான்கள் (பீட்டா)"</string>
     <string name="pack_theme_title" msgid="3052703041673623611">"தீம்கள்"</string>
     <string name="beta_title" msgid="8703819523760746458">"பீட்டா"</string>
     <string name="theme_packs_description" msgid="4647233199054882039">"Pixel தீம்களைக் கண்டறியலாம்"</string>
