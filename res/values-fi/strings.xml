@@ -48,6 +48,9 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"Näytön reunassa näkyy pieni kello"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Ota kellon fontin muutokset käyttöön"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"Kumoa kellon fontin muutokset"</string>
+    <string name="clock_style_update_toast" msgid="6933583129162805444">"Tyyliksi muutettu: <xliff:g id="ID_1">%1$s</xliff:g>. Kumoa napauttamalla uudelleen."</string>
+    <string name="clock_style_round" msgid="261319982647730366">"pyöreä"</string>
+    <string name="clock_style_sharp" msgid="453991773733285628">"terävä"</string>
     <string name="grid_title" msgid="1688173478777254123">"Ruudukko"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Muoto ja asettelu"</string>
     <string name="grid_layout" msgid="370175667652663686">"Asettelu"</string>
@@ -121,6 +124,7 @@
     <string name="mode_title" msgid="2394873501427436055">"Tumma teema"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Tilapäisesti pois käytöstä virransäästön takia"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Teemaan sopivat kuvakkeet"</string>
+    <string name="themed_icon_beta_title" msgid="5433087142610402812">"Kuvakkeiden teemat (beta)"</string>
     <string name="pack_theme_title" msgid="3052703041673623611">"Teemat"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
     <string name="theme_packs_description" msgid="4647233199054882039">"Tutustu Pixel-teemoihin"</string>

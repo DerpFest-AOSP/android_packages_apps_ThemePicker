@@ -48,6 +48,9 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"Er wordt een kleine klok weergegeven in de hoek van het scherm"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Wijzigingen in lettertype van klok toepassen"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"Wijzigingen in lettertype van klok ongedaan maken"</string>
+    <string name="clock_style_update_toast" msgid="6933583129162805444">"Stijl gewijzigd in <xliff:g id="ID_1">%1$s</xliff:g>. Tik nogmaals om dit ongedaan te maken."</string>
+    <string name="clock_style_round" msgid="261319982647730366">"rond"</string>
+    <string name="clock_style_sharp" msgid="453991773733285628">"scherp"</string>
     <string name="grid_title" msgid="1688173478777254123">"App-raster"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Vorm en indeling van app"</string>
     <string name="grid_layout" msgid="370175667652663686">"Indeling"</string>
@@ -121,6 +124,7 @@
     <string name="mode_title" msgid="2394873501427436055">"Donker thema"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Tijdelijk uit vanwege Batterijbesparing"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Thema-iconen"</string>
+    <string name="themed_icon_beta_title" msgid="5433087142610402812">"Thema-iconen (bèta)"</string>
     <string name="pack_theme_title" msgid="3052703041673623611">"Thema\'s"</string>
     <string name="beta_title" msgid="8703819523760746458">"Bèta"</string>
     <string name="theme_packs_description" msgid="4647233199054882039">"Pixel-thema\'s ontdekken"</string>

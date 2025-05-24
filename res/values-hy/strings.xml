@@ -48,6 +48,9 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"Էկրանի անկյունում ցուցադրվում է փոքրիկ ժամացույց"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Ժամացույցի տառատեսակի փոփոխության կիրառում"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"Ժամացույցի տառատեսակի փոփոխության հետարկում"</string>
+    <string name="clock_style_update_toast" msgid="6933583129162805444">"Ոճը փոխվել է՝ <xliff:g id="ID_1">%1$s</xliff:g>։ Հետարկելու համար նորից հպեք։"</string>
+    <string name="clock_style_round" msgid="261319982647730366">"կլոր"</string>
+    <string name="clock_style_sharp" msgid="453991773733285628">"սրածայր"</string>
     <string name="grid_title" msgid="1688173478777254123">"Հավելվածների ցանց"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Ձև և դասավորություն"</string>
     <string name="grid_layout" msgid="370175667652663686">"Դասավորություն"</string>
@@ -121,6 +124,8 @@
     <string name="mode_title" msgid="2394873501427436055">"Մուգ թեմա"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Ժամանակավորապես անջատվել է մարտկոցի տնտեսման համար"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Թեմատիկ պատկերակներ"</string>
+    <!-- no translation found for themed_icon_beta_title (5433087142610402812) -->
+    <skip />
     <string name="pack_theme_title" msgid="3052703041673623611">"Թեմաներ"</string>
     <string name="beta_title" msgid="8703819523760746458">"Բետա"</string>
     <string name="theme_packs_description" msgid="4647233199054882039">"Բացահայտեք Pixel-ի թեմաները"</string>

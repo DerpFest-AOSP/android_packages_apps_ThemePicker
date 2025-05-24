@@ -48,6 +48,9 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"Jūsu ekrāna stūrī tiek rādīts neliels pulkstenis."</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Lietot pulksteņa fonta izmaiņas"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"Atsaukt pulksteņa fonta izmaiņas"</string>
+    <string name="clock_style_update_toast" msgid="6933583129162805444">"Stils ir mainīts uz “<xliff:g id="ID_1">%1$s</xliff:g>”. Pieskarieties vēlreiz, lai atsauktu."</string>
+    <string name="clock_style_round" msgid="261319982647730366">"noapaļots"</string>
+    <string name="clock_style_sharp" msgid="453991773733285628">"asām malām"</string>
     <string name="grid_title" msgid="1688173478777254123">"Lietotņu režģis"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Lietotnes forma un izkārtojums"</string>
     <string name="grid_layout" msgid="370175667652663686">"Izkārtojums"</string>
@@ -121,6 +124,8 @@
     <string name="mode_title" msgid="2394873501427436055">"Tumšais motīvs"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Īslaicīgi atspējots akumulatora enerģijas taupīšanas dēļ"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Motīvu ikonas"</string>
+    <!-- no translation found for themed_icon_beta_title (5433087142610402812) -->
+    <skip />
     <string name="pack_theme_title" msgid="3052703041673623611">"Motīvi"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
     <string name="theme_packs_description" msgid="4647233199054882039">"Atklājiet Pixel motīvus"</string>

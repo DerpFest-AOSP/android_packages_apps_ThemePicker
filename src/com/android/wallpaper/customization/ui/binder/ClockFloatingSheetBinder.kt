@@ -27,6 +27,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.get
+import androidx.core.view.isEmpty
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -131,6 +133,7 @@ object ClockFloatingSheetBinder {
             )
         val clockStyleList: RecyclerView = view.requireViewById(R.id.clock_style_list)
         clockStyleList.initStyleList(appContext, clockStyleAdapter)
+        val clockStyleListContainer: View = view.requireViewById(R.id.clock_style_list_container)
         val axisPresetSlider: Slider =
             clockStyleContent.requireViewById(R.id.clock_axis_preset_slider)
 
@@ -166,6 +169,17 @@ object ClockFloatingSheetBinder {
                     viewModel.onSliderProgressChanged(value.roundToInt())
                 }
             }
+            addOnSliderTouchListener(
+                object : OnSliderTouchListener {
+                    override fun onStartTrackingTouch(slider: Slider) {
+                        // Do nothing intended
+                    }
+
+                    override fun onStopTrackingTouch(slider: Slider) {
+                        viewModel.onSliderTouchUpProgressChanged(slider.value.roundToInt())
+                    }
+                }
+            )
         }
         val isClockColorActive = {
             isFloatingSheetActive() && viewModel.selectedTab.value == Tab.COLOR
@@ -220,16 +234,16 @@ object ClockFloatingSheetBinder {
             object : OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
                     if (
-                        clockStyleContent.height != 0 &&
+                        clockStyleListContainer.height != 0 &&
                             axisPresetSlider.height != 0 &&
                             (_clockFloatingSheetHeights.value.clockStyleContentHeight !=
-                                clockSizeContent.height ||
+                                clockStyleListContainer.height ||
                                 _clockFloatingSheetHeights.value.axisPresetSliderHeight !=
                                     axisPresetSlider.height)
                     ) {
                         _clockFloatingSheetHeights.value =
                             _clockFloatingSheetHeights.value.copy(
-                                clockStyleContentHeight = clockStyleContent.height,
+                                clockStyleContentHeight = clockStyleListContainer.height,
                                 axisPresetSliderHeight = axisPresetSlider.height,
                             )
                         clockStyleContent.viewTreeObserver.removeOnGlobalLayoutListener(this)
@@ -274,6 +288,12 @@ object ClockFloatingSheetBinder {
             }
         )
 
+        val clockStyleContentVerticalPadding =
+            view.resources.getDimensionPixelSize(R.dimen.floating_sheet_content_vertical_padding)
+        val clockStyleContentSliderMargin =
+            view.resources.getDimensionPixelSize(
+                R.dimen.clock_axis_control_slider_row_margin_vertical
+            )
         lifecycleOwner.lifecycleScope.launch {
             var currentTab: Tab = Tab.STYLE
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -302,8 +322,14 @@ object ClockFloatingSheetBinder {
                             val toHeight =
                                 when (selectedTab) {
                                     Tab.STYLE ->
-                                        if (shouldShowPresetSlider) clockStyleContentHeight
-                                        else clockStyleContentHeight - axisPresetSliderHeight
+                                        if (shouldShowPresetSlider)
+                                            clockStyleContentHeight +
+                                                axisPresetSliderHeight +
+                                                2 * clockStyleContentVerticalPadding +
+                                                clockStyleContentSliderMargin
+                                        else
+                                            clockStyleContentHeight +
+                                                2 * clockStyleContentVerticalPadding
                                     Tab.COLOR -> clockColorContentHeight
                                     Tab.SIZE -> clockSizeContentHeight
                                 }
@@ -395,7 +421,7 @@ object ClockFloatingSheetBinder {
                 }
 
                 launch {
-                    viewModel.previewingSliderProgress.collect { progress ->
+                    viewModel.previewingColorSliderProgress.collect { progress ->
                         clockColorSlider.value = progress.toFloat()
                     }
                 }
@@ -412,6 +438,19 @@ object ClockFloatingSheetBinder {
                     viewModel.previewingClockColorOptionIndex.collect { indexToFocus ->
                         (clockColorList.layoutManager as LinearLayoutManager)
                             .scrollToPositionWithOffset(indexToFocus, 0)
+                    }
+                }
+
+                launch {
+                    viewModel.previewingClockStyleOptionIndex.collect { indexToFocus ->
+                        val offset =
+                            if (!clockStyleList.isEmpty()) {
+                                clockStyleList.get(0).width
+                            } else {
+                                0
+                            }
+                        (clockStyleList.layoutManager as LinearLayoutManager)
+                            .scrollToPositionWithOffset(indexToFocus, offset)
                     }
                 }
 
@@ -458,12 +497,20 @@ object ClockFloatingSheetBinder {
                                 override fun onStartTrackingTouch(slider: Slider) {}
 
                                 override fun onStopTrackingTouch(slider: Slider) {
-                                    axisPresetsSliderViewModel.onSliderStopTrackingTouch(
-                                        slider.value
-                                    )
+                                    if (!optionsViewModel.isAccessibilityEnabled(slider.context)) {
+                                        axisPresetsSliderViewModel.onSliderStopTrackingTouch(
+                                            slider.value
+                                        )
+                                    }
                                 }
                             }
                         )
+                        axisPresetSlider.clearOnChangeListeners()
+                        axisPresetSlider.addOnChangeListener { slider, value, fromUser ->
+                            if (optionsViewModel.isAccessibilityEnabled(slider.context)) {
+                                axisPresetsSliderViewModel.onSliderStopTrackingTouch(value)
+                            }
+                        }
                     }
                 }
 

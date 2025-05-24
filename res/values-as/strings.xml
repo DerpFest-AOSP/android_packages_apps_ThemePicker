@@ -48,6 +48,9 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"আপোনাৰ স্ক্ৰীনখনৰ চুকত এটা সৰু ঘড়ীয়ে দেখুৱায়"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"ঘড়ীৰ ফণ্টত কৰা সালসলনি প্ৰয়োগ কৰক"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"ঘড়ীৰ ফণ্টত কৰা সালসলনি আনডু কৰক"</string>
+    <string name="clock_style_update_toast" msgid="6933583129162805444">"শৈলী <xliff:g id="ID_1">%1$s</xliff:g>লৈ সলনি কৰা হ’ল। আনডু কৰিবলৈ পুনৰ টিপক।"</string>
+    <string name="clock_style_round" msgid="261319982647730366">"ঘূৰণীয়া"</string>
+    <string name="clock_style_sharp" msgid="453991773733285628">"তীক্ষ্ণ"</string>
     <string name="grid_title" msgid="1688173478777254123">"এপৰ গ্ৰিড"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"এপৰ আকৃতি আৰু লে’আউট"</string>
     <string name="grid_layout" msgid="370175667652663686">"লে’আউট"</string>
@@ -121,6 +124,7 @@
     <string name="mode_title" msgid="2394873501427436055">"গাঢ় ৰঙৰ থীম"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"বেটাৰী সঞ্চয়কাৰীৰ বাবে অস্থায়ীভাৱে অক্ষম কৰা হৈছে"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"থীমযুক্ত চিহ্ন"</string>
+    <string name="themed_icon_beta_title" msgid="5433087142610402812">"থীমযুক্ত চিহ্ন (বিটা)"</string>
     <string name="pack_theme_title" msgid="3052703041673623611">"থীম"</string>
     <string name="beta_title" msgid="8703819523760746458">"বিটা"</string>
     <string name="theme_packs_description" msgid="4647233199054882039">"Pixelৰ থীম বিচাৰি পাওক"</string>

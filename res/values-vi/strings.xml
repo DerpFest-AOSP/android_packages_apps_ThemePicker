@@ -48,6 +48,9 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"Một chiếc đồng hồ nhỏ hiển thị ở góc màn hình"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Áp dụng các thay đổi về phông chữ đồng hồ"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"Huỷ các thay đổi về phông chữ đồng hồ"</string>
+    <string name="clock_style_update_toast" msgid="6933583129162805444">"Đã thay đổi kiểu thành <xliff:g id="ID_1">%1$s</xliff:g>. Nhấn lại để huỷ."</string>
+    <string name="clock_style_round" msgid="261319982647730366">"làm tròn"</string>
+    <string name="clock_style_sharp" msgid="453991773733285628">"sắc nét"</string>
     <string name="grid_title" msgid="1688173478777254123">"Lưới ứng dụng"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Hình dạng và bố cục ứng dụng"</string>
     <string name="grid_layout" msgid="370175667652663686">"Bố cục"</string>
@@ -121,6 +124,7 @@
     <string name="mode_title" msgid="2394873501427436055">"Giao diện tối"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Tạm thời tắt do tính năng của Trình tiết kiệm pin"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Biểu tượng theo chủ đề"</string>
+    <string name="themed_icon_beta_title" msgid="5433087142610402812">"Biểu tượng theo chủ đề (thử nghiệm)"</string>
     <string name="pack_theme_title" msgid="3052703041673623611">"Giao diện"</string>
     <string name="beta_title" msgid="8703819523760746458">"Thử nghiệm"</string>
     <string name="theme_packs_description" msgid="4647233199054882039">"Khám phá các giao diện Pixel"</string>

@@ -111,6 +111,9 @@
     <!-- Description for clock font editor axis revert button. [CHAR LIMIT=NONE] -->
     <string name="clock_font_editor_revert">Undo clock font changes</string>
 
+    <!-- Description for a clock style setting that toggles the clock font between one with rounded corners and one without. [CHAR LIMIT=NONE] -->
+    <string name="clock_style_round_clock">Round clock</string>
+
     <!-- Toast message to notify that the clock style is updated when they tap on the clock face. They can tap again to undo. [CHAR LIMIT=NONE] -->
     <string name="clock_style_update_toast">Style changed to <xliff:g name="font_name">%1$s</xliff:g>. Tap again to undo.</string>
 

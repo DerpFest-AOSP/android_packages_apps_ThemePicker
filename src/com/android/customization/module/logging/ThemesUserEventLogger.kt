@@ -27,7 +27,11 @@ interface ThemesUserEventLogger : UserEventLogger {
 
     fun logGridApplied(grid: GridOptionModel)
 
-    fun logClockApplied(clockId: String)
+    /**
+     * @param useClockCustomization When setting style, if we use further clock customization like
+     *   width, weight and round corners for the font.
+     */
+    fun logClockApplied(clockId: String, useClockCustomization: Boolean)
 
     fun logClockColorApplied(seedColor: Int)
 

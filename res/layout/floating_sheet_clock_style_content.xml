@@ -23,6 +23,7 @@
     android:clipChildren="false">
 
     <FrameLayout
+        android:id="@+id/clock_style_list_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
