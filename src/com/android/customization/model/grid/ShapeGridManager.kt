@@ -17,6 +17,7 @@
 package com.android.customization.model.grid
 
 import android.graphics.drawable.Drawable
+import kotlinx.coroutines.flow.Flow
 
 interface ShapeGridManager {
     /**
@@ -26,15 +27,18 @@ interface ShapeGridManager {
      */
     suspend fun getGridOptions(): List<GridOptionModel>
 
+    /**
+     * A flow of the current list of grid options, updated when the grid options change.
+     *
+     * @return It will return an empty list if there are no available grid options.
+     */
+    val gridOptions: Flow<List<GridOptionModel>>
+
     suspend fun getShapeOptions(): List<ShapeOptionModel>
 
     fun applyGridOption(gridKey: String)
 
-    /**
-     * @return an integer representing whether the operation was successful, 1 for success and 0 for
-     *   failure
-     */
-    fun applyShapeOption(shapeKey: String): Int
+    fun applyShapeOption(shapeKey: String)
 
     fun getGridOptionDrawable(iconId: Int): Drawable?
 }

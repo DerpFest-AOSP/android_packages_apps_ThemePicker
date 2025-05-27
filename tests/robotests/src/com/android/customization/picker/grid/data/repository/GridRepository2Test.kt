@@ -25,7 +25,6 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
@@ -47,7 +46,6 @@ class GridRepository2Test {
     @get:Rule var hiltRule = HiltAndroidRule(this)
     @Inject lateinit var gridOptionsManager: FakeShapeGridManager
     @Inject lateinit var testScope: TestScope
-    @BackgroundDispatcher @Inject lateinit var bgScope: CoroutineScope
     @BackgroundDispatcher @Inject lateinit var bgDispatcher: CoroutineDispatcher
 
     private lateinit var underTest: GridRepository2
@@ -65,12 +63,7 @@ class GridRepository2Test {
     @Test
     fun gridOptions_default() =
         testScope.runTest {
-            underTest =
-                GridRepository2(
-                    manager = gridOptionsManager,
-                    bgScope = bgScope,
-                    bgDispatcher = bgDispatcher,
-                )
+            underTest = GridRepository2(manager = gridOptionsManager, bgDispatcher = bgDispatcher)
             val gridOptions = collectLastValue(underTest.gridOptions)
 
             assertThat(gridOptions()).isEqualTo(FakeShapeGridManager.DEFAULT_GRID_OPTION_LIST)
@@ -79,12 +72,7 @@ class GridRepository2Test {
     @Test
     fun gridOptions_shouldUpdateAfterApplyShapeGridOption() =
         testScope.runTest {
-            underTest =
-                GridRepository2(
-                    manager = gridOptionsManager,
-                    bgScope = bgScope,
-                    bgDispatcher = bgDispatcher,
-                )
+            underTest = GridRepository2(manager = gridOptionsManager, bgDispatcher = bgDispatcher)
             val gridOptions = collectLastValue(underTest.gridOptions)
 
             underTest.applyGridOption("practical")
@@ -100,12 +88,7 @@ class GridRepository2Test {
     @Test
     fun selectedGridOption_default() =
         testScope.runTest {
-            underTest =
-                GridRepository2(
-                    manager = gridOptionsManager,
-                    bgScope = bgScope,
-                    bgDispatcher = bgDispatcher,
-                )
+            underTest = GridRepository2(manager = gridOptionsManager, bgDispatcher = bgDispatcher)
             val selectedGridOption = collectLastValue(underTest.selectedGridOption)
 
             assertThat(selectedGridOption())
@@ -115,12 +98,7 @@ class GridRepository2Test {
     @Test
     fun selectedGridOption_shouldUpdateAfterApplyShapeGridOption() =
         testScope.runTest {
-            underTest =
-                GridRepository2(
-                    manager = gridOptionsManager,
-                    bgScope = bgScope,
-                    bgDispatcher = bgDispatcher,
-                )
+            underTest = GridRepository2(manager = gridOptionsManager, bgDispatcher = bgDispatcher)
             val selectedGridOption = collectLastValue(underTest.selectedGridOption)
 
             underTest.applyGridOption("practical")
@@ -132,12 +110,7 @@ class GridRepository2Test {
     @Test
     fun isGridCustomizationAvailable_true() =
         testScope.runTest {
-            underTest =
-                GridRepository2(
-                    manager = gridOptionsManager,
-                    bgScope = bgScope,
-                    bgDispatcher = bgDispatcher,
-                )
+            underTest = GridRepository2(manager = gridOptionsManager, bgDispatcher = bgDispatcher)
             val isGridCustomizationAvailable =
                 collectLastValue(underTest.isGridCustomizationAvailable)
 
@@ -148,12 +121,7 @@ class GridRepository2Test {
     fun isGridCustomizationAvailable_false_whenZeroOptions() =
         testScope.runTest {
             gridOptionsManager.setGridOptions(emptyList())
-            underTest =
-                GridRepository2(
-                    manager = gridOptionsManager,
-                    bgScope = bgScope,
-                    bgDispatcher = bgDispatcher,
-                )
+            underTest = GridRepository2(manager = gridOptionsManager, bgDispatcher = bgDispatcher)
             val isGridCustomizationAvailable =
                 collectLastValue(underTest.isGridCustomizationAvailable)
 

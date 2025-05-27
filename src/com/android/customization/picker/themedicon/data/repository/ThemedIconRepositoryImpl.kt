@@ -19,112 +19,85 @@ package com.android.customization.picker.themedicon.data.repository
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.database.ContentObserver
 import android.net.Uri
-import android.util.Log
 import com.android.customization.module.CustomizationPreferences
 import com.android.themepicker.R
+import com.android.wallpaper.model.Screen
 import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
+import com.android.wallpaper.util.PreviewUtils
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DisposableHandle
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Singleton
 class ThemedIconRepositoryImpl
 @Inject
 constructor(
     @ApplicationContext private val appContext: Context,
     private val contentResolver: ContentResolver,
-    packageManager: PackageManager,
     @BackgroundDispatcher private val backgroundScope: CoroutineScope,
 ) : ThemedIconRepository {
-    private val uri: MutableStateFlow<Uri?> = MutableStateFlow(null)
-    private val _isAvailable: MutableStateFlow<Boolean?> = MutableStateFlow(null)
-    private var getUriJob: Job =
-        backgroundScope.launch {
-            val homeIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
-            val resolveInfo =
-                packageManager.resolveActivity(
-                    homeIntent,
-                    PackageManager.MATCH_DEFAULT_ONLY or PackageManager.GET_META_DATA,
-                )
-            val metadataKey = appContext.getString(R.string.themed_icon_metadata_key)
-            val providerAuthority = resolveInfo?.activityInfo?.metaData?.getString(metadataKey)
-            if (providerAuthority == null) {
-                Log.i(TAG, "Couldn't resolve $metadataKey from $homeIntent")
+    private val metadataKey = appContext.getString(R.string.themed_icon_metadata_key)
+    private var previewUtils: PreviewUtils? = null
+    private val previewUtilsFlow = flow {
+        // If PreviewUtils is created too early on start up, the provider (e.g. Launcher) may not be
+        // ready, so PreviewUtils#supportsPreview would return false. Only cache previewUtils if it
+        // supports previewing. Otherwise, retry when new flow consumers appear.
+        if (previewUtils == null) {
+            PreviewUtils(appContext, metadataKey, Screen.HOME_SCREEN).let {
+                if (it.supportsPreview()) {
+                    previewUtils = it
+                }
             }
-            val providerInfo =
-                providerAuthority?.let { authority ->
-                    val info = packageManager.resolveContentProvider(authority, 0)
-                    val hasPermission =
-                        info?.readPermission?.let {
-                            if (it.isNotEmpty()) {
-                                appContext.checkSelfPermission(it) ==
-                                    PackageManager.PERMISSION_GRANTED
-                            } else true
-                        } ?: true
-                    if (!hasPermission) {
-                        Log.i(TAG, "No permission to query authority $authority")
-                        null
-                    } else {
-                        info
-                    }
-                }
-            uri.value =
-                providerInfo?.let {
-                    Uri.Builder()
-                        .scheme(ContentResolver.SCHEME_CONTENT)
-                        .authority(providerInfo.authority)
-                        .appendPath(ICON_THEMED)
-                        .build()
-                }
-            _isAvailable.value = uri.value != null
         }
+        emit(previewUtils)
+    }
+    private var uri: Uri? = null
+    private val uriFlow: Flow<Uri?> =
+        previewUtilsFlow.map { uri ?: it?.getUri(ICON_THEMED)?.also { result -> uri = result } }
 
-    override val isAvailable: Flow<Boolean> = _isAvailable.filterNotNull()
+    override val isAvailable: Flow<Boolean> = previewUtilsFlow.map { it != null }
 
     override val isActivated: Flow<Boolean> =
-        callbackFlow {
-                var disposableHandle: DisposableHandle? = null
-                launch {
-                    uri.collect {
-                        disposableHandle?.dispose()
-                        if (it != null) {
-                            val contentObserver =
-                                object : ContentObserver(null) {
-                                    override fun onChange(selfChange: Boolean) {
-                                        trySend(getThemedIconEnabled(it))
-                                    }
+        uriFlow
+            .flatMapLatest {
+                callbackFlow {
+                    var disposableHandle: DisposableHandle? = null
+                    if (it != null) {
+                        val contentObserver =
+                            object : ContentObserver(null) {
+                                override fun onChange(selfChange: Boolean) {
+                                    trySend(getThemedIconEnabled(it))
                                 }
-                            contentResolver.registerContentObserver(
-                                it,
-                                /* notifyForDescendants= */ true,
-                                contentObserver,
-                            )
-
-                            trySend(getThemedIconEnabled(it))
-
-                            disposableHandle = DisposableHandle {
-                                contentResolver.unregisterContentObserver(contentObserver)
                             }
+                        contentResolver.registerContentObserver(
+                            it,
+                            /* notifyForDescendants= */ true,
+                            contentObserver,
+                        )
+
+                        trySend(getThemedIconEnabled(it))
+
+                        disposableHandle = DisposableHandle {
+                            contentResolver.unregisterContentObserver(contentObserver)
                         }
                     }
+                    awaitClose { disposableHandle?.dispose() }
                 }
-                awaitClose { disposableHandle?.dispose() }
             }
             .stateIn(
                 scope = backgroundScope,
@@ -156,8 +129,7 @@ constructor(
     }
 
     override suspend fun setThemedIconEnabled(enabled: Boolean) {
-        getUriJob.join()
-        uri.value?.let {
+        uri?.let {
             val values = ContentValues()
             values.put(COL_ICON_THEMED_VALUE, enabled)
             contentResolver.update(it, values, /* where= */ null, /* selectionArgs= */ null)
@@ -168,6 +140,5 @@ constructor(
         private const val ICON_THEMED = "icon_themed"
         private const val COL_ICON_THEMED_VALUE = "boolean_value"
         private const val ENABLED = 1
-        private const val TAG = "ThemedIconRepositoryImpl"
     }
 }
