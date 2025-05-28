@@ -87,6 +87,9 @@ constructor(
             .map { it.groupBy { selectionModel -> selectionModel.slotId } }
             .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
 
+    val _selectedQuickAffordanceIndex = MutableStateFlow<Int>(0)
+    val selectedQuickAffordanceIndex = _selectedQuickAffordanceIndex.asStateFlow()
+
     val previewingQuickAffordances =
         combine(
             quickAffordanceInteractor.slots,
@@ -195,6 +198,7 @@ constructor(
                                         overridingQuickAffordances.value.toMutableMap().apply {
                                             put(selectedSlotId, KEYGUARD_QUICK_AFFORDANCE_ID_NONE)
                                         }
+                                    _selectedQuickAffordanceIndex.value = 0
                                     overridingQuickAffordances.tryEmit(newMap)
                                 }
                             } else {
@@ -203,7 +207,7 @@ constructor(
                         },
                 )
             ) +
-                affordances.map { affordance ->
+                affordances.mapIndexed { index, affordance ->
                     val affordanceIcon = getAffordanceIcon(affordance.iconResourceId)
                     val isSelectedFlow: StateFlow<Boolean> =
                         combine(selectedSlotId, previewingQuickAffordances) {
@@ -226,6 +230,8 @@ constructor(
                                     ->
                                     if (!isSelected) {
                                         {
+                                            // the one is to offset for the none item added above
+                                            _selectedQuickAffordanceIndex.value = index + 1
                                             val newMap =
                                                 overridingQuickAffordances.value
                                                     .toMutableMap()
