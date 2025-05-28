@@ -436,8 +436,18 @@ object ClockFloatingSheetBinder {
 
                 launch {
                     viewModel.previewingClockColorOptionIndex.collect { indexToFocus ->
-                        (clockColorList.layoutManager as LinearLayoutManager)
-                            .scrollToPositionWithOffset(indexToFocus, 0)
+                        clockColorList.post {
+                            val layoutManager =
+                                clockColorList.layoutManager as? LinearLayoutManager ?: return@post
+                            val itemView = layoutManager.findViewByPosition(indexToFocus)
+
+                            if (itemView != null) {
+                                val parentCenter = clockColorList.width / 2
+                                val itemCenter = itemView.left + itemView.width / 2 + itemView.width
+                                val scrollBy = itemCenter - parentCenter
+                                clockColorList.smoothScrollBy(scrollBy, 0)
+                            }
+                        }
                     }
                 }
 

@@ -35,6 +35,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -50,6 +51,9 @@ constructor(
     @Assisted private val viewModelScope: CoroutineScope,
 ) {
     val isGridCustomizationAvailable = interactor.isGridCustomizationAvailable
+
+    val _selectedGridOptionIndex = MutableStateFlow<Int>(0)
+    val selectedGridOptionIndex = _selectedGridOptionIndex.asStateFlow()
 
     // The currently-set system grid option
     val selectedGridOption =
@@ -71,7 +75,11 @@ constructor(
             .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
     val gridOptionListItems: Flow<List<OptionItemViewModel2<Drawable>>> =
         gridOptions
-            .map { gridOptions -> gridOptions.map { toGridOptionItemViewModel(it) } }
+            .map { gridOptions ->
+                gridOptions.mapIndexed { index, gridOption ->
+                    toGridOptionItemViewModel(gridOption, index)
+                }
+            }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     val onApply: Flow<(suspend () -> Unit)?> =
@@ -95,7 +103,10 @@ constructor(
         overridingGridKey.value = null
     }
 
-    private fun toGridOptionItemViewModel(option: GridOptionModel): OptionItemViewModel2<Drawable> {
+    private fun toGridOptionItemViewModel(
+        option: GridOptionModel,
+        index: Int = -1,
+    ): OptionItemViewModel2<Drawable> {
         // Fallback to use GridTileDrawable when no resource found for the icon ID
         val drawable =
             interactor.getGridOptionDrawable(option.iconId)
@@ -127,7 +138,12 @@ constructor(
             onClicked =
                 isSelected.map {
                     if (!it) {
-                        { overridingGridKey.value = option.key }
+                        {
+                            if (index > -1) {
+                                _selectedGridOptionIndex.value = index
+                            }
+                            overridingGridKey.value = option.key
+                        }
                     } else {
                         null
                     }
