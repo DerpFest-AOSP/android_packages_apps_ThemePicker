@@ -48,6 +48,8 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"Jam kecil ditampilkan di sudut layar"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Terapkan perubahan font jam"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"Urungkan perubahan font jam"</string>
+    <!-- no translation found for clock_style_round_clock (1694787561051568664) -->
+    <skip />
     <string name="clock_style_update_toast" msgid="6933583129162805444">"Gaya diubah menjadi <xliff:g id="ID_1">%1$s</xliff:g>. Ketuk lagi untuk mengurungkan."</string>
     <string name="clock_style_round" msgid="261319982647730366">"bulat"</string>
     <string name="clock_style_sharp" msgid="453991773733285628">"tajam"</string>
