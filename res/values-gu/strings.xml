@@ -48,12 +48,11 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"તમારી સ્ક્રીનના ખૂણામાં એક નાની ઘડિયાળ દેખાય છે"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Clockના ફૉન્ટમાં કરેલા ફેરફારો લાગુ કરો"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"Clockના ફૉન્ટમાં છેલ્લે કરેલા ફેરફારો રદ કરો"</string>
-    <!-- no translation found for clock_style_update_toast (6933583129162805444) -->
+    <!-- no translation found for clock_style_round_clock (1694787561051568664) -->
     <skip />
-    <!-- no translation found for clock_style_round (261319982647730366) -->
-    <skip />
-    <!-- no translation found for clock_style_sharp (453991773733285628) -->
-    <skip />
+    <string name="clock_style_update_toast" msgid="6933583129162805444">"શૈલી બદલીને <xliff:g id="ID_1">%1$s</xliff:g> કરવામાં આવી. છેલ્લો ફેરફાર રદ કરવા માટે ફરી ટૅપ કરો."</string>
+    <string name="clock_style_round" msgid="261319982647730366">"રાઉન્ડ"</string>
+    <string name="clock_style_sharp" msgid="453991773733285628">"શાર્પ"</string>
     <string name="grid_title" msgid="1688173478777254123">"ઍપ ગ્રિડ"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"ઍપનો આકાર અને લેઆઉટ"</string>
     <string name="grid_layout" msgid="370175667652663686">"લેઆઉટ"</string>

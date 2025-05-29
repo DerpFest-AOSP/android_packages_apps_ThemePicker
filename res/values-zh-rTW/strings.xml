@@ -48,6 +48,8 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"在畫面角落顯示小型時鐘"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"套用時鐘字型變更"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"取消時鐘字型變更"</string>
+    <!-- no translation found for clock_style_round_clock (1694787561051568664) -->
+    <skip />
     <string name="clock_style_update_toast" msgid="6933583129162805444">"樣式已變更為「<xliff:g id="ID_1">%1$s</xliff:g>」，再次輕觸即可復原。"</string>
     <string name="clock_style_round" msgid="261319982647730366">"圓弧"</string>
     <string name="clock_style_sharp" msgid="453991773733285628">"尖銳"</string>

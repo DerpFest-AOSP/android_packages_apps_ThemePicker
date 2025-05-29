@@ -24,15 +24,10 @@ import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Singleton
@@ -40,30 +35,19 @@ class GridRepository2
 @Inject
 constructor(
     private val manager: ShapeGridManager,
-    @BackgroundDispatcher private val bgScope: CoroutineScope,
     @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
 ) {
 
-    private val _gridOptions = MutableStateFlow<List<GridOptionModel>?>(null)
-
-    init {
-        bgScope.launch { _gridOptions.value = manager.getGridOptions() }
-    }
-
-    val gridOptions: StateFlow<List<GridOptionModel>?> = _gridOptions.asStateFlow()
+    val gridOptions: Flow<List<GridOptionModel>> = manager.gridOptions
 
     val selectedGridOption: Flow<GridOptionModel?> =
-        gridOptions.map { gridOptions -> gridOptions?.firstOrNull { it.isCurrent } }
+        gridOptions.map { gridOptions -> gridOptions.firstOrNull { it.isCurrent } }
 
     val isGridCustomizationAvailable =
         gridOptions.filterNotNull().map { it.size > 1 }.distinctUntilChanged()
 
     suspend fun applyGridOption(gridKey: String) =
-        withContext(bgDispatcher) {
-            manager.applyGridOption(gridKey)
-            // After applying, we should query and update shape and grid options again.
-            _gridOptions.value = manager.getGridOptions()
-        }
+        withContext(bgDispatcher) { manager.applyGridOption(gridKey) }
 
     fun getGridOptionDrawable(iconId: Int): Drawable? {
         return manager.getGridOptionDrawable(iconId)
