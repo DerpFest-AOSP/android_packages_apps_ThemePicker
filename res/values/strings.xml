@@ -151,6 +151,14 @@
         [CHAR LIMIT=15] -->
     <string name="app_icons_theme_themed">themed</string>
 
+    <!-- Label for an icon style option that applies no theming to app icons when selected.
+        [CHAR LIMIT=15] -->
+    <string name="app_icons_style_default">Default</string>
+
+    <!-- Label for an icon style option that applies a monochrome theme to app icons when selected.
+        [CHAR LIMIT=15] -->
+    <string name="app_icons_style_minimal">Minimal</string>
+
     <!-- Title of a tab to change the app icon shape [CHAR LIMIT=15] -->
     <string name="app_icons_shape">Shape</string>
 

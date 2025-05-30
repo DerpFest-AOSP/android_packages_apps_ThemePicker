@@ -21,8 +21,8 @@ import androidx.test.filters.SmallTest
 import com.android.customization.model.grid.FakeShapeGridManager
 import com.android.customization.module.logging.ThemesUserEventLogger
 import com.android.customization.picker.grid.data.repository.ShapeRepository
-import com.android.customization.picker.grid.domain.interactor.AppIconInteractor
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
+import com.android.customization.picker.icon.domain.interactor.AppIconInteractor
 import com.android.customization.picker.themedicon.data.repository.FakeThemedIconRepository
 import com.android.themepicker.R
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
