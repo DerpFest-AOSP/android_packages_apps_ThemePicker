@@ -40,6 +40,7 @@ import com.android.systemui.shared.customization.data.content.CustomizationProvi
 import com.android.systemui.shared.settings.data.repository.SecureSettingsRepository
 import com.android.systemui.shared.settings.data.repository.SecureSettingsRepositoryImpl
 import com.android.wallpaper.customization.ui.binder.ThemePickerToolbarBinder
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil
 import com.android.wallpaper.effects.EffectsController
 import com.android.wallpaper.effects.FakeEffectsController
 import com.android.wallpaper.module.DefaultRecentWallpaperManager
@@ -65,6 +66,7 @@ import com.android.wallpaper.picker.customization.ui.binder.DefaultCustomization
 import com.android.wallpaper.picker.customization.ui.binder.DefaultPackThemeSuggestedEntryBinder
 import com.android.wallpaper.picker.customization.ui.binder.PackThemeSuggestedEntryBinder
 import com.android.wallpaper.picker.customization.ui.binder.ToolbarBinder
+import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.domain.interactor.PackThemeInteractor
@@ -135,6 +137,12 @@ abstract class ThemePickerTestModule {
     abstract fun bindCustomizationPreferences(
         impl: TestDefaultCustomizationPreferences
     ): CustomizationPreferences
+
+    @Binds
+    @Singleton
+    abstract fun bindCustomizationOptionUtil(
+        impl: ThemePickerCustomizationOptionUtil
+    ): CustomizationOptionUtil
 
     @Binds
     @Singleton

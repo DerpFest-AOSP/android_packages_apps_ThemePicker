@@ -22,6 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.get
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -87,6 +88,23 @@ object GridFloatingSheetBinder {
                             (gridOptionList.layoutManager as LinearLayoutManager).scrollToPosition(
                                 indexToFocus
                             )
+                        }
+                    }
+                }
+
+                launch {
+                    viewModel.selectedGridOptionIndex.collect { index ->
+                        gridOptionList.post {
+                            val layoutManager =
+                                gridOptionList.layoutManager as? LinearLayoutManager ?: return@post
+                            val itemView = layoutManager.findViewByPosition(index)
+
+                            if (itemView != null) {
+                                val parentCenter = gridOptionList.width / 2
+                                val itemCenter = itemView.left + itemView.width / 2
+                                val scrollBy = itemCenter - parentCenter
+                                gridOptionList.smoothScrollBy(scrollBy, 0)
+                            }
                         }
                     }
                 }

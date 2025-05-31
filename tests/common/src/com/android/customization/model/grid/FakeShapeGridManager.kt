@@ -21,6 +21,9 @@ import android.graphics.drawable.Drawable
 import androidx.core.graphics.drawable.toDrawable
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 @Singleton
 class FakeShapeGridManager @Inject constructor() : ShapeGridManager {
@@ -28,29 +31,31 @@ class FakeShapeGridManager @Inject constructor() : ShapeGridManager {
     val gridOptionDrawable0: Drawable = Color.BLUE.toDrawable()
     val gridOptionDrawable1: Drawable = Color.GREEN.toDrawable()
 
-    private var gridOptions: List<GridOptionModel> = DEFAULT_GRID_OPTION_LIST
+    private var _gridOptions: MutableStateFlow<List<GridOptionModel>> =
+        MutableStateFlow(DEFAULT_GRID_OPTION_LIST)
 
     private var shapeOptions: List<ShapeOptionModel> = DEFAULT_SHAPE_OPTION_LIST
 
     fun setGridOptions(gridOptions: List<GridOptionModel>) {
-        this.gridOptions = gridOptions
+        this._gridOptions.value = gridOptions
     }
 
     fun setShapeOptions(shapeOptions: List<ShapeOptionModel>) {
         this.shapeOptions = shapeOptions
     }
 
-    override suspend fun getGridOptions(): List<GridOptionModel> = gridOptions
+    override val gridOptions: Flow<List<GridOptionModel>> = _gridOptions.asStateFlow()
+
+    override suspend fun getGridOptions(): List<GridOptionModel> = _gridOptions.value
 
     override suspend fun getShapeOptions(): List<ShapeOptionModel> = shapeOptions
 
     override fun applyGridOption(gridKey: String) {
-        gridOptions = gridOptions.map { it.copy(isCurrent = it.key == gridKey) }
+        _gridOptions.value = _gridOptions.value.map { it.copy(isCurrent = it.key == gridKey) }
     }
 
-    override fun applyShapeOption(shapeKey: String): Int {
+    override fun applyShapeOption(shapeKey: String) {
         shapeOptions = shapeOptions.map { it.copy(isCurrent = it.key == shapeKey) }
-        return 0
     }
 
     override fun getGridOptionDrawable(iconId: Int): Drawable? {

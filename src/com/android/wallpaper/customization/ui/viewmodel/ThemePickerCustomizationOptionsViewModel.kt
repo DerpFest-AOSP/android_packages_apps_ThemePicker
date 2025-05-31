@@ -19,7 +19,11 @@ package com.android.wallpaper.customization.ui.viewmodel
 import android.content.Context
 import android.view.accessibility.AccessibilityManager
 import com.android.customization.picker.mode.ui.viewmodel.DarkModeViewModel
-import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.APP_ICONS
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.GRID
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.CLOCK
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.SHORTCUTS
 import com.android.wallpaper.picker.customization.ui.view.ApplyButton
 import com.android.wallpaper.picker.customization.ui.view.ApplyButton.ApplyButtonState.APPLY_BUTTON_DISABLED
 import com.android.wallpaper.picker.customization.ui.view.ApplyButton.ApplyButtonState.APPLY_BUTTON_ENABLED
@@ -61,10 +65,14 @@ constructor(
     val themedIconViewModel: ThemedIconViewModel,
     val packThemeViewModel: PackThemeViewModel,
     @Assisted private val viewModelScope: CoroutineScope,
+    @Assisted initialDeepLinkDestination: String?,
 ) : CustomizationOptionsViewModel {
 
     private val defaultCustomizationOptionsViewModel =
-        defaultCustomizationOptionsViewModelFactory.create(viewModelScope)
+        defaultCustomizationOptionsViewModelFactory.create(
+            viewModelScope,
+            initialDeepLinkDestination,
+        )
 
     override val wallpaperCarouselViewModel =
         defaultCustomizationOptionsViewModel.wallpaperCarouselViewModel
@@ -126,10 +134,7 @@ constructor(
 
     override fun onTransitionToSecondaryScreenComplete() {
         defaultCustomizationOptionsViewModel.onTransitionToSecondaryScreenComplete()
-        if (
-            selectedOption.value ==
-                ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.CLOCK
-        ) {
+        if (selectedOption.value == CLOCK) {
             // Show the picker's clock when we complete the transition to land on the secondary
             // clock customization screen.
             clockPickerViewModel.setShowPickerClockControllerView(true)
@@ -140,9 +145,7 @@ constructor(
         selectedOption.map {
             if (it == null) {
                 {
-                    defaultCustomizationOptionsViewModel.selectOption(
-                        ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.CLOCK
-                    )
+                    defaultCustomizationOptionsViewModel.selectOption(CLOCK)
                     // When we are about to transition to the clock customization screen, hide the
                     // keyguard preview renderer's smartspace as well as the clock. Because, we will
                     // show the picker's clock controller view clock when the transition ends.
@@ -157,12 +160,7 @@ constructor(
     val onCustomizeShortcutClicked: Flow<(() -> Unit)?> =
         selectedOption.map {
             if (it == null) {
-                {
-                    defaultCustomizationOptionsViewModel.selectOption(
-                        ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption
-                            .SHORTCUTS
-                    )
-                }
+                { defaultCustomizationOptionsViewModel.selectOption(SHORTCUTS) }
             } else {
                 null
             }
@@ -171,11 +169,7 @@ constructor(
     val onCustomizeColorsClicked: Flow<(() -> Unit)?> =
         selectedOption.map {
             if (it == null) {
-                {
-                    defaultCustomizationOptionsViewModel.selectOption(
-                        ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS
-                    )
-                }
+                { defaultCustomizationOptionsViewModel.selectOption(COLORS) }
             } else {
                 null
             }
@@ -184,12 +178,7 @@ constructor(
     val onCustomizeIconsClicked: Flow<(() -> Unit)?> =
         selectedOption.map {
             if (it == null) {
-                {
-                    defaultCustomizationOptionsViewModel.selectOption(
-                        ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
-                            .APP_ICONS
-                    )
-                }
+                { defaultCustomizationOptionsViewModel.selectOption(APP_ICONS) }
             } else {
                 null
             }
@@ -198,11 +187,7 @@ constructor(
     val onCustomizeShapeGridClicked: Flow<(() -> Unit)?> =
         selectedOption.map {
             if (it == null) {
-                {
-                    defaultCustomizationOptionsViewModel.selectOption(
-                        ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.GRID
-                    )
-                }
+                { defaultCustomizationOptionsViewModel.selectOption(GRID) }
             } else {
                 null
             }
@@ -213,15 +198,11 @@ constructor(
         selectedOption
             .flatMapLatest {
                 when (it) {
-                    ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.CLOCK ->
-                        clockPickerViewModel.onApply
-                    ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption
-                        .SHORTCUTS -> keyguardQuickAffordancePickerViewModel2.onApply
-                    ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.GRID ->
-                        gridPickerViewModel.onApply
-                    ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
-                        .APP_ICONS -> appIconPickerViewModel.onApply
-                    ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS ->
+                    CLOCK -> clockPickerViewModel.onApply
+                    SHORTCUTS -> keyguardQuickAffordancePickerViewModel2.onApply
+                    GRID -> gridPickerViewModel.onApply
+                    APP_ICONS -> appIconPickerViewModel.onApply
+                    COLORS ->
                         combine(colorPickerViewModel2.onApply, darkModeViewModel.onApply) {
                             colorOnApply,
                             darkModeOnApply ->
@@ -283,7 +264,8 @@ constructor(
     @AssistedFactory
     interface Factory : CustomizationOptionsViewModelFactory {
         override fun create(
-            viewModelScope: CoroutineScope
+            viewModelScope: CoroutineScope,
+            initialDeepLinkDestination: String?,
         ): ThemePickerCustomizationOptionsViewModel
     }
 }
