@@ -236,7 +236,7 @@ object ShortcutFloatingSheetBinder {
                         ),
                     itemHorizontalSpacePx =
                         context.resources.getDimensionPixelSize(
-                            R.dimen.floating_sheet_list_item_horizontal_space
+                            R.dimen.floating_sheet_shortcut_list_item_horizontal_space
                         ),
                     itemVerticalSpacePx =
                         context.resources.getDimensionPixelSize(
