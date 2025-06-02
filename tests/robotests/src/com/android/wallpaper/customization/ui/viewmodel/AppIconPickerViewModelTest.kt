@@ -22,8 +22,8 @@ import com.android.customization.model.grid.FakeShapeGridManager
 import com.android.customization.module.logging.ThemesUserEventLogger
 import com.android.customization.picker.grid.data.repository.ShapeRepository
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
+import com.android.customization.picker.icon.data.repository.FakeIconStyleRepository
 import com.android.customization.picker.icon.domain.interactor.AppIconInteractor
-import com.android.customization.picker.themedicon.data.repository.FakeThemedIconRepository
 import com.android.themepicker.R
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
@@ -54,7 +54,7 @@ class AppIconPickerViewModelTest {
     @get:Rule var hiltRule = HiltAndroidRule(this)
     @Inject lateinit var testScope: TestScope
     @Inject lateinit var interactor: AppIconInteractor
-    @Inject lateinit var themedIconRepository: FakeThemedIconRepository
+    @Inject lateinit var themedIconRepository: FakeIconStyleRepository
     @Inject lateinit var shapeManager: FakeShapeGridManager
     @Inject lateinit var shapeRepository: ShapeRepository
     @Inject @ApplicationContext lateinit var appContext: Context

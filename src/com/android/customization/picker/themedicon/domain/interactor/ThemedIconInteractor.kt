@@ -16,15 +16,15 @@
 
 package com.android.customization.picker.themedicon.domain.interactor
 
-import com.android.customization.picker.themedicon.data.repository.ThemedIconRepository
+import com.android.customization.picker.icon.data.repository.IconStyleRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 
 @Singleton
-class ThemedIconInteractor @Inject constructor(private val repository: ThemedIconRepository) {
-    val isAvailable: Flow<Boolean> = repository.isAvailable
-    val isActivated: Flow<Boolean> = repository.isActivated
+class ThemedIconInteractor @Inject constructor(private val repository: IconStyleRepository) {
+    val isAvailable: Flow<Boolean> = repository.isThemedIconAvailable
+    val isActivated: Flow<Boolean> = repository.isThemedIconActivated
 
     suspend fun setThemedIconEnabled(enabled: Boolean) = repository.setThemedIconEnabled(enabled)
 }

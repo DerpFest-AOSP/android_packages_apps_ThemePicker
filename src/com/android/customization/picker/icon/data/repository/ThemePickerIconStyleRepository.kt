@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.customization.picker.themedicon.data.repository
+package com.android.customization.picker.icon.data.repository
 
 import android.content.ContentResolver
 import android.content.ContentValues
@@ -44,13 +44,13 @@ import kotlinx.coroutines.flow.stateIn
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Singleton
-class ThemedIconRepositoryImpl
+class ThemePickerIconStyleRepository
 @Inject
 constructor(
     @ApplicationContext private val appContext: Context,
     private val contentResolver: ContentResolver,
     @BackgroundDispatcher private val backgroundScope: CoroutineScope,
-) : ThemedIconRepository {
+) : IconStyleRepository {
     private val metadataKey = appContext.getString(R.string.themed_icon_metadata_key)
     private var previewUtils: PreviewUtils? = null
     private val previewUtilsFlow = flow {
@@ -70,9 +70,9 @@ constructor(
     private val uriFlow: Flow<Uri?> =
         previewUtilsFlow.map { uri ?: it?.getUri(ICON_THEMED)?.also { result -> uri = result } }
 
-    override val isAvailable: Flow<Boolean> = previewUtilsFlow.map { it != null }
+    override val isThemedIconAvailable: Flow<Boolean> = previewUtilsFlow.map { it != null }
 
-    override val isActivated: Flow<Boolean> =
+    override val isThemedIconActivated: Flow<Boolean> =
         uriFlow
             .flatMapLatest {
                 callbackFlow {
