@@ -347,6 +347,8 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                             summary.iconShape?.let {
                                 disposableHandle =
                                     optionAppIconsIcon?.let { it1 ->
+                                        // TODO (b/397782741): bind icons correctly for additional
+                                        //  themes
                                         ShapeIconViewBinder.bindPreviewIcon(
                                             view = it1,
                                             appIconDrawable =

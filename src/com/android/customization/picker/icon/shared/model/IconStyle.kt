@@ -18,7 +18,17 @@ package com.android.customization.picker.icon.shared.model
 
 import com.android.themepicker.R
 
-enum class IconStyle(val nameResId: Int) {
+interface IconStyle {
+    val nameResId: Int
+
+    fun getIsThemedIcon(): Boolean
+}
+
+enum class ThemePickerIconStyle(override val nameResId: Int) : IconStyle {
     DEFAULT(R.string.app_icons_style_default),
-    MONOCHROME(R.string.app_icons_style_minimal),
+    MONOCHROME(R.string.app_icons_style_minimal);
+
+    override fun getIsThemedIcon(): Boolean {
+        return this == MONOCHROME
+    }
 }

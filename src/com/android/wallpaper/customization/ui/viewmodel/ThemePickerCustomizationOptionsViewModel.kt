@@ -87,16 +87,30 @@ constructor(
         appIconPickerViewModelFactory.create(viewModelScope = viewModelScope)
 
     override val customizationOptionsData: Flow<CustomizationOptionsData> =
-        combine(
-            gridPickerViewModel.isGridCustomizationAvailable,
-            appIconPickerViewModel.isThemedIconAvailable,
-            appIconPickerViewModel.isShapeOptionsAvailable,
-        ) { isGridCustomizationAvailable, isThemedIconAvailable, isShapeOptionsAvailable ->
-            ThemePickerCustomizationOptionsData(
-                isGridCustomizationAvailable = isGridCustomizationAvailable,
-                isThemedIconAvailable = isThemedIconAvailable,
-                isShapeAvailable = isShapeOptionsAvailable,
-            )
+        if (BaseFlags.get().isExtendibleThemeManager()) {
+            combine(
+                gridPickerViewModel.isGridCustomizationAvailable,
+                appIconPickerViewModel.isIconStyleAvailable,
+                appIconPickerViewModel.isShapeOptionsAvailable,
+            ) { isGridCustomizationAvailable, isIconStyleAvailable, isShapeOptionsAvailable ->
+                ThemePickerCustomizationOptionsData(
+                    isGridCustomizationAvailable = isGridCustomizationAvailable,
+                    isIconStyleAvailable = isIconStyleAvailable,
+                    isShapeAvailable = isShapeOptionsAvailable,
+                )
+            }
+        } else {
+            combine(
+                gridPickerViewModel.isGridCustomizationAvailable,
+                appIconPickerViewModel.isThemedIconAvailable,
+                appIconPickerViewModel.isShapeOptionsAvailable,
+            ) { isGridCustomizationAvailable, isThemedIconAvailable, isShapeOptionsAvailable ->
+                ThemePickerCustomizationOptionsData(
+                    isGridCustomizationAvailable = isGridCustomizationAvailable,
+                    isIconStyleAvailable = isThemedIconAvailable,
+                    isShapeAvailable = isShapeOptionsAvailable,
+                )
+            }
         }
 
     private var onApplyJob: Job? = null
