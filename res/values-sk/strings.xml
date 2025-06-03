@@ -48,8 +48,7 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"V rohu obrazovky sa zobrazujú malé hodiny"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Použiť zmeny písma ciferníka"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"Vrátiť zmeny písma ciferníka"</string>
-    <!-- no translation found for clock_style_round_clock (1694787561051568664) -->
-    <skip />
+    <string name="clock_style_round_clock" msgid="1694787561051568664">"Okrúhle hodiny"</string>
     <string name="clock_style_update_toast" msgid="6933583129162805444">"Štýl bol zmenený na možnosť <xliff:g id="ID_1">%1$s</xliff:g>. Opätovným klepnutím ju vrátite späť."</string>
     <string name="clock_style_round" msgid="261319982647730366">"oblé"</string>
     <string name="clock_style_sharp" msgid="453991773733285628">"hranaté"</string>
