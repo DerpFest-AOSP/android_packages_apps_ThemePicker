@@ -43,6 +43,7 @@ import com.android.customization.picker.color.ui.view.ColorOptionIconView2
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.customization.picker.common.ui.view.SingleRowListItemSpacing
 import com.android.themepicker.R
+import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.CLOCK
 import com.android.wallpaper.customization.ui.viewmodel.ClockFloatingSheetHeightsViewModel
 import com.android.wallpaper.customization.ui.viewmodel.ClockPickerViewModel.ClockStyleModel
@@ -54,6 +55,9 @@ import com.android.wallpaper.picker.customization.ui.view.FloatingToolbar
 import com.android.wallpaper.picker.customization.ui.view.adapter.FloatingToolbarTabAdapter
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.option.ui.adapter.OptionItemAdapter2
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.slider.LabelFormatter
 import com.google.android.material.slider.Slider
@@ -91,6 +95,7 @@ object ClockFloatingSheetBinder {
         val tabs: FloatingToolbar = view.requireViewById(R.id.floating_toolbar)
         val tabContainer =
             tabs.findViewById<ViewGroup>(com.android.wallpaper.R.id.floating_toolbar_tab_container)
+        val isDesktopUi: Boolean = BaseFlags.get().shouldShowDesktopUi(view.context)
         ColorUpdateBinder.bind(
             setColor = { color ->
                 DrawableCompat.setTint(DrawableCompat.wrap(tabContainer.background), color)
@@ -150,7 +155,8 @@ object ClockFloatingSheetBinder {
         val clockColorList: RecyclerView = view.requireViewById(R.id.clock_color_list)
         clockColorList.adapter = clockColorAdapter
         clockColorList.layoutManager =
-            LinearLayoutManager(appContext, LinearLayoutManager.HORIZONTAL, false)
+            if (isDesktopUi) FlexboxLayoutManager(appContext, FlexDirection.ROW, FlexWrap.WRAP)
+            else LinearLayoutManager(appContext, LinearLayoutManager.HORIZONTAL, false)
 
         val clockColorSlider: Slider = view.requireViewById(R.id.clock_color_slider)
         SliderColorBinder.bind(
@@ -414,8 +420,13 @@ object ClockFloatingSheetBinder {
                         clockColorAdapter.setItems(colorOptions) {
                             var indexToFocus = colorOptions.indexOfFirst { it.isSelected.value }
                             indexToFocus = if (indexToFocus < 0) 0 else indexToFocus
-                            (clockColorList.layoutManager as LinearLayoutManager)
-                                .scrollToPositionWithOffset(indexToFocus, 0)
+                            if (isDesktopUi) {
+                                (clockColorList.layoutManager as FlexboxLayoutManager)
+                                    .scrollToPosition(indexToFocus)
+                            } else {
+                                (clockColorList.layoutManager as LinearLayoutManager)
+                                    .scrollToPositionWithOffset(indexToFocus, 0)
+                            }
                         }
                     }
                 }
@@ -438,7 +449,12 @@ object ClockFloatingSheetBinder {
                     viewModel.previewingClockColorOptionIndex.collect { indexToFocus ->
                         clockColorList.post {
                             val layoutManager =
-                                clockColorList.layoutManager as? LinearLayoutManager ?: return@post
+                                if (isDesktopUi)
+                                    clockColorList.layoutManager as? FlexboxLayoutManager
+                                        ?: return@post
+                                else
+                                    clockColorList.layoutManager as? LinearLayoutManager
+                                        ?: return@post
                             val itemView = layoutManager.findViewByPosition(indexToFocus)
 
                             if (itemView != null) {
