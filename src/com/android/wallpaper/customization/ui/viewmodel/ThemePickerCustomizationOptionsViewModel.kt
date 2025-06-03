@@ -65,13 +65,15 @@ constructor(
     val themedIconViewModel: ThemedIconViewModel,
     val packThemeViewModel: PackThemeViewModel,
     @Assisted private val viewModelScope: CoroutineScope,
-    @Assisted initialDeepLinkDestination: String?,
+    @Assisted("destination") initialDeepLinkDestination: String?,
+    @Assisted("shortcutSlotId") initialDeepLinkShortcutSlotId: String?,
 ) : CustomizationOptionsViewModel {
 
     private val defaultCustomizationOptionsViewModel =
         defaultCustomizationOptionsViewModelFactory.create(
             viewModelScope,
             initialDeepLinkDestination,
+            initialDeepLinkShortcutSlotId,
         )
 
     override val wallpaperCarouselViewModel =
@@ -79,7 +81,10 @@ constructor(
 
     val clockPickerViewModel = clockPickerViewModelFactory.create(viewModelScope = viewModelScope)
     val keyguardQuickAffordancePickerViewModel2 =
-        keyguardQuickAffordancePickerViewModel2Factory.create(viewModelScope = viewModelScope)
+        keyguardQuickAffordancePickerViewModel2Factory.create(
+            viewModelScope = viewModelScope,
+            initialDeepLinkShortcutSlotId = initialDeepLinkShortcutSlotId,
+        )
     val colorPickerViewModel2 = colorPickerViewModel2Factory.create(viewModelScope = viewModelScope)
     val gridPickerViewModel = gridPickerViewModelFactory.create(viewModelScope = viewModelScope)
     val appIconPickerViewModel =
@@ -265,7 +270,8 @@ constructor(
     interface Factory : CustomizationOptionsViewModelFactory {
         override fun create(
             viewModelScope: CoroutineScope,
-            initialDeepLinkDestination: String?,
+            @Assisted("destination") initialDeepLinkDestination: String?,
+            @Assisted("shortcutSlotId") initialDeepLinkShortcutSlotId: String?,
         ): ThemePickerCustomizationOptionsViewModel
     }
 }
