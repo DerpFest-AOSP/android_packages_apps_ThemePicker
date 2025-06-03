@@ -62,9 +62,11 @@ constructor(
     private val quickAffordanceInteractor: KeyguardQuickAffordancePickerInteractor,
     private val logger: ThemesUserEventLogger,
     @Assisted private val viewModelScope: CoroutineScope,
+    @Assisted initialDeepLinkShortcutSlotId: String?,
 ) {
     /** A locally-selected slot, if the user ever switched from the original one. */
-    private val _selectedSlotId = MutableStateFlow<String?>(null)
+    private val _selectedSlotId: MutableStateFlow<String?> =
+        MutableStateFlow(initialDeepLinkShortcutSlotId)
     /** The ID of the selected slot. */
     val selectedSlotId: StateFlow<String> =
         combine(quickAffordanceInteractor.slots, _selectedSlotId) { slots, selectedSlotIdOrNull ->
@@ -81,14 +83,15 @@ constructor(
                 started = SharingStarted.WhileSubscribed(),
                 initialValue = "",
             )
-    private val overridingQuickAffordances = MutableStateFlow<Map<String, String>>(emptyMap())
+    private val overridingQuickAffordances: MutableStateFlow<Map<String, String>> =
+        MutableStateFlow(emptyMap())
     private val selectedQuickAffordancesGroupBySlotId =
         quickAffordanceInteractor.selections
             .map { it.groupBy { selectionModel -> selectionModel.slotId } }
             .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
 
-    val _selectedQuickAffordanceIndex = MutableStateFlow<Int>(0)
-    val selectedQuickAffordanceIndex = _selectedQuickAffordanceIndex.asStateFlow()
+    private val _selectedQuickAffordanceIndex: MutableStateFlow<Int> = MutableStateFlow(0)
+    val selectedQuickAffordanceIndex: StateFlow<Int> = _selectedQuickAffordanceIndex.asStateFlow()
 
     val previewingQuickAffordances =
         combine(
@@ -473,6 +476,9 @@ constructor(
     @ViewModelScoped
     @AssistedFactory
     interface Factory {
-        fun create(viewModelScope: CoroutineScope): KeyguardQuickAffordancePickerViewModel2
+        fun create(
+            viewModelScope: CoroutineScope,
+            initialDeepLinkShortcutSlotId: String?,
+        ): KeyguardQuickAffordancePickerViewModel2
     }
 }
