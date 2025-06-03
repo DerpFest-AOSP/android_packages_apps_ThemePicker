@@ -22,7 +22,9 @@ import com.android.customization.module.logging.ThemesUserEventLogger
 import com.android.customization.picker.grid.domain.interactor.AppIconInteractor
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
 import com.android.themepicker.R
+import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
+import com.android.wallpaper.picker.customization.ui.viewmodel.FloatingToolbarTabViewModel
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -101,6 +103,80 @@ constructor(
             {
                 val newValue = !it
                 overridingIsThemedIconEnabled.value = newValue
+            }
+        }
+
+    enum class Tab {
+        STYLE,
+        SHAPE,
+    }
+
+    private val _selectedTab = MutableStateFlow<Tab?>(null)
+    val selectedTab =
+        combine(isThemedIconAvailable, isShapeOptionsAvailable, _selectedTab) {
+            isThemedIconAvailable,
+            isShapeOptionsAvailable,
+            selectedTab ->
+            selectedTab
+                ?: if (isThemedIconAvailable) {
+                    Tab.STYLE
+                } else if (isShapeOptionsAvailable) {
+                    Tab.SHAPE
+                } else {
+                    null
+                }
+        }
+
+    val tabs: Flow<List<FloatingToolbarTabViewModel>> =
+        combine(isThemedIconAvailable, isShapeOptionsAvailable, selectedTab) {
+            isThemedIconAvailable,
+            isShapeOptionsAvailable,
+            selectedTab ->
+            buildList {
+                if (isThemedIconAvailable) {
+                    val isSelected = (selectedTab == Tab.STYLE)
+                    add(
+                        FloatingToolbarTabViewModel(
+                            icon =
+                                Icon.Resource(
+                                    res = R.drawable.ic_style,
+                                    contentDescription = Text.Resource(R.string.app_icons_style),
+                                ),
+                            text =
+                                Text.Resource(R.string.app_icons_style)
+                                    .asString(applicationContext),
+                            isSelected = isSelected,
+                            onClick =
+                                if (isSelected) {
+                                    null
+                                } else {
+                                    { _selectedTab.value = Tab.STYLE }
+                                },
+                        )
+                    )
+                }
+                if (isShapeOptionsAvailable) {
+                    val isSelected = (selectedTab == Tab.SHAPE)
+                    add(
+                        FloatingToolbarTabViewModel(
+                            icon =
+                                Icon.Resource(
+                                    res = R.drawable.ic_shapes,
+                                    contentDescription = Text.Resource(R.string.app_icons_shape),
+                                ),
+                            text =
+                                Text.Resource(R.string.app_icons_shape)
+                                    .asString(applicationContext),
+                            isSelected = isSelected,
+                            onClick =
+                                if (isSelected) {
+                                    null
+                                } else {
+                                    { _selectedTab.value = Tab.SHAPE }
+                                },
+                        )
+                    )
+                }
             }
         }
 
