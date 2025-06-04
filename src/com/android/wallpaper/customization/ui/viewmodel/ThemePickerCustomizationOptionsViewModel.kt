@@ -19,6 +19,7 @@ package com.android.wallpaper.customization.ui.viewmodel
 import android.content.Context
 import android.view.accessibility.AccessibilityManager
 import com.android.customization.picker.mode.ui.viewmodel.DarkModeViewModel
+import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.APP_ICONS
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.GRID
@@ -128,7 +129,11 @@ constructor(
 
         keyguardQuickAffordancePickerViewModel2.resetPreview()
         gridPickerViewModel.resetPreview()
-        appIconPickerViewModel.resetPreview()
+        if (BaseFlags.get().isExtendibleThemeManager()) {
+            appIconPickerViewModel.resetPreview2()
+        } else {
+            appIconPickerViewModel.resetPreview()
+        }
         clockPickerViewModel.resetPreview()
         // resetPreview happens when transition back to the primary screen ends. Show the keyguard
         // preview renderer's smartspace and the clock.
@@ -206,7 +211,12 @@ constructor(
                     CLOCK -> clockPickerViewModel.onApply
                     SHORTCUTS -> keyguardQuickAffordancePickerViewModel2.onApply
                     GRID -> gridPickerViewModel.onApply
-                    APP_ICONS -> appIconPickerViewModel.onApply
+                    APP_ICONS ->
+                        if (BaseFlags.get().isExtendibleThemeManager()) {
+                            appIconPickerViewModel.onApply2
+                        } else {
+                            appIconPickerViewModel.onApply
+                        }
                     COLORS ->
                         combine(colorPickerViewModel2.onApply, darkModeViewModel.onApply) {
                             colorOnApply,
