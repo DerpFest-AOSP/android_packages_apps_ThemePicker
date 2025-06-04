@@ -12,13 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
-package com.android.customization.picker.grid.domain.interactor
+package com.android.customization.picker.icon.domain.interactor
 
 import com.android.customization.model.grid.ShapeOptionModel
 import com.android.customization.picker.grid.data.repository.ShapeRepository
+import com.android.customization.picker.icon.shared.model.IconStyle
 import com.android.customization.picker.themedicon.data.repository.ThemedIconRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -44,6 +44,22 @@ constructor(
     val isThemedIconAvailable: Flow<Boolean> = themedIconRepository.isAvailable
 
     val isThemedIconEnabled: Flow<Boolean> = themedIconRepository.isActivated
+
+    val iconStyles =
+        isThemedIconAvailable.map { isThemedIconAvailable ->
+            // TODO (b/397782741): introduce different icon styles depending on repository
+            var styles = IconStyle.entries.toList()
+            if (!isThemedIconAvailable) styles = styles.filter { it != IconStyle.MONOCHROME }
+            styles
+        }
+
+    val selectedIconStyle =
+        isThemedIconEnabled.map {
+            when (it) {
+                true -> IconStyle.MONOCHROME
+                false -> IconStyle.DEFAULT
+            }
+        }
 
     suspend fun applyThemedIconEnabled(enabled: Boolean) =
         themedIconRepository.setThemedIconEnabled(enabled)

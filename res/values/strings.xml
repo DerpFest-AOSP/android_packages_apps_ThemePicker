@@ -151,6 +151,14 @@
         [CHAR LIMIT=15] -->
     <string name="app_icons_theme_themed">themed</string>
 
+    <!-- Label for an icon style option that applies no theming to app icons when selected.
+        [CHAR LIMIT=15] -->
+    <string name="app_icons_style_default">Default</string>
+
+    <!-- Label for an icon style option that applies a monochrome theme to app icons when selected.
+        [CHAR LIMIT=15] -->
+    <string name="app_icons_style_minimal">Minimal</string>
+
     <!-- Title of a tab to change the app icon shape [CHAR LIMIT=15] -->
     <string name="app_icons_shape">Shape</string>
 
@@ -653,4 +661,16 @@
     [CHAR LIMIT=128].
     -->
     <string name="custom_clocks_label">Custom Clocks</string>
+
+    <!--
+    Accessibility label for the Clock face width label.
+    -->
+    <string name="clock_face_width">Clock face width</string>
+
+    <!--
+    Accessibility announcement template for a numerical range.
+    %1$d is the minimum value, %2$d is the maximum value.
+    Example: "range from 1 to 7". [CHAR LIMIT=none]
+    -->
+    <string name="range_announcement_template">range from %1$d to %2$d</string>
 </resources>

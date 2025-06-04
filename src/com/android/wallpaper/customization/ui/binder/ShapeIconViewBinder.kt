@@ -39,7 +39,7 @@ object ShapeIconViewBinder {
     fun bindPreviewIcon(
         view: ImageView,
         appIconDrawable: AdaptiveIconDrawable?,
-        shapeIcon: ShapeIconViewModel,
+        shapeIcon: ShapeIconViewModel? = null,
         isThemed: Boolean,
         colorUpdateViewModel: ColorUpdateViewModel,
         shouldAnimateColor: () -> Boolean,
@@ -48,7 +48,7 @@ object ShapeIconViewBinder {
         val shapeTileDrawable =
             ShapeTileDrawable(
                 context = view.context,
-                path = shapeIcon.path,
+                path = shapeIcon?.path,
                 icon = appIconDrawable,
                 isThemed = isThemed,
             )
