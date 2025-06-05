@@ -52,18 +52,40 @@
             android:clipToPadding="false"/>
     </FrameLayout>
 
-    <com.google.android.material.slider.Slider
-        android:id="@+id/clock_axis_preset_slider"
+    <LinearLayout
+        android:id="@+id/clock_face_width_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/accessibility_min_height"
-        android:layout_marginTop="@dimen/clock_axis_control_slider_row_margin_vertical"
-        android:valueFrom="0.0"
-        android:valueTo="100.0"
-        android:stepSize="10.0"
-        app:trackHeight="@dimen/slider_track_height"
-        app:thumbHeight="@dimen/slider_thumb_height"
-        app:labelBehavior="gone"
-        android:theme="@style/Theme.Material3.DynamicColors.DayNight" />
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/clock_axis_control_slider_container_margin_vertical">
+
+        <TextView
+            android:id="@+id/clock_face_width_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/clock_face_width"
+            android:text="@string/clock_face_width"
+            android:textAppearance="@style/TextAppearance.DeviceDefault.Small.LabelMedium"
+            android:textColor="@color/system_on_surface_variant"
+            android:lineSpacingExtra="1sp"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="20dp"
+            android:layout_marginTop="8dp" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/clock_axis_preset_slider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/accessibility_min_height"
+            android:layout_marginTop="@dimen/clock_axis_control_slider_row_margin_vertical"
+            android:valueFrom="0.0"
+            android:valueTo="100.0"
+            android:stepSize="10.0"
+            app:trackHeight="@dimen/slider_track_height"
+            app:thumbHeight="@dimen/slider_thumb_height"
+            app:labelBehavior="gone"
+            android:theme="@style/Theme.Material3.DynamicColors.DayNight" />
+        </LinearLayout>
+
 </LinearLayout>
 
