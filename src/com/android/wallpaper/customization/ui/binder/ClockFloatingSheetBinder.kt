@@ -28,7 +28,6 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.get
-import androidx.core.view.isEmpty
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -453,14 +452,18 @@ object ClockFloatingSheetBinder {
 
                 launch {
                     viewModel.previewingClockStyleOptionIndex.collect { indexToFocus ->
-                        val offset =
-                            if (!clockStyleList.isEmpty()) {
-                                clockStyleList.get(0).width
-                            } else {
-                                0
+                        clockStyleList.post {
+                            val layoutManager =
+                                clockStyleList.layoutManager as? LinearLayoutManager ?: return@post
+                            val itemView = layoutManager.findViewByPosition(indexToFocus)
+
+                            if (itemView != null) {
+                                val parentCenter = clockStyleList.width / 2
+                                val itemCenter = itemView.left + itemView.width / 2
+                                val scrollBy = itemCenter - parentCenter
+                                clockStyleList.smoothScrollBy(scrollBy, 0)
                             }
-                        (clockStyleList.layoutManager as LinearLayoutManager)
-                            .scrollToPositionWithOffset(indexToFocus, offset)
+                        }
                     }
                 }
 
