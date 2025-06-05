@@ -141,8 +141,29 @@ object ClockFloatingSheetBinder {
         val clockStyleList: RecyclerView = view.requireViewById(R.id.clock_style_list)
         clockStyleList.initStyleList(appContext, clockStyleAdapter)
         val clockStyleListContainer: View = view.requireViewById(R.id.clock_style_list_container)
-        val axisPresetSlider: Slider =
-            clockStyleContent.requireViewById(R.id.clock_axis_preset_slider)
+
+        val axisPresetSliderContainer: View =
+            clockStyleContent.requireViewById(R.id.clock_face_width_container)
+        val axisPresetSlider =
+            clockStyleContent.requireViewById<Slider>(R.id.clock_axis_preset_slider).also {
+                SliderColorBinder.bind(
+                    slider = it,
+                    colorUpdateViewModel = colorUpdateViewModel,
+                    shouldAnimateColor = isFloatingSheetActive,
+                    lifecycleOwner = lifecycleOwner,
+                )
+            }
+
+        ColorUpdateBinder.bind(
+            setColor = { color ->
+                axisPresetSliderContainer
+                    .requireViewById<TextView>(R.id.clock_face_width_label)
+                    .setTextColor(color)
+            },
+            color = colorUpdateViewModel.colorOnSurfaceVariant,
+            shouldAnimate = isClockStyleActive,
+            lifecycleOwner = lifecycleOwner,
+        )
 
         // Setting content description for the clock face width slider
         val sliderLabel = appContext.getString(R.string.clock_face_width)
@@ -214,13 +235,15 @@ object ClockFloatingSheetBinder {
             if (isDesktopUi) FlexboxLayoutManager(appContext, FlexDirection.ROW, FlexWrap.WRAP)
             else LinearLayoutManager(appContext, LinearLayoutManager.HORIZONTAL, false)
 
-        val clockColorSlider: Slider = view.requireViewById(R.id.clock_color_slider)
-        SliderColorBinder.bind(
-            slider = clockColorSlider,
-            colorUpdateViewModel = colorUpdateViewModel,
-            shouldAnimateColor = isFloatingSheetActive,
-            lifecycleOwner = lifecycleOwner,
-        )
+        val clockColorSlider =
+            view.requireViewById<Slider>(R.id.clock_color_slider).also {
+                SliderColorBinder.bind(
+                    slider = it,
+                    colorUpdateViewModel = colorUpdateViewModel,
+                    shouldAnimateColor = isFloatingSheetActive,
+                    lifecycleOwner = lifecycleOwner,
+                )
+            }
 
         clockColorSlider.apply {
             valueFrom = ClockMetadataModel.MIN_COLOR_TONE_PROGRESS.toFloat()
@@ -281,6 +304,7 @@ object ClockFloatingSheetBinder {
             shouldAnimate = isClockStyleActive,
             lifecycleOwner = lifecycleOwner,
         )
+
         ColorUpdateBinder.bind(
             setColor = { color ->
                 clockSizeContent
@@ -297,16 +321,16 @@ object ClockFloatingSheetBinder {
                 override fun onGlobalLayout() {
                     if (
                         clockStyleListContainer.height != 0 &&
-                            axisPresetSlider.height != 0 &&
+                            axisPresetSliderContainer.height != 0 &&
                             (_clockFloatingSheetHeights.value.clockStyleContentHeight !=
                                 clockStyleListContainer.height ||
                                 _clockFloatingSheetHeights.value.axisPresetSliderHeight !=
-                                    axisPresetSlider.height)
+                                    axisPresetSliderContainer.height)
                     ) {
                         _clockFloatingSheetHeights.value =
                             _clockFloatingSheetHeights.value.copy(
                                 clockStyleContentHeight = clockStyleListContainer.height,
-                                axisPresetSliderHeight = axisPresetSlider.height,
+                                axisPresetSliderHeight = axisPresetSliderContainer.height,
                             )
                         clockStyleContent.viewTreeObserver.removeOnGlobalLayoutListener(this)
                     }
@@ -438,7 +462,9 @@ object ClockFloatingSheetBinder {
                 }
 
                 launch {
-                    viewModel.shouldShowPresetSlider.collect { axisPresetSlider.isVisible = it }
+                    viewModel.shouldShowPresetSlider.collect {
+                        axisPresetSliderContainer.isVisible = it
+                    }
                 }
 
                 launch {
