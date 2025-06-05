@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.android.customization.picker.themedicon.data.repository
+package com.android.customization.picker.icon.data.repository
 
 import kotlinx.coroutines.flow.Flow
 
-interface ThemedIconRepository {
+interface IconStyleRepository {
 
-    val isAvailable: Flow<Boolean>
+    val isThemedIconAvailable: Flow<Boolean>
 
-    val isActivated: Flow<Boolean>
+    val isThemedIconActivated: Flow<Boolean>
 
     suspend fun setThemedIconEnabled(enabled: Boolean)
 }

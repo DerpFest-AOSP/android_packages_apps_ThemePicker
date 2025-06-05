@@ -18,8 +18,8 @@ package com.android.customization.picker.icon.domain.interactor
 
 import com.android.customization.model.grid.ShapeOptionModel
 import com.android.customization.picker.grid.data.repository.ShapeRepository
+import com.android.customization.picker.icon.data.repository.IconStyleRepository
 import com.android.customization.picker.icon.shared.model.IconStyle
-import com.android.customization.picker.themedicon.data.repository.ThemedIconRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
@@ -30,7 +30,7 @@ class AppIconInteractor
 @Inject
 constructor(
     private val shapeRepository: ShapeRepository,
-    private val themedIconRepository: ThemedIconRepository,
+    private val iconStyleRepository: IconStyleRepository,
 ) {
 
     val shapeOptions = shapeRepository.shapeOptions
@@ -41,9 +41,9 @@ constructor(
     val selectedShapeOption =
         shapeRepository.selectedShapeOption.map { shapeOption -> shapeOption ?: defaultShape }
 
-    val isThemedIconAvailable: Flow<Boolean> = themedIconRepository.isAvailable
+    val isThemedIconAvailable: Flow<Boolean> = iconStyleRepository.isThemedIconAvailable
 
-    val isThemedIconEnabled: Flow<Boolean> = themedIconRepository.isActivated
+    val isThemedIconEnabled: Flow<Boolean> = iconStyleRepository.isThemedIconActivated
 
     val iconStyles =
         isThemedIconAvailable.map { isThemedIconAvailable ->
@@ -62,7 +62,7 @@ constructor(
         }
 
     suspend fun applyThemedIconEnabled(enabled: Boolean) =
-        themedIconRepository.setThemedIconEnabled(enabled)
+        iconStyleRepository.setThemedIconEnabled(enabled)
 
     suspend fun applyShape(shapeKey: String) = shapeRepository.applyShape(shapeKey)
 }
