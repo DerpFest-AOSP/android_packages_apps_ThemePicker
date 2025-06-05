@@ -18,7 +18,6 @@ package com.android.wallpaper.customization.ui.binder
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.drawable.AdaptiveIconDrawable
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -34,9 +33,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.customization.picker.common.ui.view.SingleRowListItemSpacing
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
 import com.android.customization.picker.icon.shared.model.IconStyle
+import com.android.customization.picker.icon.ui.util.IconStyleViewUtil
 import com.android.themepicker.R
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.APP_ICONS
+import com.android.wallpaper.customization.ui.view.ShapeTileDrawable
 import com.android.wallpaper.customization.ui.viewmodel.AppIconPickerViewModel
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
@@ -54,6 +55,7 @@ object AppIconFloatingSheetBinder {
     fun bind(
         view: View,
         optionsViewModel: ThemePickerCustomizationOptionsViewModel,
+        iconStyleViewUtil: IconStyleViewUtil,
         colorUpdateViewModel: ColorUpdateViewModel,
         lifecycleOwner: LifecycleOwner,
         backgroundDispatcher: CoroutineDispatcher,
@@ -119,7 +121,7 @@ object AppIconFloatingSheetBinder {
 
         val styleOptionListAdapter =
             createStyleOptionItemAdapter(
-                context = view.context,
+                iconStyleViewUtil = iconStyleViewUtil,
                 colorUpdateViewModel = colorUpdateViewModel,
                 shouldAnimateColor = isFloatingSheetActive,
                 lifecycleOwner = lifecycleOwner,
@@ -272,32 +274,53 @@ object AppIconFloatingSheetBinder {
     }
 
     private fun createStyleOptionItemAdapter(
-        context: Context,
+        iconStyleViewUtil: IconStyleViewUtil,
         colorUpdateViewModel: ColorUpdateViewModel,
         shouldAnimateColor: () -> Boolean,
         lifecycleOwner: LifecycleOwner,
         backgroundDispatcher: CoroutineDispatcher,
     ): OptionItemAdapter2<IconStyle> {
-        val previewIconPackageName = context.resources.getString(R.string.camera_package)
-        val appIconDrawable = ShapeIconViewBinder.loadAppIcon(context, previewIconPackageName)
         return OptionItemAdapter2(
             layoutResourceId = R.layout.icon_style_option2,
             lifecycleOwner = lifecycleOwner,
             backgroundDispatcher = backgroundDispatcher,
             bindPayload = { view: View, iconStyle: IconStyle ->
-                val imageView = view.findViewById(R.id.foreground) as? ImageView
+                val optionIcon = view.requireViewById<ViewGroup>(R.id.option_icon)
+                val buttonIcon = view.requireViewById<ViewGroup>(R.id.button_icon)
+                val drawable = iconStyleViewUtil.getDrawable(iconStyle)
+                if (iconStyle.getIsExternalLink()) {
+                    optionIcon.visibility = View.GONE
+                    buttonIcon.visibility = View.VISIBLE
+                    val imageView = view.requireViewById<ImageView>(R.id.button_foreground)
+                    imageView.setImageDrawable(drawable)
+                    view.setOnClickListener { iconStyleViewUtil.getOnClick(iconStyle)?.invoke() }
+                } else {
+                    optionIcon.visibility = View.VISIBLE
+                    buttonIcon.visibility = View.GONE
+                    val imageView =
+                        view.requireViewById<ImageView>(com.android.wallpaper.R.id.foreground)
+                    imageView.setImageDrawable(drawable)
+                }
+                // If the icon is a themed icon, bind its foreground and background color
                 val disposableHandle =
-                    imageView?.let {
-                        // TODO (b/397782741): bind icons correctly for additional themes
-                        ShapeIconViewBinder.bindPreviewIcon(
-                            view = it,
-                            appIconDrawable = appIconDrawable as? AdaptiveIconDrawable,
-                            isThemed = iconStyle.getIsThemedIcon(),
+                    if (iconStyle.getIsThemedIcon()) {
+                        (drawable as? ShapeTileDrawable)?.let {
+                            ShapeIconViewBinder.bindPreviewIconColor(
+                                shapeTileDrawable = it,
+                                colorUpdateViewModel = colorUpdateViewModel,
+                                shouldAnimateColor = shouldAnimateColor,
+                                lifecycleOwner = lifecycleOwner,
+                            )
+                        }
+                    } else if (iconStyle.getIsExternalLink()) {
+                        ShapeIconViewBinder.bindButtonIconColor(
+                            foreground = buttonIcon.requireViewById(R.id.button_foreground),
+                            background = buttonIcon.requireViewById(R.id.button_background),
                             colorUpdateViewModel = colorUpdateViewModel,
                             shouldAnimateColor = shouldAnimateColor,
                             lifecycleOwner = lifecycleOwner,
                         )
-                    }
+                    } else null
                 return@OptionItemAdapter2 disposableHandle
             },
             colorUpdateViewModel = WeakReference(colorUpdateViewModel),
