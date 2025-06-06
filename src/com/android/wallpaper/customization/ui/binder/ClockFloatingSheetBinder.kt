@@ -16,9 +16,6 @@
 
 package com.android.wallpaper.customization.ui.binder
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.ValueAnimator
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
@@ -71,7 +68,6 @@ import kotlinx.coroutines.launch
 object ClockFloatingSheetBinder {
     private const val SLIDER_ENABLED_ALPHA = 1f
     private const val SLIDER_DISABLED_ALPHA = .3f
-    private const val ANIMATION_DURATION = 200L
 
     private val _clockFloatingSheetHeights: MutableStateFlow<ClockFloatingSheetHeightsViewModel> =
         MutableStateFlow(ClockFloatingSheetHeightsViewModel())
@@ -318,6 +314,10 @@ object ClockFloatingSheetBinder {
                             clockSizeContentHeight ?: return@collect
                             axisPresetSliderHeight ?: return@collect
 
+                            clockStyleContent.isVisible = currentTab == Tab.STYLE
+                            clockColorContent.isVisible = currentTab == Tab.COLOR
+                            clockSizeContent.isVisible = currentTab == Tab.SIZE
+
                             val fromHeight = floatingSheetContainer.height
                             val toHeight =
                                 when (selectedTab) {
@@ -339,38 +339,22 @@ object ClockFloatingSheetBinder {
                                     Tab.COLOR -> clockColorContent
                                     Tab.SIZE -> clockSizeContent
                                 }
-                            val shouldCurrentContentFadeOut = currentTab != selectedTab
-                            // Start to animate the content height
-                            ValueAnimator.ofInt(fromHeight, toHeight)
-                                .apply {
-                                    addUpdateListener { valueAnimator ->
-                                        val value = valueAnimator.animatedValue as Int
-                                        floatingSheetContainer.layoutParams =
-                                            floatingSheetContainer.layoutParams.apply {
-                                                height = value
-                                            }
-                                        if (shouldCurrentContentFadeOut) {
-                                            currentContent.alpha =
-                                                getAlpha(fromHeight, toHeight, value)
-                                        }
-                                    }
-                                    duration = ANIMATION_DURATION
-                                    addListener(
-                                        object : AnimatorListenerAdapter() {
-                                            override fun onAnimationEnd(animation: Animator) {
-                                                clockStyleContent.isVisible =
-                                                    selectedTab == Tab.STYLE
-                                                clockStyleContent.alpha = 1f
-                                                clockColorContent.isVisible =
-                                                    selectedTab == Tab.COLOR
-                                                clockColorContent.alpha = 1f
-                                                clockSizeContent.isVisible = selectedTab == Tab.SIZE
-                                                clockSizeContent.alpha = 1f
-                                            }
-                                        }
-                                    )
+                            val selectedContent: View =
+                                when (selectedTab) {
+                                    Tab.STYLE -> clockStyleContent
+                                    Tab.COLOR -> clockColorContent
+                                    Tab.SIZE -> clockSizeContent
                                 }
-                                .start()
+                            val fromContent =
+                                if (currentTab != selectedTab) currentContent else null
+                            val toContent = if (currentTab != selectedTab) selectedContent else null
+                            FloatingSheetHeightAnimationBinder.bind(
+                                floatingSheetContainer,
+                                fromHeight,
+                                toHeight,
+                                fromContent,
+                                toContent,
+                            )
                             currentTab = selectedTab
                         }
                 }
@@ -582,8 +566,4 @@ object ClockFloatingSheetBinder {
             colorUpdateViewModel = WeakReference(colorUpdateViewModel),
             shouldAnimateColor = shouldAnimateColor,
         )
-
-    // Alpha is 1 when current height is from height, and 0 when current height is to height.
-    private fun getAlpha(fromHeight: Int, toHeight: Int, currentHeight: Int): Float =
-        (1 - (currentHeight - fromHeight).toFloat() / (toHeight - fromHeight).toFloat())
 }

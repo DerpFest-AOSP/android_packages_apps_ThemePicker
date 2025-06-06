@@ -20,6 +20,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.graphics.drawable.DrawableCompat
@@ -38,7 +39,7 @@ import com.android.themepicker.R
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.APP_ICONS
 import com.android.wallpaper.customization.ui.view.ShapeTileDrawable
-import com.android.wallpaper.customization.ui.viewmodel.AppIconPickerViewModel
+import com.android.wallpaper.customization.ui.viewmodel.AppIconPickerViewModel.Tab
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.view.FloatingToolbar
@@ -48,6 +49,8 @@ import com.android.wallpaper.picker.option.ui.adapter.OptionItemAdapter2
 import com.google.android.material.materialswitch.MaterialSwitch
 import java.lang.ref.WeakReference
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 object AppIconFloatingSheetBinder {
@@ -137,6 +140,53 @@ object AppIconFloatingSheetBinder {
         val themedIconTitle = view.requireViewById<TextView>(R.id.themed_icon_toggle_title)
         val themedIconBetaLabel = view.requireViewById<TextView>(R.id.themed_icon_beta_title)
 
+        data class FloatingSheetHeightsViewModel(
+            val styleContentHeight: Int? = null,
+            val shapeContentHeight: Int? = null,
+        )
+        val floatingSheetHeights: MutableStateFlow<FloatingSheetHeightsViewModel> =
+            MutableStateFlow(FloatingSheetHeightsViewModel())
+
+        if (isExtendibleThemeManager) {
+            styleContent.viewTreeObserver.addOnGlobalLayoutListener(
+                object : OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        if (
+                            styleContent.height != 0 &&
+                                floatingSheetHeights.value.styleContentHeight != styleContent.height
+                        ) {
+                            floatingSheetHeights.value =
+                                floatingSheetHeights.value.copy(
+                                    styleContentHeight = styleContent.height
+                                )
+                            // Keep the height of the style floating sheet fixed so text renders
+                            // correctly after changing tabs.
+                            styleContent.layoutParams =
+                                styleContent.layoutParams.apply { height = styleContent.height }
+                            styleContent.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                        }
+                    }
+                }
+            )
+
+            shapeContent.viewTreeObserver.addOnGlobalLayoutListener(
+                object : OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        if (
+                            shapeContent.height != 0 &&
+                                floatingSheetHeights.value.shapeContentHeight != shapeContent.height
+                        ) {
+                            floatingSheetHeights.value =
+                                floatingSheetHeights.value.copy(
+                                    shapeContentHeight = shapeContent.height
+                                )
+                            shapeContent.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                        }
+                    }
+                }
+            )
+        }
+
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
@@ -176,13 +226,51 @@ object AppIconFloatingSheetBinder {
                     }
 
                     launch {
-                        viewModel.selectedTab.collect {
-                            // TODO (b/397782741): add animation when switching tabs
-                            styleContent.isVisible = (it == AppIconPickerViewModel.Tab.STYLE)
-                            shapeContent.isVisible = (it == AppIconPickerViewModel.Tab.SHAPE)
+                        val verticalPadding =
+                            view.resources.getDimensionPixelSize(
+                                R.dimen.floating_sheet_content_vertical_padding
+                            )
+                        var currentTab: Tab? = null
+                        combine(floatingSheetHeights, viewModel.selectedTab, ::Pair).collect {
+                            (heights, selectedTab) ->
+                            val (styleContentHeight, shapeContentHeight) = heights
+                            styleContentHeight ?: return@collect
+                            shapeContentHeight ?: return@collect
+                            selectedTab ?: return@collect
+
+                            styleContent.isVisible = (currentTab == Tab.STYLE)
+                            shapeContent.isVisible = (currentTab == Tab.SHAPE)
+
+                            val fromHeight = floatingSheetContainer.height
+                            val toHeight =
+                                when (selectedTab) {
+                                    Tab.STYLE -> styleContentHeight
+                                    Tab.SHAPE -> shapeContentHeight
+                                } + 2 * verticalPadding
+                            val currentContent: View? =
+                                when (currentTab) {
+                                    Tab.STYLE -> styleContent
+                                    Tab.SHAPE -> shapeContent
+                                    else -> null
+                                }
+                            val selectedContent: View =
+                                when (selectedTab) {
+                                    Tab.STYLE -> styleContent
+                                    Tab.SHAPE -> shapeContent
+                                }
+                            FloatingSheetHeightAnimationBinder.bind(
+                                floatingSheetContainer,
+                                fromHeight,
+                                toHeight,
+                                currentContent,
+                                selectedContent,
+                            )
+                            currentTab = selectedTab
                         }
                     }
                 } else {
+                    styleContent.isVisible = false
+
                     launch {
                         viewModel.isShapeOptionsAvailable.collect { shapeAvailable ->
                             shapeContent.isVisible = shapeAvailable
