@@ -119,6 +119,7 @@ constructor(
         iconStyles.map {
             List(size = it.size, init = { index -> toStyleOptionItemViewModel(it[index]) })
         }
+    val isIconStyleAvailable = iconStyles.map { it.size > 1 }
 
     enum class Tab {
         STYLE,
@@ -142,12 +143,12 @@ constructor(
         }
 
     val tabs: Flow<List<FloatingToolbarTabViewModel>> =
-        combine(isThemedIconAvailable, isShapeOptionsAvailable, selectedTab) {
-            isThemedIconAvailable,
+        combine(isIconStyleAvailable, isShapeOptionsAvailable, selectedTab) {
+            isIconStyleAvailable,
             isShapeOptionsAvailable,
             selectedTab ->
             buildList {
-                if (isThemedIconAvailable) {
+                if (isIconStyleAvailable) {
                     val isSelected = (selectedTab == Tab.STYLE)
                     add(
                         FloatingToolbarTabViewModel(
@@ -293,14 +294,14 @@ constructor(
                         coroutineScope {
                             launch {
                                 overridingIconStyle?.let {
-                                    interactor.applyThemedIconEnabled(it == IconStyle.MONOCHROME)
+                                    interactor.applyThemedIconEnabled(it.getIsThemedIcon())
                                 }
                             }
                             selectedIconStyle.drop(1).take(1).collect {
                                 return@collect
                             }
                             overridingIconStyle?.let {
-                                logger.logThemedIconApplied(it == IconStyle.MONOCHROME)
+                                logger.logThemedIconApplied(it.getIsThemedIcon())
                             }
                         }
                     }

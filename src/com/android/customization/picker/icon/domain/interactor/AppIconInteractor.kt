@@ -19,7 +19,6 @@ package com.android.customization.picker.icon.domain.interactor
 import com.android.customization.model.grid.ShapeOptionModel
 import com.android.customization.picker.grid.data.repository.ShapeRepository
 import com.android.customization.picker.icon.data.repository.IconStyleRepository
-import com.android.customization.picker.icon.shared.model.IconStyle
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
@@ -45,21 +44,9 @@ constructor(
 
     val isThemedIconEnabled: Flow<Boolean> = iconStyleRepository.isThemedIconActivated
 
-    val iconStyles =
-        isThemedIconAvailable.map { isThemedIconAvailable ->
-            // TODO (b/397782741): introduce different icon styles depending on repository
-            var styles = IconStyle.entries.toList()
-            if (!isThemedIconAvailable) styles = styles.filter { it != IconStyle.MONOCHROME }
-            styles
-        }
+    val iconStyles = iconStyleRepository.iconStyles
 
-    val selectedIconStyle =
-        isThemedIconEnabled.map {
-            when (it) {
-                true -> IconStyle.MONOCHROME
-                false -> IconStyle.DEFAULT
-            }
-        }
+    val selectedIconStyle = iconStyleRepository.selectedIconStyle
 
     suspend fun applyThemedIconEnabled(enabled: Boolean) =
         iconStyleRepository.setThemedIconEnabled(enabled)

@@ -54,7 +54,7 @@ class AppIconPickerViewModelTest {
     @get:Rule var hiltRule = HiltAndroidRule(this)
     @Inject lateinit var testScope: TestScope
     @Inject lateinit var interactor: AppIconInteractor
-    @Inject lateinit var themedIconRepository: FakeIconStyleRepository
+    @Inject lateinit var iconStyleRepository: FakeIconStyleRepository
     @Inject lateinit var shapeManager: FakeShapeGridManager
     @Inject lateinit var shapeRepository: ShapeRepository
     @Inject @ApplicationContext lateinit var appContext: Context
@@ -295,7 +295,7 @@ class AppIconPickerViewModelTest {
     fun tabs_styleNotAvailable() {
         testScope.runTest {
             val tabs = collectLastValue(underTest.tabs)
-            themedIconRepository.setIsAvailable(false)
+            iconStyleRepository.setIsThemedIconAvailable(false)
 
             val resultTabs = checkNotNull(tabs())
             assertThat(resultTabs).hasSize(1)

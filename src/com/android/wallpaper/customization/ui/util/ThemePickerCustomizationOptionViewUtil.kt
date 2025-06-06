@@ -161,7 +161,7 @@ constructor(
                             )
                     )
                     if (
-                        customizationOptionsData.isThemedIconAvailable ||
+                        customizationOptionsData.isIconStyleAvailable ||
                             customizationOptionsData.isShapeAvailable
                     )
                         add(

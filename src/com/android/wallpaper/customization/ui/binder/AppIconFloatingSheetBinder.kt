@@ -288,10 +288,11 @@ object AppIconFloatingSheetBinder {
                 val imageView = view.findViewById(R.id.foreground) as? ImageView
                 val disposableHandle =
                     imageView?.let {
+                        // TODO (b/397782741): bind icons correctly for additional themes
                         ShapeIconViewBinder.bindPreviewIcon(
                             view = it,
                             appIconDrawable = appIconDrawable as? AdaptiveIconDrawable,
-                            isThemed = iconStyle == IconStyle.MONOCHROME,
+                            isThemed = iconStyle.getIsThemedIcon(),
                             colorUpdateViewModel = colorUpdateViewModel,
                             shouldAnimateColor = shouldAnimateColor,
                             lifecycleOwner = lifecycleOwner,

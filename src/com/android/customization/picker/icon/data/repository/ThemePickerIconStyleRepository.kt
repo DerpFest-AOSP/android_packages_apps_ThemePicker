@@ -22,6 +22,8 @@ import android.content.Context
 import android.database.ContentObserver
 import android.net.Uri
 import com.android.customization.module.CustomizationPreferences
+import com.android.customization.picker.icon.shared.model.IconStyle
+import com.android.customization.picker.icon.shared.model.ThemePickerIconStyle
 import com.android.themepicker.R
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.module.InjectorProvider
@@ -104,6 +106,21 @@ constructor(
                 started = SharingStarted.WhileSubscribed(),
                 initialValue = false,
             )
+
+    override val iconStyles: Flow<List<IconStyle>> =
+        isThemedIconAvailable.map { isThemedIconAvailable ->
+            var styles = ThemePickerIconStyle.entries.toList()
+            if (!isThemedIconAvailable) styles = styles.filter { !it.getIsThemedIcon() }
+            styles
+        }
+
+    override val selectedIconStyle =
+        isThemedIconActivated.map {
+            when (it) {
+                true -> ThemePickerIconStyle.MONOCHROME
+                false -> ThemePickerIconStyle.DEFAULT
+            }
+        }
 
     fun getThemedIconEnabled(uri: Uri): Boolean {
         val cursor =
