@@ -48,8 +48,7 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"आपके डिवाइस की स्क्रीन के कोने में एक छोटी घड़ी दिखती है"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"घड़ी के फ़ॉन्ट में किए गए बदलावों को लागू करें"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"घड़ी के फ़ॉन्ट में किए गए बदलावों को पहले जैसा करें"</string>
-    <!-- no translation found for clock_style_round_clock (1694787561051568664) -->
-    <skip />
+    <string name="clock_style_round_clock" msgid="1694787561051568664">"राउंड क्लॉक"</string>
     <string name="clock_style_update_toast" msgid="6933583129162805444">"स्टाइल को <xliff:g id="ID_1">%1$s</xliff:g> में बदला गया. पहले जैसा करने के लिए फिर से टैप करें."</string>
     <string name="clock_style_round" msgid="261319982647730366">"राउंड"</string>
     <string name="clock_style_sharp" msgid="453991773733285628">"शार्प"</string>
@@ -60,6 +59,14 @@
     <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>, <xliff:g id="ID_2">%2$s</xliff:g>"</string>
     <string name="app_icons_theme_default" msgid="4773453045331265070">"डिफ़ॉल्ट"</string>
     <string name="app_icons_theme_themed" msgid="6539464818104931856">"थीम वाले आइकॉन"</string>
+    <!-- no translation found for app_icons_style_default (2568057806991656437) -->
+    <skip />
+    <!-- no translation found for app_icons_style_minimal (4905227469969513136) -->
+    <skip />
+    <!-- no translation found for app_icons_shape (2539949450435849188) -->
+    <skip />
+    <!-- no translation found for app_icons_style (993356162262531521) -->
+    <skip />
     <string name="apply_theme_btn" msgid="6293081192321303991">"लागू करें"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"बदलाव करने के लिए टैप करें"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"मौजूदा वॉलपेपर बनाए रखें"</string>
@@ -171,4 +178,8 @@
     <string name="scroll_forward_and_select" msgid="6156132388656395769">"स्मार्टवॉच की स्क्रीन का डिज़ाइन चुनने के लिए बाईं ओर स्वाइप करें"</string>
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"स्मार्टवॉच की स्क्रीन का डिज़ाइन चुनने के लिए दाईं ओर स्वाइप करें"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"स्मार्टवॉच की स्क्रीन का डिज़ाइन पसंद के मुताबिक बनाएं"</string>
+    <!-- no translation found for clock_face_width (5818129719338363570) -->
+    <skip />
+    <!-- no translation found for range_announcement_template (2996864801083587925) -->
+    <skip />
 </resources>
