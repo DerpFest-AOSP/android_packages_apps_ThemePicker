@@ -86,6 +86,7 @@ class KeyguardQuickAffordancePickerViewModel2Test {
                 quickAffordanceInteractor = quickAffordanceInteractor,
                 logger = logger,
                 viewModelScope = testScope.backgroundScope,
+                initialDeepLinkShortcutSlotId = null,
             )
     }
 

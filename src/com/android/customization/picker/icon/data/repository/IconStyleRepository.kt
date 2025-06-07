@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package com.android.customization.picker.themedicon.data.repository
+package com.android.customization.picker.icon.data.repository
 
-import javax.inject.Inject
-import javax.inject.Singleton
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import com.android.customization.picker.icon.shared.model.IconStyle
+import kotlinx.coroutines.flow.Flow
 
-@Singleton
-class FakeThemedIconRepository @Inject constructor() : ThemedIconRepository {
-    override val isAvailable = MutableStateFlow(true).asStateFlow()
+interface IconStyleRepository {
 
-    private val _isActivated = MutableStateFlow(false)
-    override val isActivated = _isActivated.asStateFlow()
+    val isThemedIconAvailable: Flow<Boolean>
 
-    override suspend fun setThemedIconEnabled(enabled: Boolean) {
-        _isActivated.value = enabled
-    }
+    val isThemedIconActivated: Flow<Boolean>
+
+    val iconStyles: Flow<List<IconStyle>>
+
+    val selectedIconStyle: Flow<IconStyle>
+
+    suspend fun setThemedIconEnabled(enabled: Boolean)
 }

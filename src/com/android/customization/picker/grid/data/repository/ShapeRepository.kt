@@ -66,7 +66,7 @@ constructor(
         )
 
     init {
-        bgScope.launch { _shapeOptions.value = shapeGridManager.getShapeOptions() }
+        bgScope.launch { refreshShapeOptions() }
     }
 
     val shapeOptions: StateFlow<List<ShapeOptionModel>?> = _shapeOptions.asStateFlow()
@@ -78,6 +78,10 @@ constructor(
         withContext(bgDispatcher) {
             shapeGridManager.applyShapeOption(shapeKey)
             // After applying, we should query and update shape options again.
-            _shapeOptions.value = shapeGridManager.getShapeOptions()
+            refreshShapeOptions()
         }
+
+    suspend fun refreshShapeOptions() {
+        _shapeOptions.value = shapeGridManager.getShapeOptions()
+    }
 }

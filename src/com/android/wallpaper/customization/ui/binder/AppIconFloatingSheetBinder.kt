@@ -18,6 +18,7 @@ package com.android.wallpaper.customization.ui.binder
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.drawable.AdaptiveIconDrawable
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -32,10 +33,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.customization.picker.common.ui.view.SingleRowListItemSpacing
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
+import com.android.customization.picker.icon.shared.model.IconStyle
 import com.android.themepicker.R
+import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.APP_ICONS
+import com.android.wallpaper.customization.ui.viewmodel.AppIconPickerViewModel
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
+import com.android.wallpaper.picker.customization.ui.view.FloatingToolbar
+import com.android.wallpaper.picker.customization.ui.view.adapter.FloatingToolbarTabAdapter
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.option.ui.adapter.OptionItemAdapter2
 import com.google.android.material.materialswitch.MaterialSwitch
@@ -55,6 +61,33 @@ object AppIconFloatingSheetBinder {
         val viewModel = optionsViewModel.appIconPickerViewModel
         val isFloatingSheetActive = { optionsViewModel.selectedOption.value == APP_ICONS }
 
+        val isExtendibleThemeManager = BaseFlags.get().isExtendibleThemeManager()
+        val tabs = view.requireViewById<FloatingToolbar>(R.id.floating_toolbar)
+        val tabAdapter: FloatingToolbarTabAdapter?
+        if (isExtendibleThemeManager) {
+            tabs.isVisible = true
+            val tabContainer =
+                tabs.findViewById<ViewGroup>(
+                    com.android.wallpaper.R.id.floating_toolbar_tab_container
+                )
+            ColorUpdateBinder.bind(
+                setColor = { color ->
+                    DrawableCompat.setTint(DrawableCompat.wrap(tabContainer.background), color)
+                },
+                color = colorUpdateViewModel.floatingToolbarBackground,
+                shouldAnimate = isFloatingSheetActive,
+                lifecycleOwner = lifecycleOwner,
+            )
+            tabAdapter =
+                FloatingToolbarTabAdapter(
+                        colorUpdateViewModel = WeakReference(colorUpdateViewModel),
+                        shouldAnimateColor = isFloatingSheetActive,
+                    )
+                    .also { tabs.setAdapter(it) }
+        } else {
+            tabAdapter = null
+        }
+
         val floatingSheetContainer =
             view.requireViewById<ViewGroup>(R.id.floating_sheet_content_container)
         ColorUpdateBinder.bind(
@@ -68,7 +101,9 @@ object AppIconFloatingSheetBinder {
             shouldAnimate = isFloatingSheetActive,
             lifecycleOwner = lifecycleOwner,
         )
-        val shapeSection = view.requireViewById<View>(R.id.app_shape_container)
+
+        val styleContent = view.requireViewById<View>(R.id.app_icon_style_container)
+        val shapeContent = view.requireViewById<View>(R.id.app_shape_container)
 
         val shapeOptionListAdapter =
             createShapeOptionItemAdapter(
@@ -79,7 +114,20 @@ object AppIconFloatingSheetBinder {
             )
         val shapeOptionList =
             view.requireViewById<RecyclerView>(R.id.shape_options).also {
-                it.initShapeOptionList(view.context, shapeOptionListAdapter)
+                it.initOptionList(view.context, shapeOptionListAdapter)
+            }
+
+        val styleOptionListAdapter =
+            createStyleOptionItemAdapter(
+                context = view.context,
+                colorUpdateViewModel = colorUpdateViewModel,
+                shouldAnimateColor = isFloatingSheetActive,
+                lifecycleOwner = lifecycleOwner,
+                backgroundDispatcher = backgroundDispatcher,
+            )
+        val styleOptionList =
+            view.requireViewById<RecyclerView>(R.id.icon_style_options).also {
+                it.initOptionList(view.context, styleOptionListAdapter)
             }
 
         val themedIconsSwitch = view.requireViewById<MaterialSwitch>(R.id.themed_icon_toggle)
@@ -90,60 +138,93 @@ object AppIconFloatingSheetBinder {
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.isShapeOptionsAvailable.collect { shapeAvailable ->
-                        shapeSection.isVisible = shapeAvailable
-                        if (shapeAvailable) {
-                            viewModel.shapeOptions.collect { options ->
-                                shapeOptionListAdapter.setItems(options) {
-                                    val indexToFocus =
-                                        options
-                                            .indexOfFirst { it.isSelected.value }
-                                            .coerceAtLeast(0)
-                                    (shapeOptionList.layoutManager as LinearLayoutManager)
-                                        .scrollToPosition(indexToFocus)
-                                }
-                            }
+                    viewModel.shapeOptions.collect { options ->
+                        shapeOptionListAdapter.setItems(options) {
+                            val indexToFocus =
+                                options.indexOfFirst { it.isSelected.value }.coerceAtLeast(0)
+                            (shapeOptionList.layoutManager as LinearLayoutManager).scrollToPosition(
+                                indexToFocus
+                            )
                         }
                     }
                 }
 
-                launch {
-                    viewModel.isThemedIconAvailable.collect { isAvailable ->
-                        themedIconEntry.isVisible = isAvailable
-                        themedIconsSwitch.isEnabled = isAvailable
-                    }
-                }
+                if (isExtendibleThemeManager) {
+                    themedIconEntry.isVisible = false
 
-                launch {
-                    var switchBinding: SwitchColorBinder.Binding? = null
-                    var titleBinding: ColorUpdateBinder.Binding? = null
-                    viewModel.previewingIsThemeIconEnabled.collect {
-                        themedIconsSwitch.isChecked = it
-                        titleBinding?.destroy()
-                        titleBinding =
-                            bindTitleColor(
-                                themedIconTitle,
-                                themedIconBetaLabel,
-                                colorUpdateViewModel,
-                                isFloatingSheetActive,
-                                lifecycleOwner,
-                            )
-                        switchBinding?.destroy()
-                        switchBinding =
-                            SwitchColorBinder.bind(
-                                switch = themedIconsSwitch,
-                                isChecked = it,
-                                colorUpdateViewModel = colorUpdateViewModel,
-                                shouldAnimateColor = isFloatingSheetActive,
-                                lifecycleOwner = lifecycleOwner,
-                            )
+                    launch {
+                        viewModel.styleOptions.collect { options ->
+                            styleOptionListAdapter.setItems(options) {
+                                val indexToFocus =
+                                    options.indexOfFirst { it.isSelected.value }.coerceAtLeast(0)
+                                (styleOptionList.layoutManager as LinearLayoutManager)
+                                    .scrollToPosition(indexToFocus)
+                            }
+                        }
                     }
-                }
 
-                launch {
-                    viewModel.toggleThemedIcon.collect {
-                        themedIconsSwitch.setOnCheckedChangeListener { _, _ ->
-                            launch { it.invoke() }
+                    launch {
+                        viewModel.tabs.collect {
+                            if (it.size > 1) {
+                                tabAdapter?.submitList(it)
+                            } else {
+                                tabs.isVisible = false
+                            }
+                        }
+                    }
+
+                    launch {
+                        viewModel.selectedTab.collect {
+                            // TODO (b/397782741): add animation when switching tabs
+                            styleContent.isVisible = (it == AppIconPickerViewModel.Tab.STYLE)
+                            shapeContent.isVisible = (it == AppIconPickerViewModel.Tab.SHAPE)
+                        }
+                    }
+                } else {
+                    launch {
+                        viewModel.isShapeOptionsAvailable.collect { shapeAvailable ->
+                            shapeContent.isVisible = shapeAvailable
+                        }
+                    }
+
+                    launch {
+                        viewModel.isThemedIconAvailable.collect { isAvailable ->
+                            themedIconEntry.isVisible = isAvailable
+                            themedIconsSwitch.isEnabled = isAvailable
+                        }
+                    }
+
+                    launch {
+                        var switchBinding: SwitchColorBinder.Binding? = null
+                        var titleBinding: ColorUpdateBinder.Binding? = null
+                        viewModel.previewingIsThemeIconEnabled.collect {
+                            themedIconsSwitch.isChecked = it
+                            titleBinding?.destroy()
+                            titleBinding =
+                                bindTitleColor(
+                                    themedIconTitle,
+                                    themedIconBetaLabel,
+                                    colorUpdateViewModel,
+                                    isFloatingSheetActive,
+                                    lifecycleOwner,
+                                )
+                            switchBinding?.destroy()
+                            switchBinding =
+                                SwitchColorBinder.bind(
+                                    switch = themedIconsSwitch,
+                                    isChecked = it,
+                                    colorUpdateViewModel = colorUpdateViewModel,
+                                    shouldAnimateColor = isFloatingSheetActive,
+                                    lifecycleOwner = lifecycleOwner,
+                                )
+                        }
+                    }
+
+                    launch {
+                        viewModel.toggleThemedIcon.collect {
+                            themedIconsSwitch.setOnCheckedChangeListener { _, _ ->
+                                launch { it.invoke() }
+                            }
                         }
                     }
                 }
@@ -190,6 +271,40 @@ object AppIconFloatingSheetBinder {
         }
     }
 
+    private fun createStyleOptionItemAdapter(
+        context: Context,
+        colorUpdateViewModel: ColorUpdateViewModel,
+        shouldAnimateColor: () -> Boolean,
+        lifecycleOwner: LifecycleOwner,
+        backgroundDispatcher: CoroutineDispatcher,
+    ): OptionItemAdapter2<IconStyle> {
+        val previewIconPackageName = context.resources.getString(R.string.camera_package)
+        val appIconDrawable = ShapeIconViewBinder.loadAppIcon(context, previewIconPackageName)
+        return OptionItemAdapter2(
+            layoutResourceId = R.layout.icon_style_option2,
+            lifecycleOwner = lifecycleOwner,
+            backgroundDispatcher = backgroundDispatcher,
+            bindPayload = { view: View, iconStyle: IconStyle ->
+                val imageView = view.findViewById(R.id.foreground) as? ImageView
+                val disposableHandle =
+                    imageView?.let {
+                        // TODO (b/397782741): bind icons correctly for additional themes
+                        ShapeIconViewBinder.bindPreviewIcon(
+                            view = it,
+                            appIconDrawable = appIconDrawable as? AdaptiveIconDrawable,
+                            isThemed = iconStyle.getIsThemedIcon(),
+                            colorUpdateViewModel = colorUpdateViewModel,
+                            shouldAnimateColor = shouldAnimateColor,
+                            lifecycleOwner = lifecycleOwner,
+                        )
+                    }
+                return@OptionItemAdapter2 disposableHandle
+            },
+            colorUpdateViewModel = WeakReference(colorUpdateViewModel),
+            shouldAnimateColor = shouldAnimateColor,
+        )
+    }
+
     private fun createShapeOptionItemAdapter(
         colorUpdateViewModel: ColorUpdateViewModel,
         shouldAnimateColor: () -> Boolean,
@@ -209,10 +324,7 @@ object AppIconFloatingSheetBinder {
             shouldAnimateColor = shouldAnimateColor,
         )
 
-    private fun RecyclerView.initShapeOptionList(
-        context: Context,
-        adapter: OptionItemAdapter2<ShapeIconViewModel>,
-    ) {
+    private fun RecyclerView.initOptionList(context: Context, adapter: OptionItemAdapter2<*>) {
         apply {
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             addItemDecoration(

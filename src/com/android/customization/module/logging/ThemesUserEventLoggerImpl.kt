@@ -73,7 +73,7 @@ import com.android.customization.module.logging.ThemesUserEventLogger.ColorSourc
 import com.android.customization.picker.clock.data.repository.ClockPickerRepository
 import com.android.customization.picker.clock.shared.ClockSize.DYNAMIC
 import com.android.customization.picker.clock.shared.ClockSize.SMALL
-import com.android.customization.picker.themedicon.data.repository.ThemedIconRepository
+import com.android.customization.picker.icon.data.repository.IconStyleRepository
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClient
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.APP_ICONS
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS
@@ -102,7 +102,7 @@ constructor(
     private val preferences: WallpaperPreferences,
     private val colorManager: ColorCustomizationManager,
     private val shapeGridManager: ShapeGridManager,
-    private val themedIconRepository: ThemedIconRepository,
+    private val iconStyleRepository: IconStyleRepository,
     private val clockPickerRepository: ClockPickerRepository,
     private val customizationProviderClient: CustomizationProviderClient,
     private val appSessionId: AppSessionId,
@@ -124,7 +124,7 @@ constructor(
             .setColorVariant(colorManager.currentStyleForLogging)
             .setSeedColor(colorManager.currentSeedColorForLogging)
             .setShapePackageHash(shapeGridManager.getSelectedShapeIdHash())
-            .setAppIconStyle(themedIconRepository.getAppIconStyle())
+            .setAppIconStyle(iconStyleRepository.getAppIconStyle())
             .setLauncherGrid(shapeGridManager.getSelectedGridInt())
             .setClockPackageHash(selectedClockLoggingData.clockIdHash)
             .setClockSeedColor(selectedClockLoggingData.clockSeedColor)
@@ -435,9 +435,9 @@ constructor(
         return selectedGrid?.getLauncherGridInt() ?: 0
     }
 
-    private suspend fun ThemedIconRepository.getAppIconStyle(): Int {
+    private suspend fun IconStyleRepository.getAppIconStyle(): Int {
         val isThemedIconActivated =
-            withTimeoutOrNull(TIMEOUT_MILLIS) { isActivated.first() } ?: false
+            withTimeoutOrNull(TIMEOUT_MILLIS) { isThemedIconActivated.first() } ?: false
         return if (isThemedIconActivated) APP_ICON_STYLE_THEMED else APP_ICON_STYLE_UNSPECIFIED
     }
 

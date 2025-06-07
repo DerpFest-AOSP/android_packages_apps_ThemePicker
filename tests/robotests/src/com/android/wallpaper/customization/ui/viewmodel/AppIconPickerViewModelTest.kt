@@ -20,8 +20,11 @@ import android.content.Context
 import androidx.test.filters.SmallTest
 import com.android.customization.model.grid.FakeShapeGridManager
 import com.android.customization.module.logging.ThemesUserEventLogger
-import com.android.customization.picker.grid.domain.interactor.AppIconInteractor
+import com.android.customization.picker.grid.data.repository.ShapeRepository
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
+import com.android.customization.picker.icon.data.repository.FakeIconStyleRepository
+import com.android.customization.picker.icon.domain.interactor.AppIconInteractor
+import com.android.themepicker.R
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
 import com.android.wallpaper.testing.collectLastValue
@@ -51,7 +54,9 @@ class AppIconPickerViewModelTest {
     @get:Rule var hiltRule = HiltAndroidRule(this)
     @Inject lateinit var testScope: TestScope
     @Inject lateinit var interactor: AppIconInteractor
+    @Inject lateinit var iconStyleRepository: FakeIconStyleRepository
     @Inject lateinit var shapeManager: FakeShapeGridManager
+    @Inject lateinit var shapeRepository: ShapeRepository
     @Inject @ApplicationContext lateinit var appContext: Context
     @Inject lateinit var logger: ThemesUserEventLogger
 
@@ -271,6 +276,45 @@ class AppIconPickerViewModelTest {
                 isEnabled = true,
             )
             assertThat(isEnabled()).isTrue()
+        }
+    }
+
+    @Test
+    fun tabs_shapeAndStyleAvailable() {
+        testScope.runTest {
+            val tabs = collectLastValue(underTest.tabs)
+
+            val resultTabs = checkNotNull(tabs())
+            assertThat(resultTabs).hasSize(2)
+            assertThat(resultTabs[0].isSelected).isTrue()
+            assertThat(resultTabs[1].isSelected).isFalse()
+        }
+    }
+
+    @Test
+    fun tabs_styleNotAvailable() {
+        testScope.runTest {
+            val tabs = collectLastValue(underTest.tabs)
+            iconStyleRepository.setIsThemedIconAvailable(false)
+
+            val resultTabs = checkNotNull(tabs())
+            assertThat(resultTabs).hasSize(1)
+            assertThat(resultTabs[0].isSelected).isTrue()
+            assertThat(resultTabs[0].text).isEqualTo(appContext.getString(R.string.app_icons_shape))
+        }
+    }
+
+    @Test
+    fun tabs_shapeNotAvailable() {
+        testScope.runTest {
+            val tabs = collectLastValue(underTest.tabs)
+            shapeManager.setShapeOptions(emptyList())
+            shapeRepository.refreshShapeOptions()
+
+            val resultTabs = checkNotNull(tabs())
+            assertThat(resultTabs).hasSize(1)
+            assertThat(resultTabs[0].isSelected).isTrue()
+            assertThat(resultTabs[0].text).isEqualTo(appContext.getString(R.string.app_icons_style))
         }
     }
 

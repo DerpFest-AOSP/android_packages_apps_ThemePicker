@@ -32,7 +32,7 @@ import com.android.customization.model.grid.GridOptionModel
 import com.android.customization.model.grid.ShapeGridManager
 import com.android.customization.picker.clock.data.repository.ClockPickerRepository
 import com.android.customization.picker.clock.data.repository.FakeClockPickerRepository
-import com.android.customization.picker.themedicon.data.repository.ThemedIconRepository
+import com.android.customization.picker.icon.data.repository.IconStyleRepository
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClient
 import com.android.systemui.shared.customization.data.content.FakeCustomizationProviderClient
 import com.android.systemui.shared.keyguard.shared.model.KeyguardQuickAffordanceSlots
@@ -67,7 +67,7 @@ class ThemesUserEventLoggerImplTest {
     @Inject lateinit var wallpaperPreferences: WallpaperPreferences
     @Inject lateinit var colorCustomizationManager: ColorCustomizationManager
     @Inject lateinit var shapeGridManager: ShapeGridManager
-    @Inject lateinit var themedIconRepository: ThemedIconRepository
+    @Inject lateinit var iconStyleRepository: IconStyleRepository
     private val clockPickerRepository: ClockPickerRepository = FakeClockPickerRepository()
     private var customizationProviderClient: CustomizationProviderClient =
         FakeCustomizationProviderClient(
@@ -106,7 +106,7 @@ class ThemesUserEventLoggerImplTest {
                 wallpaperPreferences,
                 colorCustomizationManager,
                 shapeGridManager,
-                themedIconRepository,
+                iconStyleRepository,
                 clockPickerRepository,
                 customizationProviderClient,
                 appSessionId,

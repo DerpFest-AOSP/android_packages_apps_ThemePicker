@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 The Android Open Source Project
+ * Copyright (C) 2025 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-package com.android.customization.picker.themedicon.data.repository
+package com.android.customization.picker.icon.shared.model
 
-import kotlinx.coroutines.flow.Flow
+import com.android.themepicker.R
 
-interface ThemedIconRepository {
+interface IconStyle {
+    val nameResId: Int
 
-    val isAvailable: Flow<Boolean>
+    fun getIsThemedIcon(): Boolean
+}
 
-    val isActivated: Flow<Boolean>
+enum class ThemePickerIconStyle(override val nameResId: Int) : IconStyle {
+    DEFAULT(R.string.app_icons_style_default),
+    MONOCHROME(R.string.app_icons_style_minimal);
 
-    suspend fun setThemedIconEnabled(enabled: Boolean)
+    override fun getIsThemedIcon(): Boolean {
+        return this == MONOCHROME
+    }
 }

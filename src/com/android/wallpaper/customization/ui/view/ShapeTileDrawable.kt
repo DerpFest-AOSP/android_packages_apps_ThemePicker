@@ -18,6 +18,7 @@ package com.android.wallpaper.customization.ui.view
 
 import android.annotation.ColorInt
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.ColorFilter
 import android.graphics.Matrix
@@ -29,6 +30,7 @@ import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.Drawable
 import androidx.core.graphics.PathParser
 import androidx.core.graphics.withSave
+import com.android.customization.model.ResourceConstants
 import com.android.wallpaper.R
 
 /**
@@ -41,13 +43,26 @@ import com.android.wallpaper.R
  */
 class ShapeTileDrawable(
     context: Context,
-    path: String,
+    path: String? = null,
     private val icon: AdaptiveIconDrawable? = null,
     private val isThemed: Boolean = false,
 ) : Drawable() {
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val path = PathParser.createPathFromPathData(path)
+    private val path =
+        PathParser.createPathFromPathData(
+            path
+                ?:
+                // Get default shape path
+                context.resources.getString(
+                    Resources.getSystem()
+                        .getIdentifier(
+                            ResourceConstants.CONFIG_ICON_MASK,
+                            "string",
+                            ResourceConstants.ANDROID_PACKAGE,
+                        )
+                )
+        )
     // The path scaled with regard to the update of drawable bounds
     private val scaledPath = Path(this.path)
     private val scaleMatrix = Matrix()

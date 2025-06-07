@@ -48,8 +48,7 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"ໂມງນ້ອຍທີ່ສະແດງຢູ່ໃນມຸມຂອງໜ້າຈໍທ່ານ"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"ນຳໃຊ້ການປ່ຽນແປງຟອນໂມງ"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"ຍົກເລີກການປ່ຽນແປງຟອນໂມງ"</string>
-    <!-- no translation found for clock_style_round_clock (1694787561051568664) -->
-    <skip />
+    <string name="clock_style_round_clock" msgid="1694787561051568664">"ໂມງແບບເຂັມ"</string>
     <string name="clock_style_update_toast" msgid="6933583129162805444">"ຮູບແບບຖືກປ່ຽນເປັນ <xliff:g id="ID_1">%1$s</xliff:g>. ແຕະອີກຄັ້ງເພື່ອຍົກເລີກ."</string>
     <string name="clock_style_round" msgid="261319982647730366">"ມົນ"</string>
     <string name="clock_style_sharp" msgid="453991773733285628">"ແຫຼມຄົມ"</string>
@@ -60,6 +59,10 @@
     <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>, <xliff:g id="ID_2">%2$s</xliff:g>"</string>
     <string name="app_icons_theme_default" msgid="4773453045331265070">"ຄ່າເລີ່ມຕົ້ນ"</string>
     <string name="app_icons_theme_themed" msgid="6539464818104931856">"ມີຮູບແບບສີສັນ"</string>
+    <string name="app_icons_style_default" msgid="2568057806991656437">"ຄ່າເລີ່ມຕົ້ນ"</string>
+    <string name="app_icons_style_minimal" msgid="4905227469969513136">"ມິນິມອລ"</string>
+    <string name="app_icons_shape" msgid="2539949450435849188">"ຮູບຮ່າງ"</string>
+    <string name="app_icons_style" msgid="993356162262531521">"ຮູບແບບ"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"ນຳໃຊ້"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"ແຕະເພື່ອແກ້ໄຂ"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"ໃຊ້ຮູບພື້ນຫຼັງປັດຈຸບັນ"</string>
@@ -171,4 +174,6 @@
     <string name="scroll_forward_and_select" msgid="6156132388656395769">"ປັດຊ້າຍເພື່ອເລືອກໜ້າປັດໂມງແບບຕ່າງໆ"</string>
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"ປັດຂວາເພື່ອເລືອກໜ້າປັດໂມງແບບຕ່າງໆ"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"ໜ້າປັດໂມງແບບກຳນົດເອງ"</string>
+    <string name="clock_face_width" msgid="5818129719338363570">"ຄວາມກວ້າງຂອງໜ້າປັດໂມງ"</string>
+    <string name="range_announcement_template" msgid="2996864801083587925">"ໄລຍະຈາກ %1$d ຫາ %2$d"</string>
 </resources>

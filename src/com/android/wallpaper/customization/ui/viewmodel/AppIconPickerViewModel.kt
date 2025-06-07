@@ -19,10 +19,13 @@ package com.android.wallpaper.customization.ui.viewmodel
 import android.content.Context
 import com.android.customization.model.grid.ShapeOptionModel
 import com.android.customization.module.logging.ThemesUserEventLogger
-import com.android.customization.picker.grid.domain.interactor.AppIconInteractor
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
+import com.android.customization.picker.icon.domain.interactor.AppIconInteractor
+import com.android.customization.picker.icon.shared.model.IconStyle
 import com.android.themepicker.R
+import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
+import com.android.wallpaper.picker.customization.ui.viewmodel.FloatingToolbarTabViewModel
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -104,6 +107,94 @@ constructor(
             }
         }
 
+    //// Style
+    private val selectedIconStyle = interactor.selectedIconStyle
+    private val overridingIconStyle: MutableStateFlow<IconStyle?> = MutableStateFlow(null)
+    val previewingIconStyle =
+        combine(selectedIconStyle, overridingIconStyle) { selected, overriding ->
+            overriding ?: selected
+        }
+    private val iconStyles = interactor.iconStyles
+    val styleOptions: Flow<List<OptionItemViewModel2<IconStyle>>> =
+        iconStyles.map {
+            List(size = it.size, init = { index -> toStyleOptionItemViewModel(it[index]) })
+        }
+    val isIconStyleAvailable = iconStyles.map { it.size > 1 }
+
+    enum class Tab {
+        STYLE,
+        SHAPE,
+    }
+
+    private val _selectedTab = MutableStateFlow<Tab?>(null)
+    val selectedTab =
+        combine(isThemedIconAvailable, isShapeOptionsAvailable, _selectedTab) {
+            isThemedIconAvailable,
+            isShapeOptionsAvailable,
+            selectedTab ->
+            selectedTab
+                ?: if (isThemedIconAvailable) {
+                    Tab.STYLE
+                } else if (isShapeOptionsAvailable) {
+                    Tab.SHAPE
+                } else {
+                    null
+                }
+        }
+
+    val tabs: Flow<List<FloatingToolbarTabViewModel>> =
+        combine(isIconStyleAvailable, isShapeOptionsAvailable, selectedTab) {
+            isIconStyleAvailable,
+            isShapeOptionsAvailable,
+            selectedTab ->
+            buildList {
+                if (isIconStyleAvailable) {
+                    val isSelected = (selectedTab == Tab.STYLE)
+                    add(
+                        FloatingToolbarTabViewModel(
+                            icon =
+                                Icon.Resource(
+                                    res = R.drawable.ic_style,
+                                    contentDescription = Text.Resource(R.string.app_icons_style),
+                                ),
+                            text =
+                                Text.Resource(R.string.app_icons_style)
+                                    .asString(applicationContext),
+                            isSelected = isSelected,
+                            onClick =
+                                if (isSelected) {
+                                    null
+                                } else {
+                                    { _selectedTab.value = Tab.STYLE }
+                                },
+                        )
+                    )
+                }
+                if (isShapeOptionsAvailable) {
+                    val isSelected = (selectedTab == Tab.SHAPE)
+                    add(
+                        FloatingToolbarTabViewModel(
+                            icon =
+                                Icon.Resource(
+                                    res = R.drawable.ic_shapes,
+                                    contentDescription = Text.Resource(R.string.app_icons_shape),
+                                ),
+                            text =
+                                Text.Resource(R.string.app_icons_shape)
+                                    .asString(applicationContext),
+                            isSelected = isSelected,
+                            onClick =
+                                if (isSelected) {
+                                    null
+                                } else {
+                                    { _selectedTab.value = Tab.SHAPE }
+                                },
+                        )
+                    )
+                }
+            }
+        }
+
     val summary: Flow<AppIconPickerSummaryViewModel> =
         combine(selectedShape, isThemedIconEnabled, isShapeOptionsAvailable) {
             selectedShape,
@@ -181,9 +272,53 @@ constructor(
             }
         }
 
+    val onApply2: Flow<(suspend () -> Unit)?> =
+        combine(overridingShapeKey, selectedShape, overridingIconStyle, selectedIconStyle) {
+            overridingShapeKey,
+            selectedShape,
+            overridingIconStyle,
+            currentIconStyle ->
+            val shapeNeedsUpdate =
+                overridingShapeKey != null && overridingShapeKey != selectedShape.key.value
+            val styleNeedsUpdate =
+                overridingIconStyle != null && overridingIconStyle != currentIconStyle
+            if (shapeNeedsUpdate || styleNeedsUpdate) {
+                {
+                    if (shapeNeedsUpdate) {
+                        overridingShapeKey?.let {
+                            interactor.applyShape(it)
+                            logger.logShapeApplied(it)
+                        }
+                    }
+                    if (styleNeedsUpdate) {
+                        coroutineScope {
+                            launch {
+                                overridingIconStyle?.let {
+                                    interactor.applyThemedIconEnabled(it.getIsThemedIcon())
+                                }
+                            }
+                            selectedIconStyle.drop(1).take(1).collect {
+                                return@collect
+                            }
+                            overridingIconStyle?.let {
+                                logger.logThemedIconApplied(it.getIsThemedIcon())
+                            }
+                        }
+                    }
+                }
+            } else {
+                null
+            }
+        }
+
     fun resetPreview() {
         overridingShapeKey.value = null
         overridingIsThemedIconEnabled.value = null
+    }
+
+    fun resetPreview2() {
+        overridingShapeKey.value = null
+        overridingIconStyle.value = null
     }
 
     private fun toShapeOptionItemViewModel(
@@ -207,6 +342,32 @@ constructor(
                 isSelected.map {
                     if (!it) {
                         { overridingShapeKey.value = option.key }
+                    } else {
+                        null
+                    }
+                },
+        )
+    }
+
+    private fun toStyleOptionItemViewModel(iconStyle: IconStyle): OptionItemViewModel2<IconStyle> {
+        val isSelected =
+            previewingIconStyle
+                .map { it == iconStyle }
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.Lazily,
+                    initialValue = false,
+                )
+        val text = Text.Resource(iconStyle.nameResId)
+        return OptionItemViewModel2(
+            key = MutableStateFlow(text.asString(applicationContext)),
+            payload = iconStyle,
+            text = text,
+            isSelected = isSelected,
+            onClicked =
+                isSelected.map {
+                    if (!it) {
+                        { overridingIconStyle.value = iconStyle }
                     } else {
                         null
                     }
