@@ -59,6 +59,10 @@
     <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>, <xliff:g id="ID_2">%2$s</xliff:g>"</string>
     <string name="app_icons_theme_default" msgid="4773453045331265070">"alapértelmezett"</string>
     <string name="app_icons_theme_themed" msgid="6539464818104931856">"tematikus"</string>
+    <string name="app_icons_style_default" msgid="2568057806991656437">"Alapértelmezett"</string>
+    <string name="app_icons_style_minimal" msgid="4905227469969513136">"Minimális"</string>
+    <string name="app_icons_shape" msgid="2539949450435849188">"Forma"</string>
+    <string name="app_icons_style" msgid="993356162262531521">"Stílus"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"Alkalmaz"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"Koppintson a szerkesztéshez"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Jelenlegi háttérkép megtartása"</string>
@@ -170,4 +174,6 @@
     <string name="scroll_forward_and_select" msgid="6156132388656395769">"Csúsztassa gyorsan balra az ujját másik óralap kiválasztásához"</string>
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"Csúsztassa gyorsan jobbra az ujját másik óralap kiválasztásához"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"Egyéni óralapok"</string>
+    <string name="clock_face_width" msgid="5818129719338363570">"Óralap szélessége"</string>
+    <string name="range_announcement_template" msgid="2996864801083587925">"tartomány: %1$d–%2$d"</string>
 </resources>
