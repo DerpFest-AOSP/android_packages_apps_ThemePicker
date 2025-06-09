@@ -18,9 +18,9 @@ package com.android.wallpaper.customization.ui.binder
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.drawable.AdaptiveIconDrawable
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.graphics.drawable.DrawableCompat
@@ -34,10 +34,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.customization.picker.common.ui.view.SingleRowListItemSpacing
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
 import com.android.customization.picker.icon.shared.model.IconStyle
+import com.android.customization.picker.icon.ui.util.IconStyleViewUtil
 import com.android.themepicker.R
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.APP_ICONS
-import com.android.wallpaper.customization.ui.viewmodel.AppIconPickerViewModel
+import com.android.wallpaper.customization.ui.view.ShapeTileDrawable
+import com.android.wallpaper.customization.ui.viewmodel.AppIconPickerViewModel.Tab
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.view.FloatingToolbar
@@ -47,6 +49,8 @@ import com.android.wallpaper.picker.option.ui.adapter.OptionItemAdapter2
 import com.google.android.material.materialswitch.MaterialSwitch
 import java.lang.ref.WeakReference
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 object AppIconFloatingSheetBinder {
@@ -54,6 +58,7 @@ object AppIconFloatingSheetBinder {
     fun bind(
         view: View,
         optionsViewModel: ThemePickerCustomizationOptionsViewModel,
+        iconStyleViewUtil: IconStyleViewUtil,
         colorUpdateViewModel: ColorUpdateViewModel,
         lifecycleOwner: LifecycleOwner,
         backgroundDispatcher: CoroutineDispatcher,
@@ -119,7 +124,7 @@ object AppIconFloatingSheetBinder {
 
         val styleOptionListAdapter =
             createStyleOptionItemAdapter(
-                context = view.context,
+                iconStyleViewUtil = iconStyleViewUtil,
                 colorUpdateViewModel = colorUpdateViewModel,
                 shouldAnimateColor = isFloatingSheetActive,
                 lifecycleOwner = lifecycleOwner,
@@ -134,6 +139,53 @@ object AppIconFloatingSheetBinder {
         val themedIconEntry = view.requireViewById<ViewGroup>(R.id.themed_icon_toggle_entry)
         val themedIconTitle = view.requireViewById<TextView>(R.id.themed_icon_toggle_title)
         val themedIconBetaLabel = view.requireViewById<TextView>(R.id.themed_icon_beta_title)
+
+        data class FloatingSheetHeightsViewModel(
+            val styleContentHeight: Int? = null,
+            val shapeContentHeight: Int? = null,
+        )
+        val floatingSheetHeights: MutableStateFlow<FloatingSheetHeightsViewModel> =
+            MutableStateFlow(FloatingSheetHeightsViewModel())
+
+        if (isExtendibleThemeManager) {
+            styleContent.viewTreeObserver.addOnGlobalLayoutListener(
+                object : OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        if (
+                            styleContent.height != 0 &&
+                                floatingSheetHeights.value.styleContentHeight != styleContent.height
+                        ) {
+                            floatingSheetHeights.value =
+                                floatingSheetHeights.value.copy(
+                                    styleContentHeight = styleContent.height
+                                )
+                            // Keep the height of the style floating sheet fixed so text renders
+                            // correctly after changing tabs.
+                            styleContent.layoutParams =
+                                styleContent.layoutParams.apply { height = styleContent.height }
+                            styleContent.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                        }
+                    }
+                }
+            )
+
+            shapeContent.viewTreeObserver.addOnGlobalLayoutListener(
+                object : OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        if (
+                            shapeContent.height != 0 &&
+                                floatingSheetHeights.value.shapeContentHeight != shapeContent.height
+                        ) {
+                            floatingSheetHeights.value =
+                                floatingSheetHeights.value.copy(
+                                    shapeContentHeight = shapeContent.height
+                                )
+                            shapeContent.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                        }
+                    }
+                }
+            )
+        }
 
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -174,13 +226,51 @@ object AppIconFloatingSheetBinder {
                     }
 
                     launch {
-                        viewModel.selectedTab.collect {
-                            // TODO (b/397782741): add animation when switching tabs
-                            styleContent.isVisible = (it == AppIconPickerViewModel.Tab.STYLE)
-                            shapeContent.isVisible = (it == AppIconPickerViewModel.Tab.SHAPE)
+                        val verticalPadding =
+                            view.resources.getDimensionPixelSize(
+                                R.dimen.floating_sheet_content_vertical_padding
+                            )
+                        var currentTab: Tab? = null
+                        combine(floatingSheetHeights, viewModel.selectedTab, ::Pair).collect {
+                            (heights, selectedTab) ->
+                            val (styleContentHeight, shapeContentHeight) = heights
+                            styleContentHeight ?: return@collect
+                            shapeContentHeight ?: return@collect
+                            selectedTab ?: return@collect
+
+                            styleContent.isVisible = (currentTab == Tab.STYLE)
+                            shapeContent.isVisible = (currentTab == Tab.SHAPE)
+
+                            val fromHeight = floatingSheetContainer.height
+                            val toHeight =
+                                when (selectedTab) {
+                                    Tab.STYLE -> styleContentHeight
+                                    Tab.SHAPE -> shapeContentHeight
+                                } + 2 * verticalPadding
+                            val currentContent: View? =
+                                when (currentTab) {
+                                    Tab.STYLE -> styleContent
+                                    Tab.SHAPE -> shapeContent
+                                    else -> null
+                                }
+                            val selectedContent: View =
+                                when (selectedTab) {
+                                    Tab.STYLE -> styleContent
+                                    Tab.SHAPE -> shapeContent
+                                }
+                            FloatingSheetHeightAnimationBinder.bind(
+                                floatingSheetContainer,
+                                fromHeight,
+                                toHeight,
+                                currentContent,
+                                selectedContent,
+                            )
+                            currentTab = selectedTab
                         }
                     }
                 } else {
+                    styleContent.isVisible = false
+
                     launch {
                         viewModel.isShapeOptionsAvailable.collect { shapeAvailable ->
                             shapeContent.isVisible = shapeAvailable
@@ -272,32 +362,53 @@ object AppIconFloatingSheetBinder {
     }
 
     private fun createStyleOptionItemAdapter(
-        context: Context,
+        iconStyleViewUtil: IconStyleViewUtil,
         colorUpdateViewModel: ColorUpdateViewModel,
         shouldAnimateColor: () -> Boolean,
         lifecycleOwner: LifecycleOwner,
         backgroundDispatcher: CoroutineDispatcher,
     ): OptionItemAdapter2<IconStyle> {
-        val previewIconPackageName = context.resources.getString(R.string.camera_package)
-        val appIconDrawable = ShapeIconViewBinder.loadAppIcon(context, previewIconPackageName)
         return OptionItemAdapter2(
             layoutResourceId = R.layout.icon_style_option2,
             lifecycleOwner = lifecycleOwner,
             backgroundDispatcher = backgroundDispatcher,
             bindPayload = { view: View, iconStyle: IconStyle ->
-                val imageView = view.findViewById(R.id.foreground) as? ImageView
+                val optionIcon = view.requireViewById<ViewGroup>(R.id.option_icon)
+                val buttonIcon = view.requireViewById<ViewGroup>(R.id.button_icon)
+                val drawable = iconStyleViewUtil.getDrawable(iconStyle)
+                if (iconStyle.getIsExternalLink()) {
+                    optionIcon.visibility = View.GONE
+                    buttonIcon.visibility = View.VISIBLE
+                    val imageView = view.requireViewById<ImageView>(R.id.button_foreground)
+                    imageView.setImageDrawable(drawable)
+                    view.setOnClickListener { iconStyleViewUtil.getOnClick(iconStyle)?.invoke() }
+                } else {
+                    optionIcon.visibility = View.VISIBLE
+                    buttonIcon.visibility = View.GONE
+                    val imageView =
+                        view.requireViewById<ImageView>(com.android.wallpaper.R.id.foreground)
+                    imageView.setImageDrawable(drawable)
+                }
+                // If the icon is a themed icon, bind its foreground and background color
                 val disposableHandle =
-                    imageView?.let {
-                        // TODO (b/397782741): bind icons correctly for additional themes
-                        ShapeIconViewBinder.bindPreviewIcon(
-                            view = it,
-                            appIconDrawable = appIconDrawable as? AdaptiveIconDrawable,
-                            isThemed = iconStyle.getIsThemedIcon(),
+                    if (iconStyle.getIsThemedIcon()) {
+                        (drawable as? ShapeTileDrawable)?.let {
+                            ShapeIconViewBinder.bindPreviewIconColor(
+                                shapeTileDrawable = it,
+                                colorUpdateViewModel = colorUpdateViewModel,
+                                shouldAnimateColor = shouldAnimateColor,
+                                lifecycleOwner = lifecycleOwner,
+                            )
+                        }
+                    } else if (iconStyle.getIsExternalLink()) {
+                        ShapeIconViewBinder.bindButtonIconColor(
+                            foreground = buttonIcon.requireViewById(R.id.button_foreground),
+                            background = buttonIcon.requireViewById(R.id.button_background),
                             colorUpdateViewModel = colorUpdateViewModel,
                             shouldAnimateColor = shouldAnimateColor,
                             lifecycleOwner = lifecycleOwner,
                         )
-                    }
+                    } else null
                 return@OptionItemAdapter2 disposableHandle
             },
             colorUpdateViewModel = WeakReference(colorUpdateViewModel),

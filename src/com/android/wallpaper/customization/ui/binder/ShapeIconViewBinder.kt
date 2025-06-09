@@ -77,6 +77,59 @@ object ShapeIconViewBinder {
         }
     }
 
+    fun bindPreviewIconColor(
+        shapeTileDrawable: ShapeTileDrawable,
+        colorUpdateViewModel: ColorUpdateViewModel,
+        shouldAnimateColor: () -> Boolean,
+        lifecycleOwner: LifecycleOwner,
+    ): DisposableHandle {
+        val bindingForeground =
+            ColorUpdateBinder.bind(
+                setColor = { color -> shapeTileDrawable.setThemedIconForegroundColor(color) },
+                color = colorUpdateViewModel.themedIconColor,
+                shouldAnimate = shouldAnimateColor,
+                lifecycleOwner = lifecycleOwner,
+            )
+        val bindingBackground =
+            ColorUpdateBinder.bind(
+                setColor = { color -> shapeTileDrawable.setThemedIconBackgroundColor(color) },
+                color = colorUpdateViewModel.themedIconBackgroundColor,
+                shouldAnimate = shouldAnimateColor,
+                lifecycleOwner = lifecycleOwner,
+            )
+        return DisposableHandle {
+            bindingForeground.destroy()
+            bindingBackground.destroy()
+        }
+    }
+
+    fun bindButtonIconColor(
+        foreground: ImageView,
+        background: ImageView,
+        colorUpdateViewModel: ColorUpdateViewModel,
+        shouldAnimateColor: () -> Boolean,
+        lifecycleOwner: LifecycleOwner,
+    ): DisposableHandle {
+        val bindingForeground =
+            ColorUpdateBinder.bind(
+                setColor = { color -> foreground.setColorFilter(color) },
+                color = colorUpdateViewModel.colorOnSurface,
+                shouldAnimate = shouldAnimateColor,
+                lifecycleOwner = lifecycleOwner,
+            )
+        val bindingBackground =
+            ColorUpdateBinder.bind(
+                setColor = { color -> background.setColorFilter(color) },
+                color = colorUpdateViewModel.colorSurfaceContainer,
+                shouldAnimate = shouldAnimateColor,
+                lifecycleOwner = lifecycleOwner,
+            )
+        return DisposableHandle {
+            bindingForeground.destroy()
+            bindingBackground.destroy()
+        }
+    }
+
     fun loadAppIcon(context: Context, packageName: String): Drawable? {
         return try {
             context.packageManager.getApplicationIcon(packageName)
