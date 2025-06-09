@@ -41,6 +41,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
@@ -365,13 +366,19 @@ constructor(
             text = text,
             isSelected = isSelected,
             onClicked =
-                isSelected.map {
-                    if (!it) {
-                        { overridingIconStyle.value = iconStyle }
-                    } else {
-                        null
+                if (iconStyle.getIsExternalLink()) {
+                    // A button is not selectable.
+                    flowOf(null)
+                } else {
+                    isSelected.map {
+                        if (!it) {
+                            { overridingIconStyle.value = iconStyle }
+                        } else {
+                            null
+                        }
                     }
                 },
+            skipOnClickBinding = iconStyle.getIsExternalLink(),
         )
     }
 

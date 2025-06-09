@@ -18,6 +18,8 @@ package com.android.wallpaper.modules
 
 import com.android.customization.picker.clock.ui.view.ClockViewFactory
 import com.android.customization.picker.clock.ui.view.ThemePickerClockViewFactory
+import com.android.customization.picker.icon.ui.util.IconStyleViewUtil
+import com.android.customization.picker.icon.ui.util.ThemePickerIconStyleViewUtil
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionViewUtil
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionViewUtil
 import dagger.Binds
@@ -39,4 +41,8 @@ abstract class ThemePickerActivityModule {
     abstract fun bindCustomizationOptionViewUtil(
         impl: ThemePickerCustomizationOptionViewUtil
     ): CustomizationOptionViewUtil
+
+    @Binds
+    @ActivityScoped
+    abstract fun bindIconStyleViewUtil(impl: ThemePickerIconStyleViewUtil): IconStyleViewUtil
 }
