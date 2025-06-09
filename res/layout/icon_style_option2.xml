@@ -26,6 +26,7 @@
     android:clipChildren="false">
 
     <FrameLayout
+        android:id="@+id/option_icon"
         android:layout_width="@dimen/option_item_size"
         android:layout_height="@dimen/option_item_size"
         android:clipChildren="false">
@@ -40,6 +41,28 @@
             android:id="@id/foreground"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_gravity="center"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/button_icon"
+        android:layout_width="@dimen/option_item_size"
+        android:layout_height="@dimen/option_item_size"
+        android:clipChildren="false"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/button_background"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:src="@drawable/circle_button" />
+
+        <ImageView
+            android:id="@+id/button_foreground"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_gravity="center" />
 
     </FrameLayout>
