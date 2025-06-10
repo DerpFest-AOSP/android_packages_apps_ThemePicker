@@ -59,14 +59,10 @@
     <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>، <xliff:g id="ID_2">%2$s</xliff:g>"</string>
     <string name="app_icons_theme_default" msgid="4773453045331265070">"ڈیفالٹ"</string>
     <string name="app_icons_theme_themed" msgid="6539464818104931856">"تھیم والا"</string>
-    <!-- no translation found for app_icons_style_default (2568057806991656437) -->
-    <skip />
-    <!-- no translation found for app_icons_style_minimal (4905227469969513136) -->
-    <skip />
-    <!-- no translation found for app_icons_shape (2539949450435849188) -->
-    <skip />
-    <!-- no translation found for app_icons_style (993356162262531521) -->
-    <skip />
+    <string name="app_icons_style_default" msgid="2568057806991656437">"ڈیفالٹ"</string>
+    <string name="app_icons_style_minimal" msgid="4905227469969513136">"مینیمل"</string>
+    <string name="app_icons_shape" msgid="2539949450435849188">"شکل"</string>
+    <string name="app_icons_style" msgid="993356162262531521">"اسٹائل"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"لاگو کریں"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"ترمیم کرنے کے لیے تھپتھپائيں"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"حالیہ وال پیپر رکھیں"</string>
@@ -178,8 +174,6 @@
     <string name="scroll_forward_and_select" msgid="6156132388656395769">"گھڑی کا مختلف چہرہ منتخب کرنے کے لیے دائیں طرف سوائپ کریں"</string>
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"گھڑی کا مختلف چہرہ منتخب کرنے کے لیے بائیں طرف سوائپ کریں"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"حسب ضرورت گھڑی کے چہرے"</string>
-    <!-- no translation found for clock_face_width (5818129719338363570) -->
-    <skip />
-    <!-- no translation found for range_announcement_template (2996864801083587925) -->
-    <skip />
+    <string name="clock_face_width" msgid="5818129719338363570">"گھڑی کے چہرے کی چوڑائی"</string>
+    <string name="range_announcement_template" msgid="2996864801083587925">"رینج %1$d سے %2$d تک"</string>
 </resources>
