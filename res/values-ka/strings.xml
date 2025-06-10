@@ -59,14 +59,10 @@
     <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>, <xliff:g id="ID_2">%2$s</xliff:g>"</string>
     <string name="app_icons_theme_default" msgid="4773453045331265070">"ნაგულისხმევი"</string>
     <string name="app_icons_theme_themed" msgid="6539464818104931856">"თემატური"</string>
-    <!-- no translation found for app_icons_style_default (2568057806991656437) -->
-    <skip />
-    <!-- no translation found for app_icons_style_minimal (4905227469969513136) -->
-    <skip />
-    <!-- no translation found for app_icons_shape (2539949450435849188) -->
-    <skip />
-    <!-- no translation found for app_icons_style (993356162262531521) -->
-    <skip />
+    <string name="app_icons_style_default" msgid="2568057806991656437">"ნაგულისხმევი"</string>
+    <string name="app_icons_style_minimal" msgid="4905227469969513136">"მინიმალისტური"</string>
+    <string name="app_icons_shape" msgid="2539949450435849188">"ფიგურა"</string>
+    <string name="app_icons_style" msgid="993356162262531521">"სტილი"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"მისადაგება"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"შეეხეთ რედაქტირებისთვის"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"ამჟამინდელი ფონის შენარჩუნება"</string>
@@ -178,8 +174,8 @@
     <string name="scroll_forward_and_select" msgid="6156132388656395769">"გადაფურცვლა მარცხნივ განსხვავებული ციფერბლატის ასარჩევად"</string>
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"გადაფურცვლა მარჯვნივ განსხვავებული ციფერბლატის ასარჩევად"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"მორგებული საათები"</string>
-    <!-- no translation found for clock_face_width (5818129719338363570) -->
-    <skip />
+    <string name="clock_face_width" msgid="5818129719338363570">"საათის ციფერბლატის სიგანე"</string>
+    <!-- String.format failed for translation -->
     <!-- no translation found for range_announcement_template (2996864801083587925) -->
     <skip />
 </resources>
