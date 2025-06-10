@@ -154,19 +154,22 @@ constructor(
                     }
                 }
                 .let { list ->
+                    val selectedOptionCount = list.count { it.isCurrent }
                     if (list.isEmpty()) {
-                        throw IllegalStateException(
-                            "Grid option list can not be empty. It needs to have at least one item."
+                        Log.e(
+                            TAG,
+                            "Grid option list can not be empty. It needs to have at least one item.",
                         )
-                    }
-                    // In this list, exactly one item should have isCurrent true.
-                    val isCurrentCount = list.count { it.isCurrent }
-                    if (isCurrentCount != 1) {
-                        throw IllegalStateException(
-                            "Exactly one grid option should have isCurrent = true. Found $isCurrentCount."
+                        emptyList()
+                    } else if (selectedOptionCount != 1) {
+                        Log.e(
+                            TAG,
+                            "Exactly one grid option should have isCurrent = true. Found $selectedOptionCount.",
                         )
+                        emptyList()
+                    } else {
+                        list
                     }
-                    list
                 }
                 .sortedByDescending { it.rows * it.cols }
         } ?: emptyList()
@@ -204,19 +207,22 @@ constructor(
                                 }
                             }
                             .let { list ->
+                                val selectedOptionCount = list.count { it.isCurrent }
                                 if (list.isEmpty()) {
-                                    throw IllegalStateException(
-                                        "Shape option list can not be empty. It needs to have at least one item."
+                                    Log.e(
+                                        TAG,
+                                        "Shape option list can not be empty. It needs to have at least one item.",
                                     )
-                                }
-                                // In this list, exactly one item should have isCurrent true.
-                                val isCurrentCount = list.count { it.isCurrent }
-                                if (isCurrentCount != 1) {
-                                    throw IllegalStateException(
-                                        "Exactly one shape option should have isCurrent = true. Found $isCurrentCount."
+                                    emptyList()
+                                } else if (selectedOptionCount != 1) {
+                                    Log.e(
+                                        TAG,
+                                        "Exactly one shape option should have isCurrent = true. Found $selectedOptionCount.",
                                     )
+                                    emptyList()
+                                } else {
+                                    list
                                 }
-                                list
                             }
                     } ?: emptyList()
             } else {
