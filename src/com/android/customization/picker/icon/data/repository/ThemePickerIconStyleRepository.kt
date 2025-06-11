@@ -54,6 +54,7 @@ constructor(
     @BackgroundDispatcher private val backgroundScope: CoroutineScope,
 ) : IconStyleRepository {
     private val metadataKey = appContext.getString(R.string.themed_icon_metadata_key)
+    // TODO (b/424856247): test the retry logic for getting PreviewUtils
     private var previewUtils: PreviewUtils? = null
     private val previewUtilsFlow = flow {
         // If PreviewUtils is created too early on start up, the provider (e.g. Launcher) may not be

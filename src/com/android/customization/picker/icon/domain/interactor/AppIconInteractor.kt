@@ -40,6 +40,8 @@ constructor(
     val selectedShapeOption =
         shapeRepository.selectedShapeOption.map { shapeOption -> shapeOption ?: defaultShape }
 
+    val isShapeOptionsAvailable: Flow<Boolean> = shapeRepository.isShapeOptionsAvailable
+
     val isThemedIconAvailable: Flow<Boolean> = iconStyleRepository.isThemedIconAvailable
 
     val isThemedIconEnabled: Flow<Boolean> = iconStyleRepository.isThemedIconActivated

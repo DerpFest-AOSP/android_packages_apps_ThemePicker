@@ -31,31 +31,40 @@ class FakeShapeGridManager @Inject constructor() : ShapeGridManager {
     val gridOptionDrawable0: Drawable = Color.BLUE.toDrawable()
     val gridOptionDrawable1: Drawable = Color.GREEN.toDrawable()
 
-    private var _gridOptions: MutableStateFlow<List<GridOptionModel>> =
+    private val _gridOptions: MutableStateFlow<List<GridOptionModel>> =
         MutableStateFlow(DEFAULT_GRID_OPTION_LIST)
 
-    private var shapeOptions: List<ShapeOptionModel> = DEFAULT_SHAPE_OPTION_LIST
+    private val _shapeOptions: MutableStateFlow<List<ShapeOptionModel>> =
+        MutableStateFlow(DEFAULT_SHAPE_OPTION_LIST)
 
     fun setGridOptions(gridOptions: List<GridOptionModel>) {
         this._gridOptions.value = gridOptions
     }
 
     fun setShapeOptions(shapeOptions: List<ShapeOptionModel>) {
-        this.shapeOptions = shapeOptions
+        this._shapeOptions.value = shapeOptions
+    }
+
+    private val _isCustomizationAvailable = MutableStateFlow(true)
+    override val isCustomizationAvailable: Flow<Boolean> = _isCustomizationAvailable.asStateFlow()
+
+    fun setIsCustomizationAvailable(isAvailable: Boolean) {
+        this._isCustomizationAvailable.value = isAvailable
     }
 
     override val gridOptions: Flow<List<GridOptionModel>> = _gridOptions.asStateFlow()
+    override val shapeOptions: Flow<List<ShapeOptionModel>> = _shapeOptions.asStateFlow()
 
     override suspend fun getGridOptions(): List<GridOptionModel> = _gridOptions.value
 
-    override suspend fun getShapeOptions(): List<ShapeOptionModel> = shapeOptions
+    override suspend fun getShapeOptions(): List<ShapeOptionModel> = _shapeOptions.value
 
     override fun applyGridOption(gridKey: String) {
         _gridOptions.value = _gridOptions.value.map { it.copy(isCurrent = it.key == gridKey) }
     }
 
     override fun applyShapeOption(shapeKey: String) {
-        shapeOptions = shapeOptions.map { it.copy(isCurrent = it.key == shapeKey) }
+        _shapeOptions.value = _shapeOptions.value.map { it.copy(isCurrent = it.key == shapeKey) }
     }
 
     override fun getGridOptionDrawable(iconId: Int): Drawable? {
