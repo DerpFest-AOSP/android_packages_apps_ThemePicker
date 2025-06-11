@@ -21,7 +21,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.database.ContentObserver
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.util.Log
 import androidx.core.content.res.ResourcesCompat
 import com.android.wallpaper.R
@@ -33,7 +32,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DisposableHandle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -42,6 +40,8 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.withContext
 
@@ -57,6 +57,7 @@ constructor(
 
     private val authorityMetadataKey: String =
         context.getString(R.string.grid_control_metadata_name)
+    // TODO (b/424856247): test the retry logic for getting PreviewUtils
     private var previewUtils: PreviewUtils? = null
     private val previewUtilsFlow = flow {
         // If PreviewUtils is created too early on start up, the provider (e.g. Launcher) may not be
@@ -72,163 +73,195 @@ constructor(
         emit(previewUtils)
     }
 
+    override val isCustomizationAvailable: Flow<Boolean> = previewUtilsFlow.map { it != null }
+
     override val gridOptions: Flow<List<GridOptionModel>> =
         previewUtilsFlow
             .flatMapLatest {
+                if (it == null) {
+                    return@flatMapLatest flowOf(emptyList())
+                }
                 callbackFlow {
-                    var disposableHandle: DisposableHandle? = null
-                    if (it != null) {
-                        val contentObserver =
-                            object : ContentObserver(null) {
-                                override fun onChange(selfChange: Boolean) {
-                                    trySend(getGridOptions(it.getUri(GRID_OPTIONS)))
-                                }
+                    val contentObserver =
+                        object : ContentObserver(null) {
+                            override fun onChange(selfChange: Boolean) {
+                                trySend(getGridOptions(it))
                             }
-                        context.contentResolver.registerContentObserver(
-                            it.getUri(SET_GRID),
-                            /* notifyForDescendants= */ true,
-                            contentObserver,
-                        )
-
-                        trySend(getGridOptions(it.getUri(GRID_OPTIONS)))
-
-                        disposableHandle = DisposableHandle {
-                            context.contentResolver.unregisterContentObserver(contentObserver)
                         }
+                    context.contentResolver.registerContentObserver(
+                        it.getUri(SET_GRID),
+                        /* notifyForDescendants= */ true,
+                        contentObserver,
+                    )
+
+                    trySend(getGridOptions(it))
+
+                    awaitClose {
+                        context.contentResolver.unregisterContentObserver(contentObserver)
                     }
-                    awaitClose { disposableHandle?.dispose() }
                 }
             }
             .shareIn(scope = bgScope, started = SharingStarted.WhileSubscribed(), replay = 1)
 
     override suspend fun getGridOptions(): List<GridOptionModel> =
         withContext(bgDispatcher) {
-            val uri = previewUtilsFlow.first()?.getUri(GRID_OPTIONS)
-            if (uri != null) {
-                getGridOptions(uri)
+            val previewUtils = previewUtilsFlow.first()
+            if (previewUtils != null) {
+                getGridOptions(previewUtils)
             } else {
                 emptyList()
             }
         }
 
-    private fun getGridOptions(uri: Uri): List<GridOptionModel> {
-        return context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
-            buildList {
-                    while (cursor.moveToNext()) {
-                        try {
-                            val rows = cursor.getInt(cursor.getColumnIndex(COL_ROWS))
-                            val cols = cursor.getInt(cursor.getColumnIndex(COL_COLS))
-                            val backUpTitle =
-                                context.getString(
-                                    com.android.themepicker.R.string.grid_title_pattern,
-                                    cols,
-                                    rows,
-                                )
-                            val title =
-                                cursor.getColumnIndex(COL_GRID_TITLE).let { titleIndex ->
-                                    if (titleIndex != -1) {
-                                        // Note that title can be null, even when the
-                                        // column field exists.
-                                        cursor.getString(titleIndex)
-                                    } else {
-                                        null
-                                    }
-                                } ?: backUpTitle
+    private fun getGridOptions(previewUtils: PreviewUtils): List<GridOptionModel> {
+        return context.contentResolver
+            .query(previewUtils.getUri(GRID_OPTIONS), null, null, null, null)
+            ?.use { cursor ->
+                buildList {
+                        while (cursor.moveToNext()) {
+                            try {
+                                val rows = cursor.getInt(cursor.getColumnIndex(COL_ROWS))
+                                val cols = cursor.getInt(cursor.getColumnIndex(COL_COLS))
+                                val backUpTitle =
+                                    context.getString(
+                                        com.android.themepicker.R.string.grid_title_pattern,
+                                        cols,
+                                        rows,
+                                    )
+                                val title =
+                                    cursor.getColumnIndex(COL_GRID_TITLE).let { titleIndex ->
+                                        if (titleIndex != -1) {
+                                            // Note that title can be null, even when the
+                                            // column field exists.
+                                            cursor.getString(titleIndex)
+                                        } else {
+                                            null
+                                        }
+                                    } ?: backUpTitle
 
-                            add(
-                                GridOptionModel(
-                                    key = cursor.getString(cursor.getColumnIndex(COL_GRID_KEY)),
-                                    title = title,
-                                    isCurrent =
-                                        cursor
-                                            .getString(cursor.getColumnIndex(COL_IS_DEFAULT))
-                                            .toBoolean(),
-                                    rows = rows,
-                                    cols = cols,
-                                    iconId = cursor.getInt(cursor.getColumnIndex(KEY_GRID_ICON_ID)),
+                                add(
+                                    GridOptionModel(
+                                        key = cursor.getString(cursor.getColumnIndex(COL_GRID_KEY)),
+                                        title = title,
+                                        isCurrent =
+                                            cursor
+                                                .getString(cursor.getColumnIndex(COL_IS_DEFAULT))
+                                                .toBoolean(),
+                                        rows = rows,
+                                        cols = cols,
+                                        iconId =
+                                            cursor.getInt(cursor.getColumnIndex(KEY_GRID_ICON_ID)),
+                                    )
                                 )
-                            )
-                        } catch (e: IllegalStateException) {
-                            Log.e(TAG, "Fail to read from the cursor to build GridOptionModel", e)
+                            } catch (e: IllegalStateException) {
+                                Log.e(
+                                    TAG,
+                                    "Fail to read from the cursor to build GridOptionModel",
+                                    e,
+                                )
+                            }
                         }
                     }
+                    .let { list ->
+                        val selectedOptionCount = list.count { it.isCurrent }
+                        if (list.isEmpty()) {
+                            Log.e(
+                                TAG,
+                                "Grid option list can not be empty. It needs to have at least one item.",
+                            )
+                            emptyList()
+                        } else if (selectedOptionCount != 1) {
+                            Log.e(
+                                TAG,
+                                "Exactly one grid option should have isCurrent = true. Found $selectedOptionCount.",
+                            )
+                            emptyList()
+                        } else {
+                            list
+                        }
+                    }
+                    .sortedByDescending { it.rows * it.cols }
+            } ?: emptyList()
+    }
+
+    override val shapeOptions: Flow<List<ShapeOptionModel>> =
+        previewUtilsFlow
+            .flatMapLatest {
+                if (it == null) {
+                    return@flatMapLatest flowOf(emptyList())
                 }
-                .let { list ->
-                    val selectedOptionCount = list.count { it.isCurrent }
-                    if (list.isEmpty()) {
-                        Log.e(
-                            TAG,
-                            "Grid option list can not be empty. It needs to have at least one item.",
-                        )
-                        emptyList()
-                    } else if (selectedOptionCount != 1) {
-                        Log.e(
-                            TAG,
-                            "Exactly one grid option should have isCurrent = true. Found $selectedOptionCount.",
-                        )
-                        emptyList()
-                    } else {
-                        list
+                callbackFlow {
+                    val contentObserver =
+                        object : ContentObserver(null) {
+                            override fun onChange(selfChange: Boolean) {
+                                trySend(getShapeOptions(it))
+                            }
+                        }
+                    context.contentResolver.registerContentObserver(
+                        it.getUri(SET_SHAPE),
+                        /* notifyForDescendants= */ true,
+                        contentObserver,
+                    )
+
+                    trySend(getShapeOptions(it))
+
+                    awaitClose {
+                        context.contentResolver.unregisterContentObserver(contentObserver)
                     }
                 }
-                .sortedByDescending { it.rows * it.cols }
-        } ?: emptyList()
-    }
+            }
+            .shareIn(scope = bgScope, started = SharingStarted.WhileSubscribed(), replay = 1)
 
     override suspend fun getShapeOptions(): List<ShapeOptionModel> =
         withContext(bgDispatcher) {
             val previewUtils = previewUtilsFlow.first()
             if (previewUtils != null) {
-                context.contentResolver
-                    .query(previewUtils.getUri(SHAPE_OPTIONS), null, null, null, null)
-                    ?.use { cursor ->
-                        buildList {
-                                while (cursor.moveToNext()) {
-                                    add(
-                                        ShapeOptionModel(
-                                            key =
-                                                cursor.getString(
-                                                    cursor.getColumnIndex(COL_SHAPE_KEY)
-                                                ),
-                                            title =
-                                                cursor.getString(
-                                                    cursor.getColumnIndex(COL_SHAPE_TITLE)
-                                                ),
-                                            path =
-                                                cursor.getString(cursor.getColumnIndex(COL_PATH)),
-                                            isCurrent =
-                                                cursor
-                                                    .getString(
-                                                        cursor.getColumnIndex(COL_IS_DEFAULT)
-                                                    )
-                                                    .toBoolean(),
-                                        )
-                                    )
-                                }
-                            }
-                            .let { list ->
-                                val selectedOptionCount = list.count { it.isCurrent }
-                                if (list.isEmpty()) {
-                                    Log.e(
-                                        TAG,
-                                        "Shape option list can not be empty. It needs to have at least one item.",
-                                    )
-                                    emptyList()
-                                } else if (selectedOptionCount != 1) {
-                                    Log.e(
-                                        TAG,
-                                        "Exactly one shape option should have isCurrent = true. Found $selectedOptionCount.",
-                                    )
-                                    emptyList()
-                                } else {
-                                    list
-                                }
-                            }
-                    } ?: emptyList()
+                getShapeOptions(previewUtils)
             } else {
                 emptyList()
             }
         }
+
+    private fun getShapeOptions(previewUtils: PreviewUtils): List<ShapeOptionModel> {
+        return context.contentResolver
+            .query(previewUtils.getUri(SHAPE_OPTIONS), null, null, null, null)
+            ?.use { cursor ->
+                buildList {
+                        while (cursor.moveToNext()) {
+                            add(
+                                ShapeOptionModel(
+                                    key = cursor.getString(cursor.getColumnIndex(COL_SHAPE_KEY)),
+                                    title =
+                                        cursor.getString(cursor.getColumnIndex(COL_SHAPE_TITLE)),
+                                    path = cursor.getString(cursor.getColumnIndex(COL_PATH)),
+                                    isCurrent =
+                                        cursor
+                                            .getString(cursor.getColumnIndex(COL_IS_DEFAULT))
+                                            .toBoolean(),
+                                )
+                            )
+                        }
+                    }
+                    .let { list ->
+                        val selectedOptionCount = list.count { it.isCurrent }
+                        if (list.isEmpty()) {
+                            Log.e(
+                                TAG,
+                                "Shape option list can not be empty. It needs to have at least one item.",
+                            )
+                            emptyList()
+                        } else if (selectedOptionCount != 1) {
+                            Log.e(
+                                TAG,
+                                "Exactly one shape option should have isCurrent = true. Found $selectedOptionCount.",
+                            )
+                            emptyList()
+                        } else {
+                            list
+                        }
+                    }
+            } ?: emptyList()
+    }
 
     override fun applyGridOption(gridKey: String) {
         previewUtils?.let {

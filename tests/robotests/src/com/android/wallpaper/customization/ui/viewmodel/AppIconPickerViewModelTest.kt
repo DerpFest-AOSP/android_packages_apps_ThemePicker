@@ -309,7 +309,6 @@ class AppIconPickerViewModelTest {
         testScope.runTest {
             val tabs = collectLastValue(underTest.tabs)
             shapeManager.setShapeOptions(emptyList())
-            shapeRepository.refreshShapeOptions()
 
             val resultTabs = checkNotNull(tabs())
             assertThat(resultTabs).hasSize(1)

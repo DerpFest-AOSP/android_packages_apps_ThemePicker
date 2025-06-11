@@ -106,25 +106,4 @@ class GridRepository2Test {
             assertThat(selectedGridOption())
                 .isEqualTo(FakeShapeGridManager.DEFAULT_GRID_OPTION_LIST[1].copy(isCurrent = true))
         }
-
-    @Test
-    fun isGridCustomizationAvailable_true() =
-        testScope.runTest {
-            underTest = GridRepository2(manager = gridOptionsManager, bgDispatcher = bgDispatcher)
-            val isGridCustomizationAvailable =
-                collectLastValue(underTest.isGridCustomizationAvailable)
-
-            assertThat(isGridCustomizationAvailable()).isTrue()
-        }
-
-    @Test
-    fun isGridCustomizationAvailable_false_whenZeroOptions() =
-        testScope.runTest {
-            gridOptionsManager.setGridOptions(emptyList())
-            underTest = GridRepository2(manager = gridOptionsManager, bgDispatcher = bgDispatcher)
-            val isGridCustomizationAvailable =
-                collectLastValue(underTest.isGridCustomizationAvailable)
-
-            assertThat(isGridCustomizationAvailable()).isFalse()
-        }
 }

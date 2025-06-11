@@ -77,7 +77,12 @@ constructor(
             .map { shapeOptions -> shapeOptions.map { toShapeOptionItemViewModel(it) } }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
-    val isShapeOptionsAvailable: Flow<Boolean> = shapeOptions.map { it.size > 1 }
+    val isShapeOptionsAvailable: Flow<Boolean> =
+        interactor.isShapeOptionsAvailable.shareIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            replay = 1,
+        )
 
     //// Themed icons enabled
     val isThemedIconAvailable =

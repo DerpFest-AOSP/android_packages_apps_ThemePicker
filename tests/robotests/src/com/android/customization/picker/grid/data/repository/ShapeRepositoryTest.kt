@@ -47,7 +47,7 @@ import org.robolectric.RobolectricTestRunner
 class ShapeRepositoryTest {
 
     @get:Rule var hiltRule = HiltAndroidRule(this)
-    @Inject lateinit var gridOptionsManager: FakeShapeGridManager
+    @Inject lateinit var shapeManager: FakeShapeGridManager
     @Inject lateinit var testScope: TestScope
     @BackgroundDispatcher @Inject lateinit var bgScope: CoroutineScope
     @BackgroundDispatcher @Inject lateinit var bgDispatcher: CoroutineDispatcher
@@ -60,6 +60,12 @@ class ShapeRepositoryTest {
     fun setUp() {
         hiltRule.inject()
         context = InstrumentationRegistry.getInstrumentation().targetContext
+        underTest =
+            ShapeRepository(
+                context = context,
+                shapeGridManager = shapeManager,
+                bgDispatcher = bgDispatcher,
+            )
     }
 
     @After
@@ -70,13 +76,6 @@ class ShapeRepositoryTest {
     @Test
     fun shapeOptions_default() =
         testScope.runTest {
-            underTest =
-                ShapeRepository(
-                    context = context,
-                    shapeGridManager = gridOptionsManager,
-                    bgScope = bgScope,
-                    bgDispatcher = bgDispatcher,
-                )
             val shapeOptions = collectLastValue(underTest.shapeOptions)
 
             assertThat(shapeOptions()).isEqualTo(FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST)
@@ -85,13 +84,6 @@ class ShapeRepositoryTest {
     @Test
     fun selectedShapeOption_default() =
         testScope.runTest {
-            underTest =
-                ShapeRepository(
-                    context = context,
-                    shapeGridManager = gridOptionsManager,
-                    bgScope = bgScope,
-                    bgDispatcher = bgDispatcher,
-                )
             val selectedShapeOption = collectLastValue(underTest.selectedShapeOption)
 
             assertThat(selectedShapeOption())

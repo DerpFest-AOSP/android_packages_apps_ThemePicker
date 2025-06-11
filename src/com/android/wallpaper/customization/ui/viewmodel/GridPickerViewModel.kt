@@ -50,7 +50,12 @@ constructor(
     private val logger: ThemesUserEventLogger,
     @Assisted private val viewModelScope: CoroutineScope,
 ) {
-    val isGridCustomizationAvailable = interactor.isGridCustomizationAvailable
+    val isGridCustomizationAvailable =
+        interactor.isGridCustomizationAvailable.shareIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            replay = 1,
+        )
 
     val _selectedGridOptionIndex = MutableStateFlow<Int>(0)
     val selectedGridOptionIndex = _selectedGridOptionIndex.asStateFlow()
