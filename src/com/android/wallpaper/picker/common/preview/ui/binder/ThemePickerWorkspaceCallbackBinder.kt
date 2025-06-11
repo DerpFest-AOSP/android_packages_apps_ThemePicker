@@ -18,6 +18,8 @@ package com.android.wallpaper.picker.common.preview.ui.binder
 
 import android.os.Bundle
 import android.os.Message
+import android.os.RemoteException
+import android.util.Log
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -95,7 +97,8 @@ constructor(
                                 viewModel.selectedOption.collect {
                                     when (it) {
                                         ThemePickerLockCustomizationOption.SHORTCUTS ->
-                                            workspaceCallback.sendMessage(
+                                            safeSendMessage(
+                                                workspaceCallback,
                                                 MESSAGE_ID_START_CUSTOMIZING_QUICK_AFFORDANCES,
                                                 Bundle().apply {
                                                     putString(
@@ -105,7 +108,8 @@ constructor(
                                                 },
                                             )
                                         else ->
-                                            workspaceCallback.sendMessage(
+                                            safeSendMessage(
+                                                workspaceCallback,
                                                 MESSAGE_ID_DEFAULT_PREVIEW,
                                                 Bundle.EMPTY,
                                             )
@@ -116,7 +120,8 @@ constructor(
                             launch {
                                 viewModel.keyguardQuickAffordancePickerViewModel2.selectedSlotId
                                     .collect {
-                                        workspaceCallback.sendMessage(
+                                        safeSendMessage(
+                                            workspaceCallback,
                                             MESSAGE_ID_SLOT_SELECTED,
                                             Bundle().apply { putString(KEY_SLOT_ID, it) },
                                         )
@@ -128,7 +133,8 @@ constructor(
                                     .previewingQuickAffordances
                                     .collect {
                                         it[SLOT_ID_BOTTOM_START]?.let {
-                                            workspaceCallback.sendMessage(
+                                            safeSendMessage(
+                                                workspaceCallback,
                                                 MESSAGE_ID_PREVIEW_QUICK_AFFORDANCE_SELECTED,
                                                 Bundle().apply {
                                                     putString(KEY_SLOT_ID, SLOT_ID_BOTTOM_START)
@@ -137,7 +143,8 @@ constructor(
                                             )
                                         }
                                         it[SLOT_ID_BOTTOM_END]?.let {
-                                            workspaceCallback.sendMessage(
+                                            safeSendMessage(
+                                                workspaceCallback,
                                                 MESSAGE_ID_PREVIEW_QUICK_AFFORDANCE_SELECTED,
                                                 Bundle().apply {
                                                     putString(KEY_SLOT_ID, SLOT_ID_BOTTOM_END)
@@ -151,7 +158,8 @@ constructor(
                             launch {
                                 viewModel.clockPickerViewModel.showKeyguardPreviewRendererSmartspace
                                     .collect {
-                                        workspaceCallback.sendMessage(
+                                        safeSendMessage(
+                                            workspaceCallback,
                                             MESSAGE_ID_HIDE_SMART_SPACE,
                                             Bundle().apply { putBoolean(KEY_HIDE_SMART_SPACE, !it) },
                                         )
@@ -167,7 +175,8 @@ constructor(
                         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                             launch {
                                 viewModel.appIconPickerViewModel.previewingShapeKey.collect {
-                                    workspaceCallback.sendMessage(
+                                    safeSendMessage(
+                                        workspaceCallback,
                                         MESSAGE_ID_UPDATE_SHAPE,
                                         bundleOf(COL_SHAPE_KEY to it),
                                     )
@@ -176,7 +185,8 @@ constructor(
 
                             launch {
                                 viewModel.gridPickerViewModel.previewingGridKey.collect {
-                                    workspaceCallback.sendMessage(
+                                    safeSendMessage(
+                                        workspaceCallback,
                                         MESSAGE_ID_UPDATE_GRID,
                                         bundleOf(COL_GRID_NAME to it),
                                     )
@@ -207,7 +217,8 @@ constructor(
                                                     putBoolean(KEY_DARK_MODE, darkMode)
                                                 }
                                             }
-                                        workspaceCallback.sendMessage(
+                                        safeSendMessage(
+                                            workspaceCallback,
                                             MESSAGE_ID_UPDATE_COLOR,
                                             bundle,
                                         )
@@ -217,7 +228,8 @@ constructor(
                             if (BaseFlags.get().isExtendibleThemeManager()) {
                                 launch {
                                     viewModel.appIconPickerViewModel.previewingIconStyle.collect {
-                                        workspaceCallback.sendMessage(
+                                        safeSendMessage(
+                                            workspaceCallback,
                                             MESSAGE_ID_UPDATE_ICON_THEMED,
                                             Bundle().apply {
                                                 putBoolean(KEY_BOOLEAN_VALUE, it.getIsThemedIcon())
@@ -229,7 +241,8 @@ constructor(
                                 launch {
                                     viewModel.appIconPickerViewModel.previewingIsThemeIconEnabled
                                         .collect {
-                                            workspaceCallback.sendMessage(
+                                            safeSendMessage(
+                                                workspaceCallback,
                                                 MESSAGE_ID_UPDATE_ICON_THEMED,
                                                 Bundle().apply { putBoolean(KEY_BOOLEAN_VALUE, it) },
                                             )
@@ -250,6 +263,7 @@ constructor(
     }
 
     companion object {
+        const val TAG = "ThemePickerWorkspaceCallbackBinder"
         const val MESSAGE_ID_UPDATE_SHAPE = 2586
         const val MESSAGE_ID_UPDATE_GRID = 7414
         const val MESSAGE_ID_UPDATE_COLOR = 856
@@ -258,5 +272,13 @@ constructor(
         const val KEY_COLOR_VALUES: String = "color_values"
         const val KEY_DARK_MODE: String = "use_dark_mode"
         const val KEY_BOOLEAN_VALUE: String = "boolean_value"
+
+        private fun safeSendMessage(workspaceCallback: Message, what: Int, data: Bundle) {
+            try {
+                workspaceCallback.sendMessage(what, data)
+            } catch (e: RemoteException) {
+                Log.w(TAG, "Failed to send message to workspace callback", e)
+            }
+        }
     }
 }
