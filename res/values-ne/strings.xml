@@ -59,20 +59,17 @@
     <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>, <xliff:g id="ID_2">%2$s</xliff:g>"</string>
     <string name="app_icons_theme_default" msgid="4773453045331265070">"डिफल्ट"</string>
     <string name="app_icons_theme_themed" msgid="6539464818104931856">"थिमयुक्त"</string>
-    <!-- no translation found for app_icons_style_default (2568057806991656437) -->
-    <skip />
-    <!-- no translation found for app_icons_style_minimal (4905227469969513136) -->
-    <skip />
-    <!-- no translation found for app_icons_shape (2539949450435849188) -->
-    <skip />
-    <!-- no translation found for app_icons_style (993356162262531521) -->
-    <skip />
+    <string name="app_icons_style_default" msgid="2568057806991656437">"डिफल्ट"</string>
+    <string name="app_icons_style_minimal" msgid="4905227469969513136">"मिनिमल"</string>
+    <string name="app_icons_shape" msgid="2539949450435849188">"आकार"</string>
+    <string name="app_icons_style" msgid="993356162262531521">"शैली"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"लागू गर्नुहोस्"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"सम्पादन गर्न ट्याप गर्नुहोस्"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"अहिले कै वालपेपर राख्नुहोस्"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"शैलीको प्रिभ्यु"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"ग्रिडको प्रिभ्यु"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"थिमहरूको प्रिभ्यू"</string>
+    <!-- no translation found for pack_theme_preview_card_content_description (4283911770796247345) -->
+    <skip />
     <string name="font_preview_content_description" msgid="128230439293337891">"फन्टको प्रिभ्यू"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"आइकनको प्रिभ्यू"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"रङको प्रिभ्यू"</string>
@@ -134,9 +131,11 @@
     <string name="mode_disabled_msg" msgid="9196245518435936512">"ब्याट्री सेभर अन भएकाले केही समयका लागि अफ गरिएको छ"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"थिमयुक्त आइकन"</string>
     <string name="themed_icon_beta_title" msgid="5433087142610402812">"थिमयुक्त आइकनहरू (बिटा)"</string>
-    <string name="pack_theme_title" msgid="3052703041673623611">"थिमहरू"</string>
+    <!-- no translation found for pack_theme_title (8859400282820047298) -->
+    <skip />
     <string name="beta_title" msgid="8703819523760746458">"बिटा"</string>
-    <string name="theme_packs_description" msgid="4647233199054882039">"Pixel का थिमहरू भेट्टाउनुहोस्"</string>
+    <!-- no translation found for theme_packs_description (7214401664119395771) -->
+    <skip />
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"एप ग्रिड बदल्नुहोस्"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"वालपेपरका रङहरू"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"तपाईंको वालपेपरका रङसँग मिल्ने आइकन, टेक्स्ट तथा अन्य कुराहरू"</string>
@@ -178,8 +177,6 @@
     <string name="scroll_forward_and_select" msgid="6156132388656395769">"घडीको स्क्रिनको अर्कै डिजाइन छनौट गर्न बायाँतिर स्वाइप गर्नुहोस्"</string>
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"घडीको स्क्रिनको अर्कै डिजाइन छनौट गर्न दायाँतिर स्वाइप गर्नुहोस्"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"घडीको स्क्रिनका कस्टम डिजाइनहरू"</string>
-    <!-- no translation found for clock_face_width (5818129719338363570) -->
-    <skip />
-    <!-- no translation found for range_announcement_template (2996864801083587925) -->
-    <skip />
+    <string name="clock_face_width" msgid="5818129719338363570">"वाचफेसको चौडाइ"</string>
+    <string name="range_announcement_template" msgid="2996864801083587925">"%1$d देखि %2$d सम्मको दायरा"</string>
 </resources>

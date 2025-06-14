@@ -59,20 +59,16 @@
     <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>, <xliff:g id="ID_2">%2$s</xliff:g>"</string>
     <string name="app_icons_theme_default" msgid="4773453045331265070">"기본값"</string>
     <string name="app_icons_theme_themed" msgid="6539464818104931856">"테마형"</string>
-    <!-- no translation found for app_icons_style_default (2568057806991656437) -->
-    <skip />
-    <!-- no translation found for app_icons_style_minimal (4905227469969513136) -->
-    <skip />
-    <!-- no translation found for app_icons_shape (2539949450435849188) -->
-    <skip />
-    <!-- no translation found for app_icons_style (993356162262531521) -->
-    <skip />
+    <string name="app_icons_style_default" msgid="2568057806991656437">"기본"</string>
+    <string name="app_icons_style_minimal" msgid="4905227469969513136">"최소"</string>
+    <string name="app_icons_shape" msgid="2539949450435849188">"도형"</string>
+    <string name="app_icons_style" msgid="993356162262531521">"스타일"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"적용"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"탭하여 수정"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"현재 배경화면 유지"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"스타일 미리보기"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"그리드 미리보기"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"테마 미리보기"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"콘텐츠 설명"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"글꼴 미리보기"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"아이콘 미리보기"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"색상 미리보기"</string>
@@ -134,9 +130,9 @@
     <string name="mode_disabled_msg" msgid="9196245518435936512">"절전 모드로 인해 일시적으로 사용 중지됨"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"테마 아이콘"</string>
     <string name="themed_icon_beta_title" msgid="5433087142610402812">"테마형 아이콘(베타)"</string>
-    <string name="pack_theme_title" msgid="3052703041673623611">"테마"</string>
+    <string name="pack_theme_title" msgid="8859400282820047298">"제목"</string>
     <string name="beta_title" msgid="8703819523760746458">"베타"</string>
-    <string name="theme_packs_description" msgid="4647233199054882039">"Pixel 테마 둘러보기"</string>
+    <string name="theme_packs_description" msgid="7214401664119395771">"설명"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"앱 그리드 변경"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"배경화면 색상"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"아이콘, 텍스트 등의 색상이 배경화면 색상과 매치됩니다"</string>
@@ -178,8 +174,6 @@
     <string name="scroll_forward_and_select" msgid="6156132388656395769">"왼쪽으로 스와이프하여 다른 시계 페이스 선택"</string>
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"오른쪽으로 스와이프하여 다른 시계 페이스 선택"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"시계 페이스 맞춤설정"</string>
-    <!-- no translation found for clock_face_width (5818129719338363570) -->
-    <skip />
-    <!-- no translation found for range_announcement_template (2996864801083587925) -->
-    <skip />
+    <string name="clock_face_width" msgid="5818129719338363570">"시계 페이스 너비"</string>
+    <string name="range_announcement_template" msgid="2996864801083587925">"범위: %1$d~%2$d"</string>
 </resources>

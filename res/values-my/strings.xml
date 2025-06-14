@@ -59,20 +59,17 @@
     <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>၊ <xliff:g id="ID_2">%2$s</xliff:g>"</string>
     <string name="app_icons_theme_default" msgid="4773453045331265070">"မူရင်း"</string>
     <string name="app_icons_theme_themed" msgid="6539464818104931856">"အလှဆင်ထားသည်"</string>
-    <!-- no translation found for app_icons_style_default (2568057806991656437) -->
-    <skip />
-    <!-- no translation found for app_icons_style_minimal (4905227469969513136) -->
-    <skip />
-    <!-- no translation found for app_icons_shape (2539949450435849188) -->
-    <skip />
-    <!-- no translation found for app_icons_style (993356162262531521) -->
-    <skip />
+    <string name="app_icons_style_default" msgid="2568057806991656437">"မူရင်း"</string>
+    <string name="app_icons_style_minimal" msgid="4905227469969513136">"ရိုးရိုးပုံစံ"</string>
+    <string name="app_icons_shape" msgid="2539949450435849188">"ပုံသဏ္ဌာန်"</string>
+    <string name="app_icons_style" msgid="993356162262531521">"ပုံစံ"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"အသုံးပြုရန်"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"တည်းဖြတ်ရန် တို့ပါ"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"လက်ရှိနောက်ခံပုံ ဆက်ထားရန်"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"ပုံစံ အစမ်းကြည့်ရှုခြင်း"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"ဇယားကွက် အစမ်းကြည့်ရှုခြင်း"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"အပြင်အဆင် အစမ်းကြည့်ရှုခြင်း"</string>
+    <!-- no translation found for pack_theme_preview_card_content_description (4283911770796247345) -->
+    <skip />
     <string name="font_preview_content_description" msgid="128230439293337891">"ဖောင့် အစမ်းကြည့်ရှုခြင်း"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"သင်္ကေတ အစမ်းကြည့်ရှုခြင်း"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"အရောင် အစမ်းကြည့်ရှုခြင်း"</string>
@@ -134,9 +131,11 @@
     <string name="mode_disabled_msg" msgid="9196245518435936512">"‘ဘက်ထရီ အားထိန်း’ ကြောင့် ယာယီပိတ်ထားသည်"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"အပြင်အဆင်သုံး သင်္ကေတများ"</string>
     <string name="themed_icon_beta_title" msgid="5433087142610402812">"အပြင်အဆင်ဖြင့် သင်္ကေတများ (စမ်းသပ်)"</string>
-    <string name="pack_theme_title" msgid="3052703041673623611">"အပြင်အဆင်များ"</string>
+    <!-- no translation found for pack_theme_title (8859400282820047298) -->
+    <skip />
     <string name="beta_title" msgid="8703819523760746458">"စမ်းသပ်"</string>
-    <string name="theme_packs_description" msgid="4647233199054882039">"Pixel အပြင်အဆင်များ ရှာဖွေရန်"</string>
+    <!-- no translation found for theme_packs_description (7214401664119395771) -->
+    <skip />
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"အက်ပ်ဇယား ပြောင်းရန်"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"နောက်ခံအရောင်များ"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"သင်္ကေတ၊ စာသားစသည်တို့သည် သင့်နောက်ခံအရောင်များနှင့် လိုက်ဖက်သည်"</string>
@@ -178,8 +177,6 @@
     <string name="scroll_forward_and_select" msgid="6156132388656395769">"အခြားနာရီဒိုင်ခွက်ရွေးရန် ဘယ်ဘက်သို့ ပွတ်ဆွဲပါ"</string>
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"အခြားနာရီဒိုင်ခွက်ရွေးရန် ညာဘက်သို့ ပွတ်ဆွဲပါ"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"စိတ်ကြိုက် နာရီဒိုင်ခွက်များ"</string>
-    <!-- no translation found for clock_face_width (5818129719338363570) -->
-    <skip />
-    <!-- no translation found for range_announcement_template (2996864801083587925) -->
-    <skip />
+    <string name="clock_face_width" msgid="5818129719338363570">"နာရီမျက်နှာ အကျယ်"</string>
+    <string name="range_announcement_template" msgid="2996864801083587925">"%1$d မှ %2$d အထိ အပိုင်းအခြား"</string>
 </resources>
