@@ -22,21 +22,14 @@ import android.content.res.Resources
 import com.android.customization.model.ResourceConstants
 import com.android.customization.model.grid.ShapeGridManager
 import com.android.customization.model.grid.ShapeOptionModel
-import com.android.wallpaper.R
-import com.android.wallpaper.model.Screen
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
-import com.android.wallpaper.util.PreviewUtils
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Singleton
@@ -45,15 +38,8 @@ class ShapeRepository
 constructor(
     @ApplicationContext private val context: Context,
     private val shapeGridManager: ShapeGridManager,
-    @BackgroundDispatcher private val bgScope: CoroutineScope,
     @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
 ) {
-    private val authorityMetadataKey: String =
-        context.getString(R.string.grid_control_metadata_name)
-    private val previewUtils: PreviewUtils =
-        PreviewUtils(context, authorityMetadataKey, Screen.HOME_SCREEN)
-
-    private val _shapeOptions = MutableStateFlow<List<ShapeOptionModel>?>(null)
 
     val defaultShapePath =
         context.resources.getString(
@@ -65,23 +51,20 @@ constructor(
                 )
         )
 
-    init {
-        bgScope.launch { refreshShapeOptions() }
-    }
+    val shapeOptions: Flow<List<ShapeOptionModel>> = shapeGridManager.shapeOptions
 
-    val shapeOptions: StateFlow<List<ShapeOptionModel>?> = _shapeOptions.asStateFlow()
-
-    val selectedShapeOption: Flow<ShapeOptionModel?> =
-        shapeOptions.map { shapeOptions -> shapeOptions?.firstOrNull { it.isCurrent } }
-
-    suspend fun applyShape(shapeKey: String) =
-        withContext(bgDispatcher) {
-            shapeGridManager.applyShapeOption(shapeKey)
-            // After applying, we should query and update shape options again.
-            refreshShapeOptions()
+    val isShapeOptionsAvailable =
+        combine(shapeGridManager.isCustomizationAvailable, shapeOptions) {
+            isCustomizationAvailable,
+            _ ->
+            // Call getShapeOptions() instead of using shapeOptions flow to avoid getting stale
+            // replay value
+            isCustomizationAvailable && shapeGridManager.getShapeOptions().size > 1
         }
 
-    suspend fun refreshShapeOptions() {
-        _shapeOptions.value = shapeGridManager.getShapeOptions()
-    }
+    val selectedShapeOption: Flow<ShapeOptionModel?> =
+        shapeOptions.map { shapeOptions -> shapeOptions.firstOrNull { it.isCurrent } }
+
+    suspend fun applyShape(shapeKey: String) =
+        withContext(bgDispatcher) { shapeGridManager.applyShapeOption(shapeKey) }
 }

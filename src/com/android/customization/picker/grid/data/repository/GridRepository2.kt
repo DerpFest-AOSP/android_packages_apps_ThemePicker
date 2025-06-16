@@ -25,8 +25,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
@@ -44,7 +43,11 @@ constructor(
         gridOptions.map { gridOptions -> gridOptions.firstOrNull { it.isCurrent } }
 
     val isGridCustomizationAvailable =
-        gridOptions.filterNotNull().map { it.size > 1 }.distinctUntilChanged()
+        combine(manager.isCustomizationAvailable, gridOptions) { isCustomizationAvailable, _ ->
+            // Call getGridOptions() instead of using gridOptions flow to avoid getting stale replay
+            // value
+            isCustomizationAvailable && manager.getGridOptions().size > 1
+        }
 
     suspend fun applyGridOption(gridKey: String) =
         withContext(bgDispatcher) { manager.applyGridOption(gridKey) }

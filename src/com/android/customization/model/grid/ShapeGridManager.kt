@@ -28,11 +28,25 @@ interface ShapeGridManager {
     suspend fun getGridOptions(): List<GridOptionModel>
 
     /**
+     * A flow representing whether shape and grid customization option provider is available.
+     * Collecting from this flow also triggers a retry to get customization provider if it is not
+     * available.
+     */
+    val isCustomizationAvailable: Flow<Boolean>
+
+    /**
      * A flow of the current list of grid options, updated when the grid options change.
      *
      * @return It will return an empty list if there are no available grid options.
      */
     val gridOptions: Flow<List<GridOptionModel>>
+
+    /**
+     * A flow of the current list of shape options, updated when the shape options change.
+     *
+     * @return It will return an empty list if there are no available shape options.
+     */
+    val shapeOptions: Flow<List<ShapeOptionModel>>
 
     suspend fun getShapeOptions(): List<ShapeOptionModel>
 
