@@ -68,8 +68,7 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Gcina isithombe sangemuva samanje"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Ukubuka kuqala kwesitayela"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Ukubuka kuqala kwe-grid"</string>
-    <!-- no translation found for pack_theme_preview_card_content_description (4283911770796247345) -->
-    <skip />
+    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"Incazelo Yekhontenti"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Ukubuka kuqala ifonti"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Ukubuka kuqala isithonjana"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Ukubuka kuqala umbala"</string>
@@ -131,11 +130,9 @@
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Kukhutshaziwe okwesikhashana ngenxa Yesilondolozi Sebhethri"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Izithonjana ezinetimu"</string>
     <string name="themed_icon_beta_title" msgid="5433087142610402812">"Izithonjana ezinetimu (i-beta)"</string>
-    <!-- no translation found for pack_theme_title (8859400282820047298) -->
-    <skip />
+    <string name="pack_theme_title" msgid="8859400282820047298">"Isihloko"</string>
     <string name="beta_title" msgid="8703819523760746458">"I-beta"</string>
-    <!-- no translation found for theme_packs_description (7214401664119395771) -->
-    <skip />
+    <string name="theme_packs_description" msgid="7214401664119395771">"Incazelo"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Shintsha igridi ye-app"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Imibala yesithombe sangemuva"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Izithonjana, umbhalo, neminye imibala efana nesithombe sakho sangemuva"</string>
