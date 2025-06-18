@@ -129,8 +129,12 @@ constructor(
                     val optionMap =
                         colorProvider.fetchThemeServiceCompatibleOptions(homeColors).groupBy {
                             option ->
-                            when (option.source) {
-                                ColorProviderUtil.COLOR_SOURCE_HOME -> ColorType.WALLPAPER_COLOR
+                            val colorOption = option as ColorOptionImpl
+                            when {
+                                colorOption.type == ColorType.DERPFEST_COLOR ->
+                                    ColorType.DERPFEST_COLOR
+                                colorOption.source == ColorProviderUtil.COLOR_SOURCE_HOME ->
+                                    ColorType.WALLPAPER_COLOR
                                 else -> ColorType.PRESET_COLOR
                             }
                         }
@@ -138,6 +142,8 @@ constructor(
                         ColorType.WALLPAPER_COLOR to
                             (optionMap[ColorType.WALLPAPER_COLOR] ?: emptyList()),
                         ColorType.PRESET_COLOR to (optionMap[ColorType.PRESET_COLOR] ?: emptyList()),
+                        ColorType.DERPFEST_COLOR to
+                            (optionMap[ColorType.DERPFEST_COLOR] ?: emptyList()),
                     )
                 }
                 // Fetching from color provider is time consuming. Start collecting Lazily to make
@@ -155,11 +161,15 @@ constructor(
                                         mutableListOf()
                                     val presetColorOptions: MutableList<ColorOption> =
                                         mutableListOf()
+                                    val derpfestColorOptions: MutableList<ColorOption> =
+                                        mutableListOf()
                                     options?.forEach { option ->
                                         when (val colorType = (option as ColorOptionImpl).type) {
                                             ColorType.WALLPAPER_COLOR ->
                                                 wallpaperColorOptions.add(option)
                                             ColorType.PRESET_COLOR -> presetColorOptions.add(option)
+                                            ColorType.DERPFEST_COLOR ->
+                                                derpfestColorOptions.add(option)
                                             else ->
                                                 Log.e(
                                                     TAG,
@@ -172,6 +182,7 @@ constructor(
                                             listOf(
                                                 ColorType.WALLPAPER_COLOR to wallpaperColorOptions,
                                                 ColorType.PRESET_COLOR to presetColorOptions,
+                                                ColorType.DERPFEST_COLOR to derpfestColorOptions,
                                             )
                                         )
                                     )

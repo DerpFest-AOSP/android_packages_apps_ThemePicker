@@ -66,6 +66,7 @@ open class ColorProvider(private val context: Context, stubPackageName: String) 
     private var presetColorBundles: List<ColorOption>? = null
     private var wallpaperColorBundles: List<ColorOption>? = null
     private var homeWallpaperColors: WallpaperColors? = null
+    private val derpFestColorProvider = DerpFestColorProvider(context)
 
     @ThemeStyle.Type
     val styleList: List<Int> = ColorProviderUtil.getStyleList(isColorPickerUpdateEnabled)
@@ -278,10 +279,11 @@ open class ColorProvider(private val context: Context, stubPackageName: String) 
     private fun buildFinalList(): List<ColorOption> {
         val presetColors = presetColorBundles ?: emptyList()
         val wallpaperColors = wallpaperColorBundles?.toMutableList() ?: mutableListOf()
+        val derpFestColors = derpFestColorProvider.getDerpFestColors()
         if (!isColorPickerUpdateEnabled) {
             insertMonochrome(wallpaperColors)
         }
-        return wallpaperColors + presetColors
+        return wallpaperColors + presetColors + derpFestColors
     }
 
     private fun insertMonochrome(colorList: MutableList<ColorOption>) {

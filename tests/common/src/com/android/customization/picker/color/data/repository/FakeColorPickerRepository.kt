@@ -52,6 +52,7 @@ class FakeColorPickerRepository @Inject constructor(private val baseFlags: BaseF
             listOf(
                 ColorType.WALLPAPER_COLOR to listOf<ColorOption>(),
                 ColorType.PRESET_COLOR to listOf(),
+                ColorType.DERPFEST_COLOR to listOf(),
             )
         )
     override val colorOptions: StateFlow<List<Pair<ColorType, List<ColorOption>>>> =
@@ -99,6 +100,7 @@ class FakeColorPickerRepository @Inject constructor(private val baseFlags: BaseF
                             add(colorOption)
                         }
                     },
+                ColorType.DERPFEST_COLOR to listOf(),
             )
     }
 
@@ -142,6 +144,7 @@ class FakeColorPickerRepository @Inject constructor(private val baseFlags: BaseF
                             add(colorOption)
                         }
                     },
+                ColorType.DERPFEST_COLOR to listOf(),
             )
     }
 

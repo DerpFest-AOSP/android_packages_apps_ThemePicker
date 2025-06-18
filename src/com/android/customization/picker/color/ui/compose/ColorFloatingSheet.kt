@@ -206,6 +206,7 @@ fun ColorFloatingSheetLanding(
                     return@derivedStateOf when (colorTypeToOptions.first) {
                         ColorType.WALLPAPER_COLOR -> R.string.wallpaper_color_title_2
                         ColorType.PRESET_COLOR -> R.string.preset_color_tab_2
+                        ColorType.DERPFEST_COLOR -> R.string.preset_color_tab_3
                         ColorType.FREEFORM_COLOR -> R.string.freeform_color_title
                     }
                 } else {

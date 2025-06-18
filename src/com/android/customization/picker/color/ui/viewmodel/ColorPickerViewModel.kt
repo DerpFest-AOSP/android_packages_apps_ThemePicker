@@ -240,7 +240,11 @@ constructor(
             selectedColorTypeIdOrNull ->
             colorOptions.mapIndexedNotNull { index, colorTypeToOptions ->
                 val colorType = colorTypeToOptions.first
-                if (colorType != ColorType.WALLPAPER_COLOR && colorType != ColorType.PRESET_COLOR) {
+                if (
+                    colorType != ColorType.WALLPAPER_COLOR &&
+                        colorType != ColorType.PRESET_COLOR &&
+                        colorType != ColorType.DERPFEST_COLOR
+                ) {
                     return@mapIndexedNotNull null
                 }
                 val isSelected =
@@ -253,6 +257,8 @@ constructor(
                             context.resources.getString(R.string.wallpaper_color_tab)
                         ColorType.PRESET_COLOR ->
                             context.resources.getString(R.string.preset_color_tab_2)
+                        ColorType.DERPFEST_COLOR ->
+                            context.resources.getString(R.string.preset_color_tab_3)
                         else -> ""
                     }
 
@@ -262,7 +268,8 @@ constructor(
                             when (colorType) {
                                 ColorType.WALLPAPER_COLOR ->
                                     com.android.wallpaper.R.drawable.ic_baseline_wallpaper_24
-                                ColorType.PRESET_COLOR -> R.drawable.ic_colors
+                                ColorType.PRESET_COLOR,
+                                ColorType.DERPFEST_COLOR -> R.drawable.ic_colors
                                 else -> 0
                             },
                         contentDescription = Text.Loaded(name),
@@ -283,7 +290,8 @@ constructor(
             when (selectedColorTypeIdOrNull ?: ColorType.WALLPAPER_COLOR) {
                 ColorType.WALLPAPER_COLOR ->
                     context.resources.getString(R.string.wallpaper_color_subheader)
-                ColorType.PRESET_COLOR ->
+                ColorType.PRESET_COLOR,
+                ColorType.DERPFEST_COLOR ->
                     context.resources.getString(R.string.preset_color_subheader)
                 else -> null
             }
