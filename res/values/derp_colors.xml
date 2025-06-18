@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: DerpFest AOSP
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+
+    <!-- DerpFest Colors -->
+    <color name="derpfest_vader_red">#FF0000</color>  <!-- Vader Red -->
+    <color name="derpfest_ocean_blue">#0066CC</color>  <!-- Ocean Blue -->
+    <color name="derpfest_forest_green">#228B22</color>  <!-- Forest Green -->
+    <color name="derpfest_sunset_orange">#FF8C00</color>  <!-- Sunset Orange -->
+    <color name="derpfest_purple_haze">#8A2BE2</color>  <!-- Purple Haze -->
+    <color name="derpfest_teal_dream">#008080</color>  <!-- Teal Dream -->
+    <color name="derpfest_golden_hour">#FFD700</color>  <!-- Golden Hour -->
+    <color name="derpfest_midnight_blue">#191970</color>  <!-- Midnight Blue -->
+    <color name="derpfest_rose_gold">#B76E79</color>  <!-- Rose Gold -->
+    <color name="derpfest_emerald_city">#50C878</color>  <!-- Emerald City -->
+    <color name="derpfest_crimson_tide">#DC143C</color>  <!-- Crimson Tide -->
+    <color name="derpfest_azure_sky">#007FFF</color>  <!-- Azure Sky -->
+</resources>
