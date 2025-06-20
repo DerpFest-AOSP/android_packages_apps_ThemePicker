@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package com.android.customization.picker.icon.ui.util
+package com.android.customization.picker.icon.shared.model
 
-import com.android.customization.picker.icon.shared.model.IconStyle
-import javax.inject.Inject
+import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 
-/**
- * This is a fake [IconStyleViewUtil]. Only implement the function if it's actually called in a
- * test.
- */
-class FakeIconStyleViewUtil @Inject constructor() : IconStyleViewUtil {
-    override fun getOnClick(iconStyle: IconStyle): (() -> Unit)? {
-        TODO("Not yet implemented")
-    }
-}
+data class IconStyleModel(
+    val iconStyle: IconStyle,
+    val nameResId: Int,
+    val icon: Icon?,
+    val isThemedIcon: Boolean,
+    val isExternalLink: Boolean,
+)
