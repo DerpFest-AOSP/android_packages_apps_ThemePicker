@@ -20,12 +20,10 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
-import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -149,6 +147,14 @@ object ClockFloatingSheetBinder {
                 )
             }
 
+        val sliderLabel = appContext.getString(R.string.clock_face_width)
+        axisPresetSlider.contentDescription = sliderLabel
+
+        axisPresetSlider.setLabelFormatter { value ->
+            val mappedValueInt = Math.round(value + 1.0f)
+            mappedValueInt.toString()
+        }
+
         ColorUpdateBinder.bind(
             setColor = { color ->
                 axisPresetSliderContainer
@@ -158,61 +164,6 @@ object ClockFloatingSheetBinder {
             color = colorUpdateViewModel.colorOnSurfaceVariant,
             shouldAnimate = isClockStyleActive,
             lifecycleOwner = lifecycleOwner,
-        )
-
-        // Setting content description for the clock face width slider
-        val sliderLabel = appContext.getString(R.string.clock_face_width)
-        axisPresetSlider.contentDescription = sliderLabel
-        axisPresetSlider.setAccessibilityDelegate(
-            object : View.AccessibilityDelegate() {
-                override fun onInitializeAccessibilityNodeInfo(
-                    host: View,
-                    info: AccessibilityNodeInfo,
-                ) {
-                    super.onInitializeAccessibilityNodeInfo(host, info)
-                    val infoCompat = AccessibilityNodeInfoCompat.wrap(info)
-
-                    if (host !is Slider) return
-
-                    // increased these values by 1.0 in order to announce for content description
-                    val actualMin = host.valueFrom + 1.0f
-                    val actualMax = host.valueTo + 1.0f
-                    val currentValueActual = host.value + 1.0f
-
-                    val normalizedPosition =
-                        if (actualMax - actualMin == 0f) {
-                            0f
-                        } else {
-                            ((currentValueActual - actualMin) / (actualMax - actualMin)).coerceIn(
-                                0f,
-                                1f,
-                            )
-                        }
-                    val mappedValueFloat = actualMin + normalizedPosition * (actualMax - actualMin)
-                    val mappedValueInt = Math.round(mappedValueFloat)
-
-                    val conceptualMinInt = actualMin.toInt()
-                    val conceptualMaxInt = actualMax.toInt()
-                    // this is a workaround that is needed because talkback isn't announcing the
-                    // range using RangeInfo on the material slider.
-                    val hardcodedRangeText =
-                        appContext.getString(
-                            R.string.range_announcement_template,
-                            conceptualMinInt,
-                            conceptualMaxInt,
-                        )
-                    val customRangeInfo =
-                        AccessibilityNodeInfoCompat.RangeInfoCompat.obtain(
-                            AccessibilityNodeInfoCompat.RangeInfoCompat.RANGE_TYPE_INT,
-                            actualMin,
-                            actualMax,
-                            mappedValueInt.toFloat(),
-                        )
-                    infoCompat.rangeInfo = customRangeInfo
-                    infoCompat.text = null
-                    infoCompat.stateDescription = "$mappedValueInt, $hardcodedRangeText"
-                }
-            }
         )
 
         val clockColorContent: View = view.requireViewById(R.id.clock_floating_sheet_color_content)
@@ -602,9 +553,12 @@ object ClockFloatingSheetBinder {
                         )
                         axisPresetSlider.clearOnChangeListeners()
                         axisPresetSlider.addOnChangeListener { slider, value, fromUser ->
+                            updateAccessibilityStateDescription(slider, slider.context)
+
                             if (optionsViewModel.isAccessibilityEnabled(slider.context)) {
                                 axisPresetsSliderViewModel.onSliderStopTrackingTouch(value)
                             }
+                            updateAccessibilityStateDescription(axisPresetSlider, slider.context)
                         }
                     }
                 }
@@ -614,6 +568,20 @@ object ClockFloatingSheetBinder {
                 }
             }
         }
+    }
+
+    private fun updateAccessibilityStateDescription(slider: Slider, appContext: Context) {
+        val currentValueInt = Math.round(slider.value + 1.0f)
+        val minInt = (slider.valueFrom + 1.0f).toInt()
+        val maxInt = (slider.valueTo + 1.0f).toInt()
+
+        slider.stateDescription =
+            appContext.getString(
+                R.string.slider_state_description_template,
+                currentValueInt,
+                minInt,
+                maxInt,
+            )
     }
 
     private fun createClockStyleOptionItemAdapter(
