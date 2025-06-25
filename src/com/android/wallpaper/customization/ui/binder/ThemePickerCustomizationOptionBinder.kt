@@ -94,6 +94,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
         navigateToColorContrastSettingsActivity: () -> Unit,
         navigateToLockScreenNotificationsSettingsActivity: () -> Unit,
         navigateToPackThemeActivity: (Intent) -> Unit,
+        navigateToScreenSaverSettingsActivity: () -> Unit,
         iconStyleViewUtil: IconStyleViewUtil,
     ) {
         defaultCustomizationOptionsBinder.bind(
@@ -109,6 +110,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             navigateToColorContrastSettingsActivity,
             navigateToLockScreenNotificationsSettingsActivity,
             navigateToPackThemeActivity,
+            navigateToScreenSaverSettingsActivity,
             iconStyleViewUtil,
         )
 
@@ -223,6 +225,16 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     .first { it.first == ThemePickerHomeCustomizationOption.PACK_THEME }
                     .second
             optionPackThemeIconLock = optionPackThemeLock.requireViewById(R.id.option_entry_icon)
+        }
+
+        if (BaseFlags.get().shouldShowDesktopUi(view.context)) {
+            val optionScreenSaverEntry: View =
+                homeScreenCustomizationOptionEntries
+                    .first { it.first == ThemePickerHomeCustomizationOption.SCREEN_SAVER }
+                    .second
+            optionScreenSaverEntry.setOnClickListener {
+                navigateToScreenSaverSettingsActivity.invoke()
+            }
         }
 
         val optionColors: View =
