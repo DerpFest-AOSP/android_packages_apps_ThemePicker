@@ -36,9 +36,7 @@ import com.android.systemui.shared.clocks.ClockRegistry
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClient
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClientImpl
 import com.android.systemui.shared.settings.data.repository.SecureSettingsRepository
-import com.android.systemui.shared.settings.data.repository.SecureSettingsRepositoryImpl
 import com.android.systemui.shared.settings.data.repository.SystemSettingsRepository
-import com.android.systemui.shared.settings.data.repository.SystemSettingsRepositoryImpl
 import com.android.wallpaper.customization.ui.binder.ThemePickerCustomizationOptionsBinder
 import com.android.wallpaper.customization.ui.binder.ThemePickerToolbarBinder
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil
@@ -83,6 +81,8 @@ import com.android.wallpaper.picker.preview.ui.binder.ApplyWallpaperOptionsProvi
 import com.android.wallpaper.picker.preview.ui.binder.DefaultApplyWallpaperOptionsProvider
 import com.android.wallpaper.picker.preview.ui.util.DefaultImageEffectDialogUtil
 import com.android.wallpaper.picker.preview.ui.util.ImageEffectDialogUtil
+import com.android.wallpaper.settings.data.repository.SecureSettingsRepositoryImpl
+import com.android.wallpaper.settings.data.repository.SystemSettingsRepositoryImpl
 import com.android.wallpaper.util.converter.DefaultWallpaperModelFactory
 import com.android.wallpaper.util.converter.WallpaperModelFactory
 import dagger.Binds
