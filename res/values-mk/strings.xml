@@ -59,20 +59,16 @@
     <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>, <xliff:g id="ID_2">%2$s</xliff:g>"</string>
     <string name="app_icons_theme_default" msgid="4773453045331265070">"стандардно"</string>
     <string name="app_icons_theme_themed" msgid="6539464818104931856">"тематски"</string>
-    <!-- no translation found for app_icons_style_default (2568057806991656437) -->
-    <skip />
-    <!-- no translation found for app_icons_style_minimal (4905227469969513136) -->
-    <skip />
-    <!-- no translation found for app_icons_shape (2539949450435849188) -->
-    <skip />
-    <!-- no translation found for app_icons_style (993356162262531521) -->
-    <skip />
+    <string name="app_icons_style_default" msgid="2568057806991656437">"Стандардно"</string>
+    <string name="app_icons_style_minimal" msgid="4905227469969513136">"Минимално"</string>
+    <string name="app_icons_shape" msgid="2539949450435849188">"Облик"</string>
+    <string name="app_icons_style" msgid="993356162262531521">"Стил"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"Примени"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"Допрете за да измените"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Задржи тековен тапет"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Преглед на стил"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Преглед на решетка"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"Преглед на темите"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"Опис на содржините"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Преглед на фонтот"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Преглед на иконата"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Преглед на бојата"</string>
@@ -134,9 +130,9 @@
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Привремено оневозможено поради „Штедачот на батерија“"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Тематски икони"</string>
     <string name="themed_icon_beta_title" msgid="5433087142610402812">"Тематски икони (бета)"</string>
-    <string name="pack_theme_title" msgid="3052703041673623611">"Теми"</string>
+    <string name="pack_theme_title" msgid="8859400282820047298">"Наслов"</string>
     <string name="beta_title" msgid="8703819523760746458">"Бета"</string>
-    <string name="theme_packs_description" msgid="4647233199054882039">"Откријте теми на Pixel"</string>
+    <string name="theme_packs_description" msgid="7214401664119395771">"Опис"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Променете ја мрежата на апликации"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Бои од тапетот"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Иконите, текстот и др. се совпаѓаат по боја со тапетот"</string>
@@ -178,8 +174,6 @@
     <string name="scroll_forward_and_select" msgid="6156132388656395769">"Повлечете налево за да изберете друг екран на часовникот"</string>
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"Повлечете надесно за да изберете друг екран на часовникот"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"Приспособени часовници"</string>
-    <!-- no translation found for clock_face_width (5818129719338363570) -->
-    <skip />
-    <!-- no translation found for range_announcement_template (2996864801083587925) -->
-    <skip />
+    <string name="clock_face_width" msgid="5818129719338363570">"Ширина на екранот на часовникот"</string>
+    <string name="range_announcement_template" msgid="2996864801083587925">"опсег од %1$d до %2$d"</string>
 </resources>
