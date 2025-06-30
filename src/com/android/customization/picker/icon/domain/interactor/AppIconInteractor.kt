@@ -46,7 +46,7 @@ constructor(
 
     val isThemedIconEnabled: Flow<Boolean> = iconStyleRepository.isThemedIconActivated
 
-    val iconStyles = iconStyleRepository.iconStyles
+    val iconStyleModels = iconStyleRepository.iconStyleModels
 
     val selectedIconStyle = iconStyleRepository.selectedIconStyle
 

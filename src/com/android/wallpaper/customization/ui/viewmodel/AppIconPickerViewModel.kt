@@ -22,6 +22,7 @@ import com.android.customization.module.logging.ThemesUserEventLogger
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
 import com.android.customization.picker.icon.domain.interactor.AppIconInteractor
 import com.android.customization.picker.icon.shared.model.IconStyle
+import com.android.customization.picker.icon.shared.model.IconStyleModel
 import com.android.themepicker.R
 import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
@@ -120,8 +121,8 @@ constructor(
         combine(selectedIconStyle, overridingIconStyle) { selected, overriding ->
             overriding ?: selected
         }
-    private val iconStyles = interactor.iconStyles
-    val styleOptions: Flow<List<OptionItemViewModel2<IconStyle>>> =
+    private val iconStyles = interactor.iconStyleModels
+    val styleOptions: Flow<List<OptionItemViewModel2<IconStyleModel>>> =
         iconStyles.map {
             List(size = it.size, init = { index -> toStyleOptionItemViewModel(it[index]) })
         }
@@ -355,35 +356,39 @@ constructor(
         )
     }
 
-    private fun toStyleOptionItemViewModel(iconStyle: IconStyle): OptionItemViewModel2<IconStyle> {
+    private fun toStyleOptionItemViewModel(
+        iconStyleModel: IconStyleModel
+    ): OptionItemViewModel2<IconStyleModel> {
         val isSelected =
             previewingIconStyle
-                .map { it == iconStyle }
+                .map { it == iconStyleModel.iconStyle }
                 .stateIn(
                     scope = viewModelScope,
                     started = SharingStarted.Lazily,
                     initialValue = false,
                 )
-        val text = Text.Resource(iconStyle.nameResId)
+        val text = Text.Resource(iconStyleModel.nameResId)
         return OptionItemViewModel2(
             key = MutableStateFlow(text.asString(applicationContext)),
-            payload = iconStyle,
+            payload = iconStyleModel,
             text = text,
             isSelected = isSelected,
             onClicked =
-                if (iconStyle.getIsExternalLink()) {
+                if (iconStyleModel.isExternalLink) {
                     // A button is not selectable.
                     flowOf(null)
                 } else {
                     isSelected.map {
                         if (!it) {
-                            { overridingIconStyle.value = iconStyle }
+                            { overridingIconStyle.value = iconStyleModel.iconStyle }
                         } else {
                             null
                         }
                     }
                 },
-            skipOnClickBinding = iconStyle.getIsExternalLink(),
+            skipOnClickBinding = iconStyleModel.isExternalLink,
+            // Icon styles have custom color bindings, if any, and don't need the default binding.
+            skipForegroundColorBinding = true,
         )
     }
 
