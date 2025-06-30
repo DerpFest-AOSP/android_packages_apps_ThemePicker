@@ -17,6 +17,7 @@
 package com.android.customization.picker.icon.data.repository
 
 import com.android.customization.picker.icon.shared.model.IconStyle
+import com.android.customization.picker.icon.shared.model.IconStyleModel
 import com.android.customization.picker.icon.shared.model.ThemePickerIconStyle
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,12 +34,24 @@ class FakeIconStyleRepository @Inject constructor() : IconStyleRepository {
     private val _isThemedIconActivated = MutableStateFlow(false)
     override val isThemedIconActivated = _isThemedIconActivated.asStateFlow()
 
-    override val iconStyles: Flow<List<IconStyle>> =
+    override val iconStyleModels: Flow<List<IconStyleModel>> =
         isThemedIconAvailable.map { isThemedIconAvailable ->
-            var styles = ThemePickerIconStyle.entries.toList()
-            if (!isThemedIconAvailable) styles = styles.filter { !it.getIsThemedIcon() }
-            styles
+            ThemePickerIconStyle.entries
+                .toList()
+                // Filter entries if themed icon is not available
+                .filter { isThemedIconAvailable || !it.getIsThemedIcon() }
+                .map { it.toIconStyleModel() }
         }
+
+    private fun IconStyle.toIconStyleModel(): IconStyleModel {
+        return IconStyleModel(
+            iconStyle = this,
+            nameResId = this.nameResId,
+            icon = null,
+            isThemedIcon = this == ThemePickerIconStyle.MONOCHROME,
+            isExternalLink = false,
+        )
+    }
 
     override val selectedIconStyle =
         isThemedIconActivated.map {

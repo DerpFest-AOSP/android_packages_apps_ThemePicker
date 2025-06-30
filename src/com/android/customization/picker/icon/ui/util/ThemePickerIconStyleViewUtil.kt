@@ -17,12 +17,7 @@
 package com.android.customization.picker.icon.ui.util
 
 import android.content.Context
-import android.graphics.drawable.AdaptiveIconDrawable
-import android.graphics.drawable.Drawable
 import com.android.customization.picker.icon.shared.model.IconStyle
-import com.android.themepicker.R
-import com.android.wallpaper.customization.ui.binder.ShapeIconViewBinder
-import com.android.wallpaper.customization.ui.view.ShapeTileDrawable
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
@@ -31,16 +26,6 @@ import javax.inject.Inject
 class ThemePickerIconStyleViewUtil
 @Inject
 constructor(@ApplicationContext private val context: Context) : IconStyleViewUtil {
-    override fun getDrawable(iconStyle: IconStyle): Drawable {
-        val previewIconPackageName = context.resources.getString(R.string.camera_package)
-        val appIconDrawable = ShapeIconViewBinder.loadAppIcon(context, previewIconPackageName)
-        return ShapeTileDrawable(
-            context = context,
-            icon = appIconDrawable as? AdaptiveIconDrawable,
-            isThemed = iconStyle.getIsThemedIcon(),
-        )
-    }
-
     override fun getOnClick(iconStyle: IconStyle): (() -> Unit)? {
         return null
     }

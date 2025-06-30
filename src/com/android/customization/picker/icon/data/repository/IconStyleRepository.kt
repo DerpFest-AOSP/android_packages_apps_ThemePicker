@@ -17,6 +17,7 @@
 package com.android.customization.picker.icon.data.repository
 
 import com.android.customization.picker.icon.shared.model.IconStyle
+import com.android.customization.picker.icon.shared.model.IconStyleModel
 import kotlinx.coroutines.flow.Flow
 
 interface IconStyleRepository {
@@ -25,7 +26,7 @@ interface IconStyleRepository {
 
     val isThemedIconActivated: Flow<Boolean>
 
-    val iconStyles: Flow<List<IconStyle>>
+    val iconStyleModels: Flow<List<IconStyleModel>>
 
     val selectedIconStyle: Flow<IconStyle>
 
