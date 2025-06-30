@@ -177,5 +177,6 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"Telezesha kidole kulia ili uchague uso tofauti wa saa"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"Uso wa Saa"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"Upana wa sura ya saa"</string>
-    <string name="range_announcement_template" msgid="2996864801083587925">"inaanzia %1$d hadi %2$d"</string>
+    <!-- no translation found for slider_state_description_template (1028160527998877233) -->
+    <skip />
 </resources>

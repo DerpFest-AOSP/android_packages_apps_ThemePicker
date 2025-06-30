@@ -177,5 +177,6 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"Vuốt sang phải để chọn mặt đồng hồ khác"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"Đồng hồ tuỳ chỉnh"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"Chiều rộng mặt đồng hồ"</string>
-    <string name="range_announcement_template" msgid="2996864801083587925">"phạm vi từ %1$d đến %2$d"</string>
+    <!-- no translation found for slider_state_description_template (1028160527998877233) -->
+    <skip />
 </resources>

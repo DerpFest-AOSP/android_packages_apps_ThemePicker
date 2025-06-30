@@ -177,5 +177,6 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"Swiep regs om ’n ander horlosieskerm te kies"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"Gepasmaakte horlosies"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"Wydte van horlosieskerm"</string>
-    <string name="range_announcement_template" msgid="2996864801083587925">"wissel van %1$d na %2$d"</string>
+    <!-- no translation found for slider_state_description_template (1028160527998877233) -->
+    <skip />
 </resources>
