@@ -144,8 +144,7 @@
     <string name="adaptive_color_title" msgid="1336508599235896205">"ගතික"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"පද්ධති වර්ණ"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"වර්ණ"</string>
-    <!-- no translation found for screen_saver_title (4178511806237734356) -->
-    <skip />
+    <string name="screen_saver_title" msgid="4178511806237734356">"තිර සුරැකුම"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"වම් කෙටිමඟ"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"දකුණු කෙටිමඟ"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"කිසිත් නැත"</string>
@@ -177,5 +176,6 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"වෙනස් ඔරලෝසු මුහුණතක් තෝරා ගැනීමට දකුණට ස්වයිප් කරන්න"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"අභිරුචි ඔරලෝසු"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"ඔරලෝසු මුහුණත පළල"</string>
-    <string name="range_announcement_template" msgid="2996864801083587925">"%1$d සිට %2$d දක්වා පරාසයක"</string>
+    <!-- no translation found for slider_state_description_template (1028160527998877233) -->
+    <skip />
 </resources>

@@ -176,5 +176,5 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"Swipe right to choose a different clock face"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"Custom Clocks"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"Clock face width"</string>
-    <string name="range_announcement_template" msgid="2996864801083587925">"range from %1$d to %2$d"</string>
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, range from %2$d to %3$d"</string>
 </resources>

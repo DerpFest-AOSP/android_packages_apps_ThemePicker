@@ -177,5 +177,6 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"Nach rechts wischen, um ein anderes Zifferblatt auszuwählen"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"Individuelle Zifferblätter"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"Breite des Zifferblatts"</string>
-    <string name="range_announcement_template" msgid="2996864801083587925">"Bereich von %1$d bis %2$d"</string>
+    <!-- no translation found for slider_state_description_template (1028160527998877233) -->
+    <skip />
 </resources>

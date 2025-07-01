@@ -177,5 +177,6 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"অন্য ধরনের ঘড়ির ডায়াল বেছে নিতে ডানদিকে সোয়াইপ করুন"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"কাস্টমাইজ করা ঘড়ি"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"ঘড়ি যতটা চওড়া"</string>
-    <string name="range_announcement_template" msgid="2996864801083587925">"%1$d থেকে %2$d পর্যন্ত"</string>
+    <!-- no translation found for slider_state_description_template (1028160527998877233) -->
+    <skip />
 </resources>
