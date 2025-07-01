@@ -177,5 +177,6 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"گھڑی کا مختلف چہرہ منتخب کرنے کے لیے بائیں طرف سوائپ کریں"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"حسب ضرورت گھڑی کے چہرے"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"گھڑی کے چہرے کی چوڑائی"</string>
-    <string name="range_announcement_template" msgid="2996864801083587925">"رینج %1$d سے %2$d تک"</string>
+    <!-- no translation found for slider_state_description_template (1028160527998877233) -->
+    <skip />
 </resources>

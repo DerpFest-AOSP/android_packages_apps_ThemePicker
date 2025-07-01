@@ -144,8 +144,7 @@
     <string name="adaptive_color_title" msgid="1336508599235896205">"დინამიკური"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"სისტემის ფერები"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"ფერები"</string>
-    <!-- no translation found for screen_saver_title (4178511806237734356) -->
-    <skip />
+    <string name="screen_saver_title" msgid="4178511806237734356">"ეკრანმზოგი"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"მარცხენა მალსახმობი"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"მარჯვენა მალსახმობი"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"არცერთი"</string>
@@ -177,7 +176,6 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"გადაფურცვლა მარჯვნივ განსხვავებული ციფერბლატის ასარჩევად"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"მორგებული საათები"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"საათის ციფერბლატის სიგანე"</string>
-    <!-- String.format failed for translation -->
-    <!-- no translation found for range_announcement_template (2996864801083587925) -->
+    <!-- no translation found for slider_state_description_template (1028160527998877233) -->
     <skip />
 </resources>
