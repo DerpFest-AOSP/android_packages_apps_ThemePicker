@@ -144,8 +144,7 @@
     <string name="adaptive_color_title" msgid="1336508599235896205">"Дынамічны"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"Сістэмныя колеры"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"Колеры"</string>
-    <!-- no translation found for screen_saver_title (4178511806237734356) -->
-    <skip />
+    <string name="screen_saver_title" msgid="4178511806237734356">"Экранная застаўка"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"Ярлык \"улева\""</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"Ярлык \"управа\""</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"Няма"</string>
@@ -177,6 +176,5 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"Каб выбраць іншы цыферблат, правядзіце пальцам управа"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"Карыстальніцкія цыферблаты"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"Шырыня цыферблата"</string>
-    <!-- no translation found for slider_state_description_template (1028160527998877233) -->
-    <skip />
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, дыяпазон ад %2$d да %3$d"</string>
 </resources>

@@ -176,6 +176,5 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"向右滑动，选择另一个表盘"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"自定义表盘"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"表盘宽度"</string>
-    <!-- no translation found for slider_state_description_template (1028160527998877233) -->
-    <skip />
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d，范围为 %2$d 到 %3$d"</string>
 </resources>

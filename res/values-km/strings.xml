@@ -176,6 +176,5 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"អូសទៅស្ដាំ ដើម្បីជ្រើសរើសមុខនាឡិកាផ្សេង"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"នាឡិកាផ្ទាល់ខ្លួន"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"ទទឹងមុខនាឡិកា"</string>
-    <!-- no translation found for slider_state_description_template (1028160527998877233) -->
-    <skip />
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, ចន្លោះពី %2$d ទៅ %3$d"</string>
 </resources>
