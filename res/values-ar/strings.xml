@@ -144,8 +144,7 @@
     <string name="adaptive_color_title" msgid="1336508599235896205">"ألوان ديناميكية"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"ألوان النظام"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"الألوان"</string>
-    <!-- no translation found for screen_saver_title (4178511806237734356) -->
-    <skip />
+    <string name="screen_saver_title" msgid="4178511806237734356">"شاشة الاستراحة"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"اختصار اليمين"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"اختصار اليسار"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"لا يوجد"</string>
@@ -177,6 +176,5 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"مرِّر سريعًا لليسار لاختيار تصميم ساعة مختلف."</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"تصميمات ساعة مخصّصة"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"عرض تصميم الساعة"</string>
-    <!-- no translation found for slider_state_description_template (1028160527998877233) -->
-    <skip />
+    <string name="slider_state_description_template" msgid="1028160527998877233">"القيمة %1$d، تتراوح بين %2$d و%3$d"</string>
 </resources>

@@ -176,6 +176,5 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"অন্য কোনো ক্লক ফে’চ বাছনি কৰিবলৈ সোঁফাললৈ ছোৱাইপ কৰক"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"কাষ্টম ঘড়ী"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"ঘড়ীৰ ফে’চৰ প্ৰস্থ"</string>
-    <!-- no translation found for slider_state_description_template (1028160527998877233) -->
-    <skip />
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$dৰ পৰিসৰ %2$dৰ পৰা %3$d পৰ্যন্ত"</string>
 </resources>

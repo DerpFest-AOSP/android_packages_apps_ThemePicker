@@ -144,8 +144,7 @@
     <string name="adaptive_color_title" msgid="1336508599235896205">"Dinámico"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"Colores del sistema"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"Colores"</string>
-    <!-- no translation found for screen_saver_title (4178511806237734356) -->
-    <skip />
+    <string name="screen_saver_title" msgid="4178511806237734356">"Protector de pantalla"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"Acceso izquierdo"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"Acceso derecho"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"Ninguno"</string>

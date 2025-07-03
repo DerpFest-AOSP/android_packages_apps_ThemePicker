@@ -144,8 +144,7 @@
     <string name="adaptive_color_title" msgid="1336508599235896205">"ಡೈನಾಮಿಕ್"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"ಸಿಸ್ಟಂ ಬಣ್ಣಗಳು"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"ಬಣ್ಣಗಳು"</string>
-    <!-- no translation found for screen_saver_title (4178511806237734356) -->
-    <skip />
+    <string name="screen_saver_title" msgid="4178511806237734356">"ಸ್ಕ್ರೀನ್ ಸೇವರ್"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"ಎಡ ಶಾರ್ಟ್‌ಕಟ್"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"ಬಲ ಶಾರ್ಟ್‌ಕಟ್"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"ಯಾವುದೂ ಅಲ್ಲ"</string>
@@ -177,6 +176,5 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"ಬೇರೊಂದು ಕ್ಲಾಕ್ ಫೇಸ್ ಅನ್ನು ಆಯ್ಕೆಮಾಡಲು ಬಲಕ್ಕೆ ಸ್ವೈಪ್ ಮಾಡಿ"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"ಕಸ್ಟಮ್ ಕ್ಲಾಕ್‌ಗಳು"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"ಗಡಿಯಾರದ ಮುಖದ ಅಗಲ"</string>
-    <!-- no translation found for slider_state_description_template (1028160527998877233) -->
-    <skip />
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, %2$d ರಿಂದ %3$d ನ ಶ್ರೇಣಿಯಲ್ಲಿದೆ"</string>
 </resources>
