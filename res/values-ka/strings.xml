@@ -175,7 +175,5 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"გადაფურცვლა მარჯვნივ განსხვავებული ციფერბლატის ასარჩევად"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"მორგებული საათები"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"საათის ციფერბლატის სიგანე"</string>
-    <!-- String.format failed for translation -->
-    <!-- no translation found for range_announcement_template (2996864801083587925) -->
-    <skip />
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, დიაპაზონი %2$d-იდან %3$d-მდე"</string>
 </resources>

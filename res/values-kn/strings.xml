@@ -175,5 +175,5 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"ಬೇರೊಂದು ಕ್ಲಾಕ್ ಫೇಸ್ ಅನ್ನು ಆಯ್ಕೆಮಾಡಲು ಬಲಕ್ಕೆ ಸ್ವೈಪ್ ಮಾಡಿ"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"ಕಸ್ಟಮ್ ಕ್ಲಾಕ್‌ಗಳು"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"ಗಡಿಯಾರದ ಮುಖದ ಅಗಲ"</string>
-    <string name="range_announcement_template" msgid="2996864801083587925">"%1$d ರಿಂದ %2$d ವರೆಗಿನ ವ್ಯಾಪ್ತಿ"</string>
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, %2$d ರಿಂದ %3$d ನ ಶ್ರೇಣಿಯಲ್ಲಿದೆ"</string>
 </resources>
