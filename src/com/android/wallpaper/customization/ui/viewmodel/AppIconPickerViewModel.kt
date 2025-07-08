@@ -121,12 +121,16 @@ constructor(
         combine(selectedIconStyle, overridingIconStyle) { selected, overriding ->
             overriding ?: selected
         }
-    private val iconStyles = interactor.iconStyleModels
+    private val iconStylesModels = interactor.iconStyleModels
+    val overridingIconStyleModel =
+        combine(overridingIconStyle, iconStylesModels) { overridingIconStyle, iconStylesModels ->
+            iconStylesModels.find { it.iconStyle == overridingIconStyle }
+        }
     val styleOptions: Flow<List<OptionItemViewModel2<IconStyleModel>>> =
-        iconStyles.map {
+        iconStylesModels.map {
             List(size = it.size, init = { index -> toStyleOptionItemViewModel(it[index]) })
         }
-    val isIconStyleAvailable = iconStyles.map { it.size > 1 }
+    val isIconStyleAvailable = iconStylesModels.map { it.size > 1 }
 
     enum class Tab {
         STYLE,
@@ -299,11 +303,7 @@ constructor(
                     }
                     if (styleNeedsUpdate) {
                         coroutineScope {
-                            launch {
-                                overridingIconStyle?.let {
-                                    interactor.applyThemedIconEnabled(it.getIsThemedIcon())
-                                }
-                            }
+                            launch { overridingIconStyle?.let { interactor.applyIconStyle(it) } }
                             selectedIconStyle.drop(1).take(1).collect {
                                 return@collect
                             }

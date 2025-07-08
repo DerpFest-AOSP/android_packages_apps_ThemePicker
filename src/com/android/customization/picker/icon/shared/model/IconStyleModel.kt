@@ -18,7 +18,7 @@ package com.android.customization.picker.icon.shared.model
 
 import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 
-data class IconStyleModel(
+open class IconStyleModel(
     val iconStyle: IconStyle,
     val nameResId: Int,
     val icon: Icon?,
