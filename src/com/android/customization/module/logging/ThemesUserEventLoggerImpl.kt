@@ -317,6 +317,7 @@ constructor(
         sysUiStatsLoggerFactory
             .get(CURATED_PHOTOS_FETCH_END)
             .setAppSessionId(appSessionId.getId())
+            .setEffectResultCode(status.code.value())
             .setTimeElapsed(timeElapsedMillis)
             .log()
     }
