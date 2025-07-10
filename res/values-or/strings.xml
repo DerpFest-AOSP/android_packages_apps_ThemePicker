@@ -175,5 +175,5 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"ଏକ ଭିନ୍ନ କ୍ଲକ ଫେସ ବାଛିବାକୁ ଡାହାଣକୁ ସ୍ୱାଇପ କରନ୍ତୁ"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"କ୍ଲକ ଫେସ କଷ୍ଟମ କରନ୍ତୁ"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"କ୍ଲକ ଫେସ ପ୍ରସ୍ଥ"</string>
-    <string name="range_announcement_template" msgid="2996864801083587925">"%1$dରୁ %2$d ପର୍ଯ୍ୟନ୍ତ ରେଞ୍ଜ"</string>
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, ରେଞ୍ଜ %2$dରୁ %3$d"</string>
 </resources>

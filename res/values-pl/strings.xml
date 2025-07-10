@@ -175,5 +175,5 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"Przesuń w prawo, aby wybrać inną tarczę zegara"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"Zegary niestandardowe"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"Szerokość tarczy zegara"</string>
-    <string name="range_announcement_template" msgid="2996864801083587925">"zakres od %1$d do %2$d"</string>
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, zakres od %2$d do %3$d"</string>
 </resources>

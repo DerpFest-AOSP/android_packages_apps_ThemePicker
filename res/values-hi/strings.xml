@@ -175,5 +175,5 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"स्मार्टवॉच की स्क्रीन का डिज़ाइन चुनने के लिए दाईं ओर स्वाइप करें"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"स्मार्टवॉच की स्क्रीन का डिज़ाइन पसंद के मुताबिक बनाएं"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"वॉच फ़ेस की चौड़ाई"</string>
-    <string name="range_announcement_template" msgid="2996864801083587925">"%1$d से %2$d तक"</string>
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, %2$d से %3$d तक"</string>
 </resources>

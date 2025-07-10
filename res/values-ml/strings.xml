@@ -175,5 +175,5 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"മറ്റൊരു ക്ലോക്ക് ഫേസ് തിരഞ്ഞെടുക്കാൻ വലതുഭാഗത്തേക്ക് സ്വൈപ്പ് ചെയ്യുക"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"ഇഷ്‌ടാനുസൃത ക്ലോക്കുകൾ"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"ക്ലോക്ക് ഫെയ്‌സിന്റെ വീതി"</string>
-    <string name="range_announcement_template" msgid="2996864801083587925">"%1$d മുതൽ %2$d വരെയുള്ള മൂല്യങ്ങൾ"</string>
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, ശ്രേണി %2$d മുതൽ %3$d വരെയാണ്"</string>
 </resources>

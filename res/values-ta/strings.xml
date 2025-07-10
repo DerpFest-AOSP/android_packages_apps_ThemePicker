@@ -175,5 +175,5 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"வேறு கடிகார முகப்பைத் தேர்வுசெய்ய வலதுபக்கம் ஸ்வைப் செய்யவும்"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"பிரத்தியேகக் கடிகார முகப்புகள்"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"வாட்ச் முகப்பின் அகலம்"</string>
-    <string name="range_announcement_template" msgid="2996864801083587925">"%1$d முதல் %2$d வரையிலான வரம்பு"</string>
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, %2$d முதல் %3$d வரையிலான வரம்பு"</string>
 </resources>

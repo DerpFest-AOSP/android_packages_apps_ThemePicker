@@ -175,5 +175,5 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"ปัดขวาเพื่อเลือกหน้าปัดแบบต่างๆ"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"หน้าปัดแบบกำหนดเอง"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"ความกว้างของหน้าปัดนาฬิกา"</string>
-    <string name="range_announcement_template" msgid="2996864801083587925">"ช่วงตั้งแต่ %1$d ถึง %2$d"</string>
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, ช่วงตั้งแต่ %2$d ถึง %3$d"</string>
 </resources>
