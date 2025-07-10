@@ -176,6 +176,5 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"오른쪽으로 스와이프하여 다른 시계 페이스 선택"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"시계 페이스 맞춤설정"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"시계 페이스 너비"</string>
-    <!-- no translation found for slider_state_description_template (1028160527998877233) -->
-    <skip />
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, 범위: %2$d~%3$d"</string>
 </resources>
