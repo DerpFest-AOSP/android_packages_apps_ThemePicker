@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Singleton
 class ThemedIconInteractor @Inject constructor(private val repository: IconStyleRepository) {
-    val isAvailable: Flow<Boolean> = repository.isThemedIconAvailable
+    val isAvailable: Flow<Boolean> = repository.isCustomizationAvailable
     val isActivated: Flow<Boolean> = repository.isThemedIconActivated
 
     suspend fun setThemedIconEnabled(enabled: Boolean) = repository.setThemedIconEnabled(enabled)

@@ -44,6 +44,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -61,7 +62,7 @@ constructor(
     private val metadataKey = appContext.getString(R.string.themed_icon_metadata_key)
     // TODO (b/424856247): test the retry logic for getting PreviewUtils
     private var previewUtils: PreviewUtils? = null
-    private val previewUtilsFlow = flow {
+    override val previewUtilsFlow = flow {
         // If PreviewUtils is created too early on start up, the provider (e.g. Launcher) may not be
         // ready, so PreviewUtils#supportsPreview would return false. Only cache previewUtils if it
         // supports previewing. Otherwise, retry when new flow consumers appear.
@@ -74,14 +75,12 @@ constructor(
         }
         emit(previewUtils)
     }
-    private var uri: Uri? = null
-    private val uriFlow: Flow<Uri?> =
-        previewUtilsFlow.map { uri ?: it?.getUri(ICON_THEMED)?.also { result -> uri = result } }
+    val themedIconUri: Flow<Uri?> = previewUtilsFlow.map { it?.getUri(ICON_THEMED) }
 
-    override val isThemedIconAvailable: Flow<Boolean> = previewUtilsFlow.map { it != null }
+    override val isCustomizationAvailable: Flow<Boolean> = previewUtilsFlow.map { it != null }
 
     override val isThemedIconActivated: Flow<Boolean> =
-        uriFlow
+        themedIconUri
             .flatMapLatest {
                 callbackFlow {
                     var disposableHandle: DisposableHandle? = null
@@ -114,7 +113,7 @@ constructor(
             )
 
     override val iconStyleModels: Flow<List<IconStyleModel>> =
-        isThemedIconAvailable.map { isThemedIconAvailable ->
+        isCustomizationAvailable.map { isThemedIconAvailable ->
             ThemePickerIconStyle.entries
                 .toList()
                 // Filter entries if themed icon is not available
@@ -178,16 +177,24 @@ constructor(
     }
 
     override suspend fun setThemedIconEnabled(enabled: Boolean) {
-        uri?.let {
+        themedIconUri.first()?.let {
             val values = ContentValues()
             values.put(COL_ICON_THEMED_VALUE, enabled)
             contentResolver.update(it, values, /* where= */ null, /* selectionArgs= */ null)
         }
     }
 
+    override suspend fun setIconStyle(iconStyle: IconStyle) {
+        themedIconUri.first()?.let {
+            val values = ContentValues()
+            values.put(COL_ICON_THEMED_VALUE, iconStyle == ThemePickerIconStyle.MONOCHROME)
+            contentResolver.update(it, values, /* where= */ null, /* selectionArgs= */ null)
+        }
+    }
+
     companion object {
-        private const val ICON_THEMED = "icon_themed"
-        private const val COL_ICON_THEMED_VALUE = "boolean_value"
+        const val ICON_THEMED = "icon_themed"
+        const val COL_ICON_THEMED_VALUE = "boolean_value"
         private const val ENABLED = 1
     }
 }
