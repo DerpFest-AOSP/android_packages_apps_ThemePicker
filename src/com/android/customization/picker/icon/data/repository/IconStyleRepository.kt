@@ -18,17 +18,22 @@ package com.android.customization.picker.icon.data.repository
 
 import com.android.customization.picker.icon.shared.model.IconStyle
 import com.android.customization.picker.icon.shared.model.IconStyleModel
+import com.android.wallpaper.util.BasePreviewUtils
 import kotlinx.coroutines.flow.Flow
 
 interface IconStyleRepository {
 
-    val isThemedIconAvailable: Flow<Boolean>
+    val previewUtilsFlow: Flow<BasePreviewUtils?>
+
+    val isCustomizationAvailable: Flow<Boolean>
 
     val isThemedIconActivated: Flow<Boolean>
+
+    suspend fun setThemedIconEnabled(enabled: Boolean)
 
     val iconStyleModels: Flow<List<IconStyleModel>>
 
     val selectedIconStyle: Flow<IconStyle>
 
-    suspend fun setThemedIconEnabled(enabled: Boolean)
+    suspend fun setIconStyle(iconStyle: IconStyle)
 }
