@@ -176,6 +176,5 @@
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"Өөр цагны нүүр сонгохын тулд баруун тийш шударна уу"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"Захиалгат цагнууд"</string>
     <string name="clock_face_width" msgid="5818129719338363570">"Цагны нүүрний өргөн"</string>
-    <!-- no translation found for slider_state_description_template (1028160527998877233) -->
-    <skip />
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, %2$d-с %3$d хүртэлх муж"</string>
 </resources>
