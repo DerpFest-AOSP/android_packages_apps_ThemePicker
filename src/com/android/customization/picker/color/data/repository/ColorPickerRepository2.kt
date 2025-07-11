@@ -31,6 +31,6 @@ interface ColorPickerRepository2 {
     /** The system selected color option from the generated list of color options */
     val selectedColorOption: Flow<ColorOption?>
 
-    /** Selects a color option with optimistic update */
-    suspend fun select(colorOption: ColorOption)
+    /** Selects a color option and returns whether the operation was successful */
+    suspend fun select(colorOption: ColorOption): Boolean
 }
