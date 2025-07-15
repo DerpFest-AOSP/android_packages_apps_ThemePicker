@@ -34,9 +34,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <include
-            layout="@layout/floating_sheet_clock_color_content"
-            android:id="@+id/clock_floating_sheet_color_content"
+        <ViewStub
+            android:id="@+id/clock_color_content_stub"
+            android:inflatedId="@+id/clock_floating_sheet_color_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
