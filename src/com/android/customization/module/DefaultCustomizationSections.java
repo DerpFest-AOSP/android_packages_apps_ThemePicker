@@ -199,25 +199,23 @@ public final class DefaultCustomizationSections implements CustomizationSections
                 String clockFaceJson = Settings.Secure.getString(
                         activity.getContentResolver(), "lock_screen_custom_clock_face");
 
-                boolean shouldAddLockFontSection = false;
-                if (clockFaceJson == null || clockFaceJson.isEmpty()) {
-                    shouldAddLockFontSection = true;
-                } else {
+                boolean isCustomClockSelected = false;
+                if (clockFaceJson != null && !clockFaceJson.isEmpty()) {
                     try {
                         JSONObject clockFace = new JSONObject(clockFaceJson);
-                        if (!clockFace.has("clockId") || "DEFAULT".equals(clockFace.optString("clockId"))) {
-                            shouldAddLockFontSection = true;
+                        if (clockFace.has("clockId") && !"DEFAULT".equals(clockFace.optString("clockId"))) {
+                            isCustomClockSelected = true;
                         }
                     } catch (JSONException e) {
                         Log.w("CustomizationSections", "Failed to parse lock_screen_custom_clock_face: " + clockFaceJson, e);
                     }
                 }
 
-                if (shouldAddLockFontSection) {
-                    sectionControllers.add(new LockFontSectionController(
-                            LockFontManager.getInstance(activity, new OverlayManagerCompat(activity)),
-                            sectionNavigationController));
-                }
+                // Always add lock font section, but disable it if custom clock is selected
+                sectionControllers.add(new LockFontSectionController(
+                        LockFontManager.getInstance(activity, new OverlayManagerCompat(activity)),
+                        sectionNavigationController,
+                        isCustomClockSelected));
 
                 // Notifications section.
                 sectionControllers.add(

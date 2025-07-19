@@ -45,6 +45,7 @@ public class LockFontSectionController implements CustomizationSectionController
 
     private final LockFontManager mFontOptionsManager;
     private final CustomizationSectionNavigationController mSectionNavigationController;
+    private final boolean mIsDisabled;
     private final Callback mApplyFontCallback = new Callback() {
         @Override
         public void onSuccess() {
@@ -57,8 +58,15 @@ public class LockFontSectionController implements CustomizationSectionController
 
     public LockFontSectionController(LockFontManager fontOptionsManager,
             CustomizationSectionNavigationController sectionNavigationController) {
+        this(fontOptionsManager, sectionNavigationController, false);
+    }
+
+    public LockFontSectionController(LockFontManager fontOptionsManager,
+            CustomizationSectionNavigationController sectionNavigationController,
+            boolean isDisabled) {
         mFontOptionsManager = fontOptionsManager;
         mSectionNavigationController = sectionNavigationController;
+        mIsDisabled = isDisabled;
     }
 
     @Override
@@ -74,26 +82,37 @@ public class LockFontSectionController implements CustomizationSectionController
         TextView sectionDescription = fontSectionView.findViewById(R.id.font_section_description);
         View sectionTile = fontSectionView.findViewById(R.id.font_section_tile);
 
-        mFontOptionsManager.fetchOptions(new OptionsFetchedListener<LockFontOption>() {
-            @Override
-            public void onOptionsLoaded(List<LockFontOption> options) {
-                LockFontOption activeOption = getActiveOption(options);
-                sectionDescription.setText(activeOption.getTitle());
-                activeOption.bindThumbnailTile(sectionTile);
-            }
-
-            @Override
-            public void onError(@Nullable Throwable throwable) {
-                if (throwable != null) {
-                    Log.e(TAG, "Error loading font options", throwable);
+        if (mIsDisabled) {
+            // When disabled, show disabled summary and make the view non-clickable
+            sectionDescription.setText(R.string.lockfont_disabled_summary);
+            sectionDescription.setAlpha(0.6f);
+            sectionTile.setAlpha(0.6f);
+            fontSectionView.setClickable(false);
+            fontSectionView.setEnabled(false);
+            fontSectionView.setAlpha(0.6f);
+        } else {
+            // Normal behavior when enabled
+            mFontOptionsManager.fetchOptions(new OptionsFetchedListener<LockFontOption>() {
+                @Override
+                public void onOptionsLoaded(List<LockFontOption> options) {
+                    LockFontOption activeOption = getActiveOption(options);
+                    sectionDescription.setText(activeOption.getTitle());
+                    activeOption.bindThumbnailTile(sectionTile);
                 }
-                sectionDescription.setText(R.string.something_went_wrong);
-                sectionTile.setVisibility(View.GONE);
-            }
-        }, /* reload= */ true);
 
-        fontSectionView.setOnClickListener(v -> mSectionNavigationController.navigateTo(
-                LockFontFragment.newInstance(context.getString(R.string.preview_name_lockfont))));
+                @Override
+                public void onError(@Nullable Throwable throwable) {
+                    if (throwable != null) {
+                        Log.e(TAG, "Error loading font options", throwable);
+                    }
+                    sectionDescription.setText(R.string.something_went_wrong);
+                    sectionTile.setVisibility(View.GONE);
+                }
+            }, /* reload= */ true);
+
+            fontSectionView.setOnClickListener(v -> mSectionNavigationController.navigateTo(
+                    LockFontFragment.newInstance(context.getString(R.string.preview_name_lockfont))));
+        }
 
         return fontSectionView;
     }
