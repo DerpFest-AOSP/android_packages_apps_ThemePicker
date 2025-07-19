@@ -60,9 +60,6 @@ import com.android.wallpaper.util.DisplayUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 /** {@link CustomizationSections} for the customization picker. */
 public final class DefaultCustomizationSections implements CustomizationSections {
 
@@ -196,26 +193,10 @@ public final class DefaultCustomizationSections implements CustomizationSections
                                         .get(KeyguardQuickAffordancePickerViewModel.class),
                                 lifecycleOwner));
 
-                String clockFaceJson = Settings.Secure.getString(
-                        activity.getContentResolver(), "lock_screen_custom_clock_face");
-
-                boolean isCustomClockSelected = false;
-                if (clockFaceJson != null && !clockFaceJson.isEmpty()) {
-                    try {
-                        JSONObject clockFace = new JSONObject(clockFaceJson);
-                        if (clockFace.has("clockId") && !"DEFAULT".equals(clockFace.optString("clockId"))) {
-                            isCustomClockSelected = true;
-                        }
-                    } catch (JSONException e) {
-                        Log.w("CustomizationSections", "Failed to parse lock_screen_custom_clock_face: " + clockFaceJson, e);
-                    }
-                }
-
-                // Always add lock font section, but disable it if custom clock is selected
+                // Always add lock font section - it will handle disabled state dynamically
                 sectionControllers.add(new LockFontSectionController(
                         LockFontManager.getInstance(activity, new OverlayManagerCompat(activity)),
-                        sectionNavigationController,
-                        isCustomClockSelected));
+                        sectionNavigationController));
 
                 // Notifications section.
                 sectionControllers.add(
