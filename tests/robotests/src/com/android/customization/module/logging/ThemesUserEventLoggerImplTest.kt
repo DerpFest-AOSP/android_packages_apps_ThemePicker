@@ -46,6 +46,7 @@ import com.android.wallpaper.util.LaunchSourceUtils
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import io.grpc.Status
 import javax.inject.Inject
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -519,6 +520,41 @@ class ThemesUserEventLoggerImplTest {
         assertThat(fakeStatsLogger.logCalled).isTrue()
         assertThat(fakeStatsLogger.appSessionId).isEqualTo(FakeAppSessionId.TEST_APP_SESSION_ID)
         assertThat(fakeStatsLogger.shapePackageHash).isEqualTo(TEST_SHAPE_ID.hashCode())
+    }
+
+    @Test
+    fun logCuratedPhotosRendered() {
+	// The log toggle depends on whether this is a user photo. The log toggles on if and only
+	// if this is a user photo.
+        underTest.logCuratedPhotosRendered(/* timeElapsedMillis= */ 1234L, /* userPhoto= */ true)
+
+        assertThat(fakeStatsLogger.action)
+            .isEqualTo(StyleEnums.CURATED_PHOTOS_RENDER_COMPLETE)
+        assertThat(fakeStatsLogger.logCalled).isTrue()
+        assertThat(fakeStatsLogger.appSessionId).isEqualTo(FakeAppSessionId.TEST_APP_SESSION_ID)
+        assertThat(fakeStatsLogger.timeElapsedMillis).isEqualTo(1234L)
+        assertThat(fakeStatsLogger.toggleOn).isTrue()
+
+        underTest.logCuratedPhotosRendered(/* timeElapsedMillis= */ 5678L, /* userPhoto= */ false)
+
+        assertThat(fakeStatsLogger.action)
+            .isEqualTo(StyleEnums.CURATED_PHOTOS_RENDER_COMPLETE)
+        assertThat(fakeStatsLogger.logCalled).isTrue()
+        assertThat(fakeStatsLogger.appSessionId).isEqualTo(FakeAppSessionId.TEST_APP_SESSION_ID)
+        assertThat(fakeStatsLogger.timeElapsedMillis).isEqualTo(5678L)
+        assertThat(fakeStatsLogger.toggleOn).isFalse()
+    }
+
+    @Test
+    fun logCuratedPhotosFetched() {
+        val status = Status.DEADLINE_EXCEEDED
+        underTest.logCuratedPhotosFetched(1234L, status)
+
+        assertThat(fakeStatsLogger.action).isEqualTo(StyleEnums.CURATED_PHOTOS_FETCH_END)
+        assertThat(fakeStatsLogger.logCalled).isTrue()
+        assertThat(fakeStatsLogger.appSessionId).isEqualTo(FakeAppSessionId.TEST_APP_SESSION_ID)
+        assertThat(fakeStatsLogger.effectResultCode).isEqualTo(status.code.value())
+        assertThat(fakeStatsLogger.timeElapsedMillis).isEqualTo(1234L)
     }
 
     @Test
