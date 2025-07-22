@@ -198,7 +198,12 @@ class FakeColorPickerRepository2 @Inject constructor() : ColorPickerRepository2 
         return builder.build()
     }
 
-    override suspend fun select(colorOption: ColorOption) {
-        _selectedColorOption.value = colorOption
+    var applySuccess = true
+
+    override suspend fun select(colorOption: ColorOption): Boolean {
+        if (applySuccess) {
+            _selectedColorOption.value = colorOption
+        }
+        return applySuccess
     }
 }

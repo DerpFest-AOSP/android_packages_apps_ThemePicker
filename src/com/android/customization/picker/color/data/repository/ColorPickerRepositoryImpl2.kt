@@ -142,20 +142,18 @@ constructor(
             }
             .shareIn(scope = scope, started = SharingStarted.WhileSubscribed(), replay = 1)
 
-    override suspend fun select(colorOption: ColorOption) {
-        suspendCancellableCoroutine { continuation ->
+    override suspend fun select(colorOption: ColorOption): Boolean {
+        return suspendCancellableCoroutine { continuation ->
             colorManager.apply(
                 colorOption,
                 object : CustomizationManager.Callback {
                     override fun onSuccess() {
-                        continuation.resumeWith(Result.success(Unit))
+                        continuation.resumeWith(Result.success(true))
                     }
 
                     override fun onError(throwable: Throwable?) {
                         Log.w(TAG, "Apply theme with error", throwable)
-                        continuation.resumeWith(
-                            Result.failure(throwable ?: Throwable("Error loading theme bundles"))
-                        )
+                        continuation.resumeWith(Result.success(false))
                     }
                 },
             )

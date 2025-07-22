@@ -43,7 +43,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
@@ -101,7 +103,7 @@ class ColorPickerViewModel2Test {
     }
 
     @Test
-    fun onApply_suspendsUntilOnApplyCompleteIsCalled() =
+    fun onApply_suspendsUntilColorUpdate() =
         testScope.runTest {
             val colorTypes = collectLastValue(underTest.colorTypeTabs)
             val colorOptions = collectLastValue(underTest.colorOptions)
@@ -117,6 +119,28 @@ class ColorPickerViewModel2Test {
             assertThat(job.isActive).isTrue()
 
             colorUpdateViewModel.updateColors()
+
+            assertThat(job.isActive).isFalse()
+        }
+
+    @Test
+    fun onApply_suspendsUntilTimeout() =
+        testScope.runTest {
+            val colorTypes = collectLastValue(underTest.colorTypeTabs)
+            val colorOptions = collectLastValue(underTest.colorOptions)
+            val onApply = collectLastValue(underTest.onApply)
+
+            // Select "Wallpaper colors" tab
+            colorTypes()?.get(0)?.onClick?.invoke()
+            // Select a color option to preview
+            selectColorOption(colorOptions, 1)
+            // Apply the selected color option
+            val job = testScope.launch { onApply()?.invoke() }
+
+            assertThat(job.isActive).isTrue()
+
+            advanceTimeBy(ColorPickerViewModel2.COLOR_UPDATE_TIMEOUT_MILLIS)
+            runCurrent()
 
             assertThat(job.isActive).isFalse()
         }
@@ -184,6 +208,38 @@ class ColorPickerViewModel2Test {
             assertThat(logger.themeColorStyle)
                 .isEqualTo(Style.toString(Style.FRUIT_SALAD).hashCode())
             assertThat(logger.themeSeedColor).isEqualTo(-54321)
+        }
+
+    @Test
+    fun onApply_failure_shouldNotLogColor() =
+        testScope.runTest {
+            repository.setOptions(
+                listOf(
+                    repository.buildWallpaperOption(
+                        ColorOptionsProvider.COLOR_SOURCE_LOCK,
+                        Style.EXPRESSIVE,
+                        121212,
+                    )
+                ),
+                listOf(repository.buildPresetOption(Style.FRUIT_SALAD, -54321)),
+                ColorType.PRESET_COLOR,
+                0,
+            )
+
+            val colorTypes = collectLastValue(underTest.colorTypeTabs)
+            val colorOptions = collectLastValue(underTest.colorOptions)
+
+            repository.applySuccess = false
+            // Select "Wallpaper colors" tab
+            colorTypes()?.get(0)?.onClick?.invoke()
+            // Select a color option to preview
+            selectColorOption(colorOptions, 0)
+            // Apply the selected color option
+            applySelectedColorOption()
+
+            assertThat(logger.themeColorSource).isEqualTo(StyleEnums.COLOR_SOURCE_UNSPECIFIED)
+            assertThat(logger.themeColorStyle).isEqualTo(-1)
+            assertThat(logger.themeSeedColor).isEqualTo(-1)
         }
 
     @Test
