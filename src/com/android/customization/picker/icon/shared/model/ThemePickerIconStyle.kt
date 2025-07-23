@@ -25,8 +25,4 @@ enum class ThemePickerIconStyle(override val nameResId: Int) : IconStyle {
     override fun getIsThemedIcon(): Boolean {
         return this == MONOCHROME
     }
-
-    override fun getIsExternalLink(): Boolean {
-        return false
-    }
 }

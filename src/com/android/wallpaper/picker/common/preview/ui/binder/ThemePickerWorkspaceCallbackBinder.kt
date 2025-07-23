@@ -264,16 +264,24 @@ constructor(
 
     companion object {
         const val TAG = "ThemePickerWorkspaceCallbackBinder"
+
+        @Deprecated("Use [MESSAGE_ID_UPDATE_COMMAND] instead")
         const val MESSAGE_ID_UPDATE_SHAPE = 2586
+        @Deprecated("Use [MESSAGE_ID_UPDATE_COMMAND] instead")
         const val MESSAGE_ID_UPDATE_GRID = 7414
+        @Deprecated("Use [MESSAGE_ID_UPDATE_COMMAND] instead")
         const val MESSAGE_ID_UPDATE_COLOR = 856
+        @Deprecated("Use [MESSAGE_ID_UPDATE_COMMAND] instead")
         const val MESSAGE_ID_UPDATE_ICON_THEMED = 311
         const val KEY_COLOR_RESOURCE_IDS: String = "color_resource_ids"
         const val KEY_COLOR_VALUES: String = "color_values"
         const val KEY_DARK_MODE: String = "use_dark_mode"
         const val KEY_BOOLEAN_VALUE: String = "boolean_value"
 
-        private fun safeSendMessage(workspaceCallback: Message, what: Int, data: Bundle) {
+        const val MESSAGE_ID_UPDATE_COMMAND = 512
+        const val KEY_UPDATE_METHOD = "update_method"
+
+        fun safeSendMessage(workspaceCallback: Message, what: Int, data: Bundle) {
             try {
                 workspaceCallback.sendMessage(what, data)
             } catch (e: RemoteException) {

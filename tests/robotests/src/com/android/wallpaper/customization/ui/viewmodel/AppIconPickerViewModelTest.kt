@@ -295,7 +295,7 @@ class AppIconPickerViewModelTest {
     fun tabs_styleNotAvailable() {
         testScope.runTest {
             val tabs = collectLastValue(underTest.tabs)
-            iconStyleRepository.setIsThemedIconAvailable(false)
+            iconStyleRepository.setIsCustomizationAvailable(false)
 
             val resultTabs = checkNotNull(tabs())
             assertThat(resultTabs).hasSize(1)

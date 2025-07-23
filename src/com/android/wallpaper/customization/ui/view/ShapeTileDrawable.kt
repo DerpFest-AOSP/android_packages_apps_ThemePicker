@@ -44,7 +44,7 @@ import com.android.wallpaper.R
 class ShapeTileDrawable(
     context: Context,
     path: String? = null,
-    private val icon: AdaptiveIconDrawable? = null,
+    private val icon: Drawable? = null,
     private val isThemed: Boolean = false,
 ) : Drawable() {
 
@@ -80,16 +80,20 @@ class ShapeTileDrawable(
         canvas.clipPath(scaledPath)
         canvas.drawPath(scaledPath, paint)
         canvas.withSave {
-            if (isThemed) {
-                if (icon?.monochrome != null) {
-                    canvas.drawColor(backgroundColor)
-                    icon.monochrome?.setTint(foregroundColor)
-                    icon.monochrome?.draw(this)
+            if (icon as? AdaptiveIconDrawable != null) {
+                if (isThemed) {
+                    icon.monochrome?.let {
+                        canvas.drawColor(backgroundColor)
+                        it.setTint(foregroundColor)
+                        it.draw(this)
+                    }
+                    // TODO (b/402161932): explore whether to handle case of icon w/o monochrome
+                } else {
+                    icon.background?.draw(this)
+                    icon.foreground?.draw(this)
                 }
-                // TODO (b/402161932): explore whether we need to handle case of icon w/o monochrome
             } else {
-                icon?.background?.draw(this)
-                icon?.foreground?.draw(this)
+                icon?.draw(this)
             }
         }
     }

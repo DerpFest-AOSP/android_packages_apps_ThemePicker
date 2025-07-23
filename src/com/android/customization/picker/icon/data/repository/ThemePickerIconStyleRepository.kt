@@ -20,13 +20,18 @@ import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
 import android.database.ContentObserver
+import android.graphics.drawable.AdaptiveIconDrawable
 import android.net.Uri
 import com.android.customization.module.CustomizationPreferences
 import com.android.customization.picker.icon.shared.model.IconStyle
+import com.android.customization.picker.icon.shared.model.IconStyleModel
 import com.android.customization.picker.icon.shared.model.ThemePickerIconStyle
 import com.android.themepicker.R
+import com.android.wallpaper.customization.ui.binder.ShapeIconViewBinder
+import com.android.wallpaper.customization.ui.view.ShapeTileDrawable
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.module.InjectorProvider
+import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.util.PreviewUtils
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -39,6 +44,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -56,7 +62,7 @@ constructor(
     private val metadataKey = appContext.getString(R.string.themed_icon_metadata_key)
     // TODO (b/424856247): test the retry logic for getting PreviewUtils
     private var previewUtils: PreviewUtils? = null
-    private val previewUtilsFlow = flow {
+    override val previewUtilsFlow = flow {
         // If PreviewUtils is created too early on start up, the provider (e.g. Launcher) may not be
         // ready, so PreviewUtils#supportsPreview would return false. Only cache previewUtils if it
         // supports previewing. Otherwise, retry when new flow consumers appear.
@@ -69,14 +75,12 @@ constructor(
         }
         emit(previewUtils)
     }
-    private var uri: Uri? = null
-    private val uriFlow: Flow<Uri?> =
-        previewUtilsFlow.map { uri ?: it?.getUri(ICON_THEMED)?.also { result -> uri = result } }
+    val themedIconUri: Flow<Uri?> = previewUtilsFlow.map { it?.getUri(ICON_THEMED) }
 
-    override val isThemedIconAvailable: Flow<Boolean> = previewUtilsFlow.map { it != null }
+    override val isCustomizationAvailable: Flow<Boolean> = previewUtilsFlow.map { it != null }
 
     override val isThemedIconActivated: Flow<Boolean> =
-        uriFlow
+        themedIconUri
             .flatMapLatest {
                 callbackFlow {
                     var disposableHandle: DisposableHandle? = null
@@ -108,12 +112,38 @@ constructor(
                 initialValue = false,
             )
 
-    override val iconStyles: Flow<List<IconStyle>> =
-        isThemedIconAvailable.map { isThemedIconAvailable ->
-            var styles = ThemePickerIconStyle.entries.toList()
-            if (!isThemedIconAvailable) styles = styles.filter { !it.getIsThemedIcon() }
-            styles
+    override val iconStyleModels: Flow<List<IconStyleModel>> =
+        isCustomizationAvailable.map { isThemedIconAvailable ->
+            ThemePickerIconStyle.entries
+                .toList()
+                // Filter entries if themed icon is not available
+                .filter { isThemedIconAvailable || !it.getIsThemedIcon() }
+                .map { it.toIconStyleModel() }
         }
+
+    private fun IconStyle.toIconStyleModel(): IconStyleModel {
+        return IconStyleModel(
+            iconStyle = this,
+            nameResId = this.nameResId,
+            icon = this.getIcon(),
+            isThemedIcon = this == ThemePickerIconStyle.MONOCHROME,
+            isExternalLink = false,
+        )
+    }
+
+    private fun IconStyle.getIcon(): Icon {
+        val previewIconPackageName = appContext.resources.getString(R.string.camera_package)
+        val appIconDrawable = ShapeIconViewBinder.loadAppIcon(appContext, previewIconPackageName)
+        return Icon.Loaded(
+            drawable =
+                ShapeTileDrawable(
+                    context = appContext,
+                    icon = appIconDrawable as? AdaptiveIconDrawable,
+                    isThemed = this == ThemePickerIconStyle.MONOCHROME,
+                ),
+            contentDescription = null,
+        )
+    }
 
     override val selectedIconStyle =
         isThemedIconActivated.map {
@@ -147,16 +177,24 @@ constructor(
     }
 
     override suspend fun setThemedIconEnabled(enabled: Boolean) {
-        uri?.let {
+        themedIconUri.first()?.let {
             val values = ContentValues()
             values.put(COL_ICON_THEMED_VALUE, enabled)
             contentResolver.update(it, values, /* where= */ null, /* selectionArgs= */ null)
         }
     }
 
+    override suspend fun setIconStyle(iconStyle: IconStyle) {
+        themedIconUri.first()?.let {
+            val values = ContentValues()
+            values.put(COL_ICON_THEMED_VALUE, iconStyle == ThemePickerIconStyle.MONOCHROME)
+            contentResolver.update(it, values, /* where= */ null, /* selectionArgs= */ null)
+        }
+    }
+
     companion object {
-        private const val ICON_THEMED = "icon_themed"
-        private const val COL_ICON_THEMED_VALUE = "boolean_value"
+        const val ICON_THEMED = "icon_themed"
+        const val COL_ICON_THEMED_VALUE = "boolean_value"
         private const val ENABLED = 1
     }
 }
