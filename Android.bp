@@ -14,7 +14,6 @@
 // limitations under the License.
 //
 
-
 package {
     default_applicable_licenses: ["Android-Apache-2.0"],
 }
@@ -48,7 +47,6 @@ java_library {
         "ThemePickerOverridesLib",
     ],
 }
-
 
 filegroup {
     name: "ThemePicker_Manifest",
@@ -86,6 +84,7 @@ android_library {
         "androidx.compose.ui_ui-tooling",
         "androidx.lifecycle_lifecycle-runtime-compose",
         "androidx.lifecycle_lifecycle-viewmodel-compose",
+        "PlatformComposeSceneTransitionLayout",
     ],
 
     srcs: [
@@ -152,6 +151,9 @@ android_app {
     platform_apis: true,
     manifest: "AndroidManifest.xml",
     additional_manifests: [":WallpaperPicker2_Manifest"],
-    overrides: ["WallpaperPicker", "WallpaperPicker2"],
+    overrides: [
+        "WallpaperPicker",
+        "WallpaperPicker2",
+    ],
     static_libs: ["ThemePickerApplicationLib"],
 }
