@@ -85,7 +85,7 @@ constructor(
             replay = 1,
         )
 
-    //// Themed icons enabled
+    //// Themed icons
     val isThemedIconAvailable =
         interactor.isThemedIconAvailable.shareIn(
             scope = viewModelScope,
@@ -139,12 +139,12 @@ constructor(
 
     private val _selectedTab = MutableStateFlow<Tab?>(null)
     val selectedTab =
-        combine(isThemedIconAvailable, isShapeOptionsAvailable, _selectedTab) {
-            isThemedIconAvailable,
+        combine(isIconStyleAvailable, isShapeOptionsAvailable, _selectedTab) {
+            isIconStyleAvailable,
             isShapeOptionsAvailable,
             selectedTab ->
             selectedTab
-                ?: if (isThemedIconAvailable) {
+                ?: if (isIconStyleAvailable) {
                     Tab.STYLE
                 } else if (isShapeOptionsAvailable) {
                     Tab.SHAPE
@@ -206,7 +206,7 @@ constructor(
             }
         }
 
-    val summary: Flow<AppIconPickerSummaryViewModel> =
+    val shapeAndThemedIconSummary: Flow<AppIconPickerSummaryViewModel> =
         combine(selectedShape, isThemedIconEnabled, isShapeOptionsAvailable) {
             selectedShape,
             isThemedIconEnabled,
@@ -236,11 +236,56 @@ constructor(
                         }
                     ),
                 iconShape = selectedShape.payload,
+                icon = null,
                 isThemed = isThemedIconEnabled,
             )
         }
 
-    val onApply: Flow<(suspend () -> Unit)?> =
+    val iconStyleAndShapeSummary: Flow<AppIconPickerSummaryViewModel> =
+        combine(
+            selectedShape,
+            selectedIconStyle,
+            iconStylesModels,
+            isIconStyleAvailable,
+            isShapeOptionsAvailable,
+        ) {
+            selectedShape,
+            selectedIconStyle,
+            iconStylesModels,
+            isIconStyleAvailable,
+            isShapeOptionsAvailable ->
+            val selectedShapeString =
+                if (isShapeOptionsAvailable) selectedShape.text.asString(applicationContext) else ""
+            val selectedIconStyleModel = iconStylesModels.find { it.iconStyle == selectedIconStyle }
+            val appIconThemeString =
+                if (isIconStyleAvailable)
+                    selectedIconStyleModel?.nameResId?.let { applicationContext.getString(it) }
+                else null
+            AppIconPickerSummaryViewModel(
+                description =
+                    Text.Loaded(
+                        if (
+                            selectedShapeString.isNotEmpty() && !appIconThemeString.isNullOrEmpty()
+                        ) {
+                            // Show theme and shape, comma separated
+                            applicationContext.getString(
+                                R.string.app_icons_description,
+                                appIconThemeString,
+                                selectedShapeString,
+                            )
+                        } else if (!appIconThemeString.isNullOrEmpty()) {
+                            appIconThemeString
+                        } else {
+                            selectedShapeString
+                        }
+                    ),
+                iconShape = selectedShape.payload,
+                icon = selectedIconStyleModel?.icon,
+                isThemed = selectedIconStyleModel?.isThemedIcon ?: false,
+            )
+        }
+
+    val shapeAndThemedIconOnApply: Flow<(suspend () -> Unit)?> =
         combine(
             overridingShapeKey,
             selectedShape,
@@ -283,7 +328,7 @@ constructor(
             }
         }
 
-    val onApply2: Flow<(suspend () -> Unit)?> =
+    val iconStyleAndShapeOnApply: Flow<(suspend () -> Unit)?> =
         combine(overridingShapeKey, selectedShape, overridingIconStyle, selectedIconStyle) {
             overridingShapeKey,
             selectedShape,

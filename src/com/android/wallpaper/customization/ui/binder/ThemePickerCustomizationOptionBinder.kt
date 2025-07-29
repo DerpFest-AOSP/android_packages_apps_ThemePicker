@@ -353,32 +353,66 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
 
                     launch {
                         var disposableHandle: DisposableHandle? = null
-                        val previewIconPackageName =
-                            view.context.resources.getString(R.string.camera_package)
-                        val appIconDrawable =
-                            ShapeIconViewBinder.loadAppIcon(view.context, previewIconPackageName)
-                        optionsViewModel.appIconPickerViewModel.summary.collect { summary ->
-                            disposableHandle?.dispose()
-                            summary.iconShape?.let {
-                                disposableHandle =
-                                    optionAppIconsIcon?.let { it1 ->
-                                        // TODO (b/397782741): bind icons correctly for additional
-                                        //  themes
-                                        ShapeIconViewBinder.bindPreviewIcon(
-                                            view = it1,
-                                            appIconDrawable =
-                                                appIconDrawable as? AdaptiveIconDrawable,
-                                            shapeIcon = summary.iconShape,
-                                            isThemed = summary.isThemed,
-                                            colorUpdateViewModel = colorUpdateViewModel,
-                                            shouldAnimateColor = isOnMainScreen,
-                                            lifecycleOwner = lifecycleOwner,
+                        if (BaseFlags.get().isExtendibleThemeManager()) {
+                            optionsViewModel.appIconPickerViewModel.iconStyleAndShapeSummary
+                                .collect { summary ->
+                                    disposableHandle?.dispose()
+                                    summary.iconShape?.let {
+                                        optionAppIconsIcon?.let { it1 ->
+                                            disposableHandle =
+                                                ShapeIconViewBinder
+                                                    .bindIconStyleAndShapePreviewIcon(
+                                                        view = it1,
+                                                        icon = summary.icon,
+                                                        shapeIcon = summary.iconShape,
+                                                        colorUpdateViewModel = colorUpdateViewModel,
+                                                        shouldAnimateColor = isOnMainScreen,
+                                                        lifecycleOwner = lifecycleOwner,
+                                                    )
+                                        }
+                                    }
+                                    optionAppIconsDescription?.let {
+                                        TextViewBinder.bind(
+                                            view = it,
+                                            viewModel = summary.description,
                                         )
                                     }
-                            }
-                            optionAppIconsDescription?.let {
-                                TextViewBinder.bind(view = it, viewModel = summary.description)
-                            }
+                                }
+                        } else {
+                            val previewIconPackageName =
+                                view.context.resources.getString(R.string.camera_package)
+                            val appIconDrawable =
+                                ShapeIconViewBinder.loadAppIcon(
+                                    view.context,
+                                    previewIconPackageName,
+                                )
+                            optionsViewModel.appIconPickerViewModel.shapeAndThemedIconSummary
+                                .collect { summary ->
+                                    disposableHandle?.dispose()
+                                    summary.iconShape?.let {
+                                        disposableHandle =
+                                            optionAppIconsIcon?.let { it1 ->
+                                                ShapeIconViewBinder
+                                                    .bindShapeAndThemedIconPreviewIcon(
+                                                        view = it1,
+                                                        appIconDrawable =
+                                                            appIconDrawable
+                                                                as? AdaptiveIconDrawable,
+                                                        shapeIcon = summary.iconShape,
+                                                        isThemed = summary.isThemed,
+                                                        colorUpdateViewModel = colorUpdateViewModel,
+                                                        shouldAnimateColor = isOnMainScreen,
+                                                        lifecycleOwner = lifecycleOwner,
+                                                    )
+                                            }
+                                    }
+                                    optionAppIconsDescription?.let {
+                                        TextViewBinder.bind(
+                                            view = it,
+                                            viewModel = summary.description,
+                                        )
+                                    }
+                                }
                         }
                     }
                 }
