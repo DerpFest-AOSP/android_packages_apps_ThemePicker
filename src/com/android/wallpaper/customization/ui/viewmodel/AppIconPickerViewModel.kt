@@ -121,7 +121,12 @@ constructor(
         combine(selectedIconStyle, overridingIconStyle) { selected, overriding ->
             overriding ?: selected
         }
-    private val iconStylesModels = interactor.iconStyleModels
+    private val iconStylesModels =
+        interactor.iconStyleModels.shareIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            replay = 1,
+        )
     val overridingIconStyleModel =
         combine(overridingIconStyle, iconStylesModels) { overridingIconStyle, iconStylesModels ->
             iconStylesModels.find { it.iconStyle == overridingIconStyle }

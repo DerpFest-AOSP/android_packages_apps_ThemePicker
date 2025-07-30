@@ -17,7 +17,7 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name" msgid="1647136562008520313">"Imagem de fundo e estilo"</string>
+    <string name="app_name" msgid="1647136562008520313">"Estilo e fundo de ecrã"</string>
     <string name="theme_title" msgid="2144932106319405101">"Estilo"</string>
     <string name="clock_title" msgid="2126046720254613991">"Relógio"</string>
     <string name="clock_description" msgid="3563839327378948">"Escolha rel. pers."</string>
