@@ -36,8 +36,11 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -232,6 +235,63 @@ class AppIconPickerViewModelTest {
             onMinimalOptionClick()?.invoke()
 
             assertThat(onApply()).isNotNull()
+        }
+
+    @Test
+    fun iconStyleAndShapeOnApply_completesOnSuccess() =
+        testScope.runTest {
+            val styleOptions = collectLastValue(underTest.styleOptions)
+            val onMinimalOptionClick =
+                styleOptions()?.get(1)?.onClicked?.let { collectLastValue(it) }
+            checkNotNull(onMinimalOptionClick)
+            val onApply = collectLastValue(underTest.iconStyleAndShapeOnApply)
+            val selectedIconStyle = collectLastValue(underTest.selectedIconStyle)
+            assertThat(selectedIconStyle()).isEqualTo(ThemePickerIconStyle.DEFAULT)
+
+            onMinimalOptionClick()?.invoke()
+            onApply()?.invoke()
+
+            assertThat(selectedIconStyle()).isEqualTo(ThemePickerIconStyle.MONOCHROME)
+        }
+
+    @Test
+    fun iconStyleAndShapeOnApply_completesOnFailure() =
+        testScope.runTest {
+            val styleOptions = collectLastValue(underTest.styleOptions)
+            val onMinimalOptionClick =
+                styleOptions()?.get(1)?.onClicked?.let { collectLastValue(it) }
+            checkNotNull(onMinimalOptionClick)
+            val onApply = collectLastValue(underTest.iconStyleAndShapeOnApply)
+            val selectedIconStyle = collectLastValue(underTest.selectedIconStyle)
+            assertThat(selectedIconStyle()).isEqualTo(ThemePickerIconStyle.DEFAULT)
+            iconStyleRepository.shouldApplySuccessfully = false
+
+            onMinimalOptionClick()?.invoke()
+            onApply()?.invoke()
+
+            assertThat(selectedIconStyle()).isEqualTo(ThemePickerIconStyle.DEFAULT)
+        }
+
+    @Test
+    fun iconStyleAndShapeOnApply_completesOnTimeOut() =
+        testScope.runTest {
+            val styleOptions = collectLastValue(underTest.styleOptions)
+            val onMinimalOptionClick =
+                styleOptions()?.get(1)?.onClicked?.let { collectLastValue(it) }
+            checkNotNull(onMinimalOptionClick)
+            val onApply = collectLastValue(underTest.iconStyleAndShapeOnApply)
+            val selectedIconStyle = collectLastValue(underTest.selectedIconStyle)
+            assertThat(selectedIconStyle()).isEqualTo(ThemePickerIconStyle.DEFAULT)
+            iconStyleRepository.shouldUpdateSuccessfully = false
+
+            onMinimalOptionClick()?.invoke()
+            val job = testScope.launch { onApply()?.invoke() }
+
+            assertThat(job.isActive).isTrue()
+            advanceTimeBy(AppIconPickerViewModel.ICON_UPDATE_TIMEOUT)
+            runCurrent()
+
+            assertThat(job.isActive).isFalse()
         }
 
     @Test
