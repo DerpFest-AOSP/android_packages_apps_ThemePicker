@@ -165,6 +165,12 @@ constructor(
         }
     }
 
+    override fun refetchThemeInfo() {
+        if (BaseFlags.get().isPackThemeEnabled()) {
+            packThemeViewModel.refetchPackTheme()
+        }
+    }
+
     val onCustomizeClockClicked: Flow<(() -> Unit)?> =
         selectedOption.map {
             if (it == null) {
