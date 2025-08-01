@@ -233,9 +233,9 @@ constructor(
                     GRID -> gridPickerViewModel.onApply
                     APP_ICONS ->
                         if (BaseFlags.get().isExtendibleThemeManager()) {
-                            appIconPickerViewModel.onApply2
+                            appIconPickerViewModel.iconStyleAndShapeOnApply
                         } else {
-                            appIconPickerViewModel.onApply
+                            appIconPickerViewModel.shapeAndThemedIconOnApply
                         }
                     COLORS ->
                         combine(colorPickerViewModel2.onApply, darkModeViewModel.onApply) {

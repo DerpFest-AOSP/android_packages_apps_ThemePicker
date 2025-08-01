@@ -44,8 +44,8 @@ import com.android.wallpaper.R
 class ShapeTileDrawable(
     context: Context,
     path: String? = null,
-    private val icon: Drawable? = null,
-    private val isThemed: Boolean = false,
+    val icon: Drawable? = null,
+    val isThemed: Boolean = false,
 ) : Drawable() {
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
