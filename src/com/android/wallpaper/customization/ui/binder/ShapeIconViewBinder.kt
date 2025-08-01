@@ -51,7 +51,7 @@ object ShapeIconViewBinder {
                 ShapeTileDrawable(
                     context = view.context,
                     path = shapeIcon?.path,
-                    icon = iconDrawable.icon,
+                    icon = iconDrawable.icon?.constantState?.newDrawable(),
                     isThemed = iconDrawable.isThemed,
                 )
             } else if (shapeIcon?.path != null) {
