@@ -62,6 +62,10 @@ class PackThemeViewModel @Inject constructor(private val interactor: PackThemeIn
         }
     val packThemeData: Flow<PackThemeData> = interactor.packThemeData
 
+    fun refetchPackTheme() {
+        interactor.refetchPackTheme()
+    }
+
     private companion object {
         const val THEME_ID = "themeId"
         const val PACK_THEME_ACTIVITY_ENTRYPOINT = "packThemeActivityEntrypoint"

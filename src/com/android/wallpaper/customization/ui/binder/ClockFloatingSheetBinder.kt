@@ -546,6 +546,7 @@ object ClockFloatingSheetBinder {
                         axisPresetSlider.valueTo = axisPresetsSliderViewModel.valueTo
                         axisPresetSlider.stepSize = axisPresetsSliderViewModel.stepSize
                         axisPresetSlider.clearOnSliderTouchListeners()
+                        updateAccessibilityStateDescription(axisPresetSlider, axisPresetSlider.context)
                         axisPresetSlider.addOnSliderTouchListener(
                             object : OnSliderTouchListener {
                                 override fun onStartTrackingTouch(slider: Slider) {}

@@ -25,4 +25,6 @@ import kotlinx.coroutines.flow.Flow
  */
 interface PackThemeInteractor {
     val packThemeData: Flow<PackThemeData>
+
+    fun refetchPackTheme()
 }
