@@ -17,6 +17,7 @@
 package com.android.wallpaper.customization.ui.viewmodel
 
 import android.content.Context
+import android.util.Log
 import com.android.customization.model.grid.ShapeOptionModel
 import com.android.customization.module.logging.ThemesUserEventLogger
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
@@ -34,7 +35,10 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import java.util.Locale
+import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,6 +52,7 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 
 class AppIconPickerViewModel
 @AssistedInject
@@ -115,7 +120,7 @@ constructor(
         }
 
     //// Style
-    private val selectedIconStyle = interactor.selectedIconStyle
+    val selectedIconStyle = interactor.selectedIconStyle
     private val overridingIconStyle: MutableStateFlow<IconStyle?> = MutableStateFlow(null)
     val previewingIconStyle =
         combine(selectedIconStyle, overridingIconStyle) { selected, overriding ->
@@ -127,9 +132,9 @@ constructor(
             started = SharingStarted.WhileSubscribed(),
             replay = 1,
         )
-    val overridingIconStyleModel =
-        combine(overridingIconStyle, iconStylesModels) { overridingIconStyle, iconStylesModels ->
-            iconStylesModels.find { it.iconStyle == overridingIconStyle }
+    val previewingIconStyleModel =
+        combine(previewingIconStyle, iconStylesModels) { previewingIconStyle, iconStylesModels ->
+            iconStylesModels.find { it.iconStyle == previewingIconStyle }
         }
     val styleOptions: Flow<List<OptionItemViewModel2<IconStyleModel>>> =
         iconStylesModels.map {
@@ -353,13 +358,34 @@ constructor(
                     }
                     if (styleNeedsUpdate) {
                         coroutineScope {
-                            launch { overridingIconStyle?.let { interactor.applyIconStyle(it) } }
-                            selectedIconStyle.drop(1).take(1).collect {
-                                return@collect
+                            val waitForUpdate = launch {
+                                try {
+                                    withTimeout(ICON_UPDATE_TIMEOUT) {
+                                        // Drop the first emitted icon style since it is the current
+                                        // selection. The next emitted icon style signals an update.
+                                        selectedIconStyle.drop(1).take(1).collect {
+                                            return@collect
+                                        }
+                                    }
+                                } catch (e: TimeoutCancellationException) {
+                                    Log.w(TAG, "Timed out waiting for icon update", e)
+                                }
                             }
-                            overridingIconStyle?.let {
-                                logger.logThemedIconApplied(it.getIsThemedIcon())
+                            launch {
+                                val success =
+                                    overridingIconStyle?.let { interactor.applyIconStyle(it) }
+                                if (success == true) {
+                                    logger.logThemedIconApplied(
+                                        overridingIconStyle.getIsThemedIcon()
+                                    )
+                                } else {
+                                    Log.w(TAG, "Apply unsuccessful, no data was updated")
+                                    waitForUpdate.cancel()
+                                }
                             }
+                            try {
+                                waitForUpdate.join()
+                            } catch (_: CancellationException) {}
                         }
                     }
                 }
@@ -446,5 +472,10 @@ constructor(
     @AssistedFactory
     interface Factory {
         fun create(viewModelScope: CoroutineScope): AppIconPickerViewModel
+    }
+
+    companion object {
+        const val TAG = "AppIconPickerViewModel"
+        val ICON_UPDATE_TIMEOUT = 1000.milliseconds
     }
 }

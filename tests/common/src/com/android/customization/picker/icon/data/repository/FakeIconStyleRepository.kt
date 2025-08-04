@@ -42,6 +42,9 @@ class FakeIconStyleRepository @Inject constructor() : IconStyleRepository {
     private val _selectedIconStyle = MutableStateFlow<IconStyle>(ThemePickerIconStyle.DEFAULT)
     override val selectedIconStyle = _selectedIconStyle.asStateFlow()
 
+    var shouldApplySuccessfully = true
+    var shouldUpdateSuccessfully = true
+
     override val iconStyleModels: Flow<List<IconStyleModel>> =
         isCustomizationAvailable.map { isThemedIconAvailable ->
             ThemePickerIconStyle.entries
@@ -61,8 +64,11 @@ class FakeIconStyleRepository @Inject constructor() : IconStyleRepository {
         )
     }
 
-    override suspend fun setIconStyle(iconStyle: IconStyle) {
-        _selectedIconStyle.value = iconStyle
+    override suspend fun setIconStyle(iconStyle: IconStyle): Boolean {
+        if (shouldApplySuccessfully && shouldUpdateSuccessfully) {
+            _selectedIconStyle.value = iconStyle
+        }
+        return shouldApplySuccessfully
     }
 
     override suspend fun setThemedIconEnabled(enabled: Boolean) {

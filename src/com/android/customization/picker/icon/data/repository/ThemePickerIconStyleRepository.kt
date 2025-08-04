@@ -184,12 +184,15 @@ constructor(
         }
     }
 
-    override suspend fun setIconStyle(iconStyle: IconStyle) {
+    override suspend fun setIconStyle(iconStyle: IconStyle): Boolean {
         themedIconUri.first()?.let {
             val values = ContentValues()
             values.put(COL_ICON_THEMED_VALUE, iconStyle == ThemePickerIconStyle.MONOCHROME)
-            contentResolver.update(it, values, /* where= */ null, /* selectionArgs= */ null)
+            val rowsUpdated =
+                contentResolver.update(it, values, /* where= */ null, /* selectionArgs= */ null)
+            return rowsUpdated > 0
         }
+        return false
     }
 
     companion object {
