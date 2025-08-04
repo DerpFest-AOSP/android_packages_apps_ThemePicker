@@ -27,4 +27,6 @@ interface PackThemeInteractor {
     val packThemeData: Flow<PackThemeData>
 
     fun refetchPackTheme()
+
+    val noAppErrorMessage: String
 }
