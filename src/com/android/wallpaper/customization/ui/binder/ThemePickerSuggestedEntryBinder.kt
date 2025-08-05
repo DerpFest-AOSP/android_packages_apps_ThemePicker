@@ -89,7 +89,7 @@ class ThemePickerSuggestedEntryBinder @Inject constructor() : PackThemeSuggested
                 DrawableCompat.setTint(DrawableCompat.wrap(view.icon.background), color)
                 view.suggestedChipText.setTextColor(color)
             },
-            color = colorUpdateViewModel.colorOnPrimaryContainer,
+            color = colorUpdateViewModel.colorOnSecondaryContainer,
             shouldAnimate = isOnMainScreen,
             lifecycleOwner = lifecycleOwner,
         )

@@ -56,5 +56,6 @@ constructor(
 
     suspend fun applyShape(shapeKey: String) = shapeRepository.applyShape(shapeKey)
 
-    suspend fun applyIconStyle(iconStyle: IconStyle) = iconStyleRepository.setIconStyle(iconStyle)
+    suspend fun applyIconStyle(iconStyle: IconStyle): Boolean =
+        iconStyleRepository.setIconStyle(iconStyle)
 }

@@ -35,5 +35,11 @@ interface IconStyleRepository {
 
     val selectedIconStyle: Flow<IconStyle>
 
-    suspend fun setIconStyle(iconStyle: IconStyle)
+    /**
+     * Sets the selected icon style.
+     *
+     * @param iconStyle The icon style to set.
+     * @return True if the icon style was set successfully and data was updated, false otherwise.
+     */
+    suspend fun setIconStyle(iconStyle: IconStyle): Boolean
 }
