@@ -116,7 +116,7 @@ constructor(
         )
     }
 
-    suspend fun getIsShadeLayoutWide() = customizationRuntimeValuesRepository.getIsShadeLayoutWide()
+    suspend fun getIsFullWidthShade() = !customizationRuntimeValuesRepository.getIsShadeLayoutWide()
 
     suspend fun getUdfpsLocation() = customizationRuntimeValuesRepository.getUdfpsLocation()
 

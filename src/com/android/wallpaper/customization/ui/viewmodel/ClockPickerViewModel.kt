@@ -185,7 +185,7 @@ constructor(
         _showKeyguardPreviewRendererSmartspace.value = show
     }
 
-    private suspend fun getIsShadeLayoutWide() = clockPickerInteractor.getIsShadeLayoutWide()
+    private suspend fun getIsFullWidthShade() = clockPickerInteractor.getIsFullWidthShade()
 
     private suspend fun getUdfpsLocation() = clockPickerInteractor.getUdfpsLocation()
 
@@ -609,7 +609,7 @@ constructor(
 
     suspend fun buildPreviewConfig(previewContext: Context): ClockPreviewConfig {
         return ClockPreviewConfig(
-            isShadeLayoutWide = getIsShadeLayoutWide(),
+            isFullWidthShade = getIsFullWidthShade(),
             isSceneContainerFlagEnabled = false,
             udfpsTop = getUdfpsLocation()?.let { it.centerY - it.radius },
             statusBarHeight = SystemBarUtils.getStatusBarHeight(previewContext),
