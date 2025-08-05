@@ -42,4 +42,6 @@ interface IconStyleRepository {
      * @return True if the icon style was set successfully and data was updated, false otherwise.
      */
     suspend fun setIconStyle(iconStyle: IconStyle): Boolean
+
+    suspend fun getIconStyleForLogging(): Int
 }

@@ -22,11 +22,15 @@ import android.content.Context
 import android.database.ContentObserver
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.net.Uri
+import android.stats.style.StyleEnums.APP_ICON_STYLE_THEMED
+import android.stats.style.StyleEnums.APP_ICON_STYLE_UNSPECIFIED
 import com.android.customization.module.CustomizationPreferences
+import com.android.customization.module.logging.ThemesUserEventLoggerImpl.Companion.TIMEOUT
 import com.android.customization.picker.icon.shared.model.IconStyle
 import com.android.customization.picker.icon.shared.model.IconStyleModel
 import com.android.customization.picker.icon.shared.model.ThemePickerIconStyle
 import com.android.themepicker.R
+import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.customization.ui.binder.ShapeIconViewBinder
 import com.android.wallpaper.customization.ui.view.ShapeTileDrawable
 import com.android.wallpaper.model.Screen
@@ -49,6 +53,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.withTimeoutOrNull
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Singleton
@@ -193,6 +198,17 @@ constructor(
             return rowsUpdated > 0
         }
         return false
+    }
+
+    override suspend fun getIconStyleForLogging(): Int {
+        if (BaseFlags.get().isExtendibleThemeManager()) {
+            val iconStyle = withTimeoutOrNull(TIMEOUT) { selectedIconStyle.first() }
+            return iconStyle?.loggingId ?: APP_ICON_STYLE_UNSPECIFIED
+        } else {
+            val isThemedIconActivated =
+                withTimeoutOrNull(TIMEOUT) { isThemedIconActivated.first() } ?: false
+            return if (isThemedIconActivated) APP_ICON_STYLE_THEMED else APP_ICON_STYLE_UNSPECIFIED
+        }
     }
 
     companion object {

@@ -41,7 +41,9 @@ import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptio
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.GRID
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.CLOCK
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.SHORTCUTS
+import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.module.WallpaperPreferences
+import com.android.wallpaper.testing.TestInjector
 import com.android.wallpaper.util.LaunchSourceUtils
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -69,6 +71,7 @@ class ThemesUserEventLoggerImplTest {
     @Inject lateinit var colorCustomizationManager: ColorCustomizationManager
     @Inject lateinit var shapeGridManager: ShapeGridManager
     @Inject lateinit var iconStyleRepository: IconStyleRepository
+    @Inject lateinit var testInjector: TestInjector
     private val clockPickerRepository: ClockPickerRepository = FakeClockPickerRepository()
     private var customizationProviderClient: CustomizationProviderClient =
         FakeCustomizationProviderClient(
@@ -94,6 +97,7 @@ class ThemesUserEventLoggerImplTest {
     @Before
     fun setUp() {
         hiltRule.inject()
+        InjectorProvider.setInjector(testInjector)
 
         wallpaperPreferences.setHomeWallpaperCollectionId(TEST_WALLPAPER_COLLECTION_ID)
         wallpaperPreferences.setHomeWallpaperRemoteId(TEST_WALLPAPER_REMOTE_ID)
@@ -524,12 +528,11 @@ class ThemesUserEventLoggerImplTest {
 
     @Test
     fun logCuratedPhotosRendered() {
-	// The log toggle depends on whether this is a user photo. The log toggles on if and only
-	// if this is a user photo.
+        // The log toggle depends on whether this is a user photo. The log toggles on if and only
+        // if this is a user photo.
         underTest.logCuratedPhotosRendered(/* timeElapsedMillis= */ 1234L, /* userPhoto= */ true)
 
-        assertThat(fakeStatsLogger.action)
-            .isEqualTo(StyleEnums.CURATED_PHOTOS_RENDER_COMPLETE)
+        assertThat(fakeStatsLogger.action).isEqualTo(StyleEnums.CURATED_PHOTOS_RENDER_COMPLETE)
         assertThat(fakeStatsLogger.logCalled).isTrue()
         assertThat(fakeStatsLogger.appSessionId).isEqualTo(FakeAppSessionId.TEST_APP_SESSION_ID)
         assertThat(fakeStatsLogger.timeElapsedMillis).isEqualTo(1234L)
@@ -537,8 +540,7 @@ class ThemesUserEventLoggerImplTest {
 
         underTest.logCuratedPhotosRendered(/* timeElapsedMillis= */ 5678L, /* userPhoto= */ false)
 
-        assertThat(fakeStatsLogger.action)
-            .isEqualTo(StyleEnums.CURATED_PHOTOS_RENDER_COMPLETE)
+        assertThat(fakeStatsLogger.action).isEqualTo(StyleEnums.CURATED_PHOTOS_RENDER_COMPLETE)
         assertThat(fakeStatsLogger.logCalled).isTrue()
         assertThat(fakeStatsLogger.appSessionId).isEqualTo(FakeAppSessionId.TEST_APP_SESSION_ID)
         assertThat(fakeStatsLogger.timeElapsedMillis).isEqualTo(5678L)

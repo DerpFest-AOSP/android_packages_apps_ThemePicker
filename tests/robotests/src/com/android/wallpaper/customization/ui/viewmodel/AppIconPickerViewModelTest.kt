@@ -17,9 +17,11 @@
 package com.android.wallpaper.customization.ui.viewmodel
 
 import android.content.Context
+import android.stats.style.StyleEnums.APP_ICON_STYLE_THEMED
+import android.stats.style.StyleEnums.APP_ICON_STYLE_UNSPECIFIED
 import androidx.test.filters.SmallTest
 import com.android.customization.model.grid.FakeShapeGridManager
-import com.android.customization.module.logging.ThemesUserEventLogger
+import com.android.customization.module.logging.TestThemesUserEventLogger
 import com.android.customization.picker.grid.data.repository.ShapeRepository
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
 import com.android.customization.picker.icon.data.repository.FakeIconStyleRepository
@@ -62,7 +64,7 @@ class AppIconPickerViewModelTest {
     @Inject lateinit var shapeManager: FakeShapeGridManager
     @Inject lateinit var shapeRepository: ShapeRepository
     @Inject @ApplicationContext lateinit var appContext: Context
-    @Inject lateinit var logger: ThemesUserEventLogger
+    @Inject lateinit var logger: TestThemesUserEventLogger
 
     private lateinit var underTest: AppIconPickerViewModel
 
@@ -295,6 +297,46 @@ class AppIconPickerViewModelTest {
         }
 
     @Test
+    fun iconStyleAndShapeOnApply_logs_default() =
+        testScope.runTest {
+            val styleOptions = collectLastValue(underTest.styleOptions)
+            val onMinimalOptionClick =
+                styleOptions()?.get(1)?.onClicked?.let { collectLastValue(it) }
+            checkNotNull(onMinimalOptionClick)
+            val onDefaultOptionClick =
+                styleOptions()?.get(0)?.onClicked?.let { collectLastValue(it) }
+            checkNotNull(onDefaultOptionClick)
+            val onApply = collectLastValue(underTest.iconStyleAndShapeOnApply)
+            val selectedIconStyle = collectLastValue(underTest.selectedIconStyle)
+            // Apply monochrome option first to enable applying default option
+            onMinimalOptionClick()?.invoke()
+            onApply()?.invoke()
+            assertThat(selectedIconStyle()).isEqualTo(ThemePickerIconStyle.MONOCHROME)
+
+            onDefaultOptionClick()?.invoke()
+            onApply()?.invoke()
+
+            assertThat(logger.iconStyle).isEqualTo(APP_ICON_STYLE_UNSPECIFIED)
+        }
+
+    @Test
+    fun iconStyleAndShapeOnApply_logs_monochrome() =
+        testScope.runTest {
+            val styleOptions = collectLastValue(underTest.styleOptions)
+            val onMinimalOptionClick =
+                styleOptions()?.get(1)?.onClicked?.let { collectLastValue(it) }
+            checkNotNull(onMinimalOptionClick)
+            val onApply = collectLastValue(underTest.iconStyleAndShapeOnApply)
+            val selectedIconStyle = collectLastValue(underTest.selectedIconStyle)
+            assertThat(selectedIconStyle()).isEqualTo(ThemePickerIconStyle.DEFAULT)
+
+            onMinimalOptionClick()?.invoke()
+            onApply()?.invoke()
+
+            assertThat(logger.iconStyle).isEqualTo(APP_ICON_STYLE_THEMED)
+        }
+
+    @Test
     fun selectedShapeOption_shouldUpdate_afterOnApply() =
         testScope.runTest {
             val selectedShapeOption = collectLastValue(underTest.selectedShape)
@@ -414,7 +456,7 @@ class AppIconPickerViewModelTest {
         }
 
     @Test
-    fun summary_shouldUpdate_afterOnApply() =
+    fun shapeAndThemedIconSummary_shouldUpdate_afterOnApply() =
         testScope.runTest {
             val summary = collectLastValue(underTest.shapeAndThemedIconSummary)
             val optionItems = collectLastValue(underTest.shapeOptions)
@@ -445,7 +487,7 @@ class AppIconPickerViewModelTest {
         }
 
     @Test
-    fun summary_shouldOnlyShowTheme_ifNoShapes() =
+    fun shapeAndThemedIconSummary_shouldOnlyShowTheme_ifNoShapes() =
         testScope.runTest {
             shapeManager.setShapeOptions(emptyList())
             interactor.applyShape("")
@@ -455,7 +497,7 @@ class AppIconPickerViewModelTest {
         }
 
     @Test
-    fun summary_shouldOnlyShowTheme_ifOnlyOneShape() =
+    fun shapeAndThemedIconSummary_shouldOnlyShowTheme_ifOnlyOneShape() =
         testScope.runTest {
             shapeManager.setShapeOptions(shapeManager.getShapeOptions().subList(0, 1))
             interactor.applyShape("")
@@ -465,7 +507,7 @@ class AppIconPickerViewModelTest {
         }
 
     @Test
-    fun summary2_shouldUpdate_afterOnApply() =
+    fun iconStyleAndShapeSummary_shouldUpdate_afterOnApply() =
         testScope.runTest {
             val summary = collectLastValue(underTest.iconStyleAndShapeSummary)
             val shapeOptions = collectLastValue(underTest.shapeOptions)
@@ -497,7 +539,7 @@ class AppIconPickerViewModelTest {
         }
 
     @Test
-    fun summary2_shouldOnlyShowTheme_ifNoShapes() =
+    fun iconStyleAndShapeSummary_shouldOnlyShowTheme_ifNoShapes() =
         testScope.runTest {
             shapeManager.setShapeOptions(emptyList())
             interactor.applyShape("")
@@ -507,7 +549,7 @@ class AppIconPickerViewModelTest {
         }
 
     @Test
-    fun summary2_shouldOnlyShowTheme_ifOnlyOneShape() =
+    fun iconStyleAndShapeSummary_shouldOnlyShowTheme_ifOnlyOneShape() =
         testScope.runTest {
             shapeManager.setShapeOptions(shapeManager.getShapeOptions().subList(0, 1))
             interactor.applyShape("")
@@ -517,7 +559,7 @@ class AppIconPickerViewModelTest {
         }
 
     @Test
-    fun summary2_shouldOnlyShowShape_ifNoTheme() =
+    fun iconStyleAndShapeSummary_shouldOnlyShowShape_ifNoTheme() =
         testScope.runTest {
             iconStyleRepository.setIsCustomizationAvailable(false)
             val summary = collectLastValue(underTest.iconStyleAndShapeSummary)
