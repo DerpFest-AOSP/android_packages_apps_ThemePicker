@@ -61,6 +61,7 @@ class PackThemeViewModel @Inject constructor(private val interactor: PackThemeIn
             }
         }
     val packThemeData: Flow<PackThemeData> = interactor.packThemeData
+    val noAppErrorMessage: String = interactor.noAppErrorMessage
 
     fun refetchPackTheme() {
         interactor.refetchPackTheme()

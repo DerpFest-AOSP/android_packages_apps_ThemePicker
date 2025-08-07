@@ -25,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.compose.ui.platform.ComposeView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.graphics.drawable.DrawableCompat
@@ -528,8 +529,20 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                                     navigateToPackThemeActivity.invoke(intent)
                                 }
                             } else {
-                                optionPackThemeHome?.setOnClickListener(null)
-                                optionPackThemeLock?.setOnClickListener(null)
+                                optionPackThemeHome?.setOnClickListener({
+                                    showNoPackThemeIntentErrorMessage(
+                                        lifecycleOwner,
+                                        view,
+                                        optionsViewModel,
+                                    )
+                                })
+                                optionPackThemeLock?.setOnClickListener({
+                                    showNoPackThemeIntentErrorMessage(
+                                        lifecycleOwner,
+                                        view,
+                                        optionsViewModel,
+                                    )
+                                })
                             }
                         }
                     }
@@ -610,6 +623,21 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
 
     // Track the current show clock flag. If it turns from false to true, animate fade-in.
     private var isClockCurrentlyShown: Boolean? = null
+
+    private fun showNoPackThemeIntentErrorMessage(
+        lifecycleOwner: LifecycleOwner,
+        view: View,
+        optionsViewModel: ThemePickerCustomizationOptionsViewModel,
+    ) {
+        lifecycleOwner.lifecycleScope.launch {
+            Toast.makeText(
+                    view.context,
+                    optionsViewModel.packThemeViewModel.noAppErrorMessage,
+                    Toast.LENGTH_SHORT,
+                )
+                .show()
+        }
+    }
 
     override fun bindClockPreview(
         context: Context,
