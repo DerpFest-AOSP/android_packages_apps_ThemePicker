@@ -162,7 +162,7 @@
     <string name="keyguard_quick_affordance_none_selected" msgid="8494127020144112003">"Žiadne"</string>
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"Zobrazovať upozornenia na uzamknutej obrazovke"</string>
     <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"Upozornenia na uzamk. obrazovke"</string>
-    <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Spravujte, ako sa upozornenia zobrazujú a čo zobrazujú"</string>
+    <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Spravujte, ako sa upozornenia zobrazujú a čo obsahujú"</string>
     <string name="more_settings_section_title" msgid="6854797937797818510">"Ďalšie nastav. uzamk. obrazovky"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"Ochrana súkromia, Čo to hrá a ďalšie funkcie"</string>
     <string name="more_colors" msgid="3191071655353004591">"Ďalšie farby"</string>
