@@ -210,6 +210,7 @@ constructor(
                 layoutInflater = layoutInflater,
             )
         val isComposeRefactorEnabled = BaseFlags.get().isComposeRefactorEnabled()
+        val isColorPickerUpdateEnabled = BaseFlags.get().isColorPickerUpdateEnabled()
         val isKeyguardQuickAffordanceEnabled =
             BaseFlags.get().isKeyguardQuickAffordanceEnabled(bottomSheetContainer.context)
         return buildMap {
@@ -234,7 +235,7 @@ constructor(
 
             put(
                 COLORS,
-                if (isComposeRefactorEnabled) {
+                if (isColorPickerUpdateEnabled) {
                         ComposeView(context).apply { setContent { ColorFloatingSheet() } }
                     } else {
                         inflateFloatingSheet(COLORS, bottomSheetContainer, layoutInflater)
