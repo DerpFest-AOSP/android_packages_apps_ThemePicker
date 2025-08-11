@@ -34,6 +34,7 @@ import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -107,10 +108,14 @@ class ColorContrastSectionViewModelTest {
         assertEquals(expected, result)
     }
 
-    @Test(expected = IllegalArgumentException::class)
-    fun summaryThrowsIllegalArgumentExceptionForInvalidValue() = runTest {
-        uiModeManager.setContrast(999f)
+    @Test
+    fun summaryThrowsIllegalArgumentExceptionForInvalidValue() {
+        assertThrows(IllegalArgumentException::class.java) {
+            runTest {
+                uiModeManager.setContrast(999f)
 
-        viewModel.summary.collect() // This should throw an IllegalArgumentException
+                viewModel.summary.collect() // This should throw an IllegalArgumentException
+            }
+        }
     }
 }
