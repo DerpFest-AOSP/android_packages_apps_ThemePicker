@@ -23,7 +23,7 @@ import com.android.customization.picker.clock.data.repository.ClockPickerReposit
 import com.android.customization.picker.clock.shared.ClockSize
 import com.android.customization.picker.clock.shared.model.ClockMetadataModel
 import com.android.customization.picker.clock.shared.model.ClockSnapshotModel
-import com.android.systemui.plugins.clocks.ClockAxisStyle
+import com.android.systemui.plugins.keyguard.ui.clocks.ClockAxisStyle
 import com.android.wallpaper.picker.customization.data.repository.CustomizationRuntimeValuesRepository
 import javax.inject.Inject
 import javax.inject.Singleton

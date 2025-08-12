@@ -45,7 +45,7 @@ import com.android.customization.picker.color.ui.view.ColorOptionIconView2
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.customization.picker.icon.ui.util.IconStyleViewUtil
 import com.android.customization.picker.settings.ui.binder.ColorContrastSectionViewBinder2
-import com.android.systemui.plugins.clocks.ClockAxisStyle
+import com.android.systemui.plugins.keyguard.ui.clocks.ClockAxisStyle
 import com.android.systemui.shared.Flags
 import com.android.themepicker.R
 import com.android.wallpaper.config.BaseFlags

@@ -20,8 +20,8 @@ import androidx.annotation.ColorInt
 import androidx.annotation.IntRange
 import com.android.customization.picker.clock.shared.ClockSize
 import com.android.customization.picker.clock.shared.model.ClockMetadataModel
-import com.android.systemui.plugins.clocks.ClockAxisStyle
-import com.android.systemui.plugins.clocks.ClockId
+import com.android.systemui.plugins.keyguard.ui.clocks.ClockAxisStyle
+import com.android.systemui.plugins.keyguard.ui.clocks.ClockId
 import kotlinx.coroutines.flow.Flow
 
 /**
