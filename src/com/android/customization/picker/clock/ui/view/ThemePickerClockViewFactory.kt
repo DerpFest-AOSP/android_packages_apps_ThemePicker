@@ -24,13 +24,13 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.annotation.ColorInt
 import androidx.lifecycle.LifecycleOwner
-import com.android.systemui.customization.clocks.ContextUtil.getSafeStatusBarHeight
 import com.android.systemui.customization.clocks.R as clocksR
-import com.android.systemui.plugins.clocks.ClockAxisStyle
-import com.android.systemui.plugins.clocks.ClockController
-import com.android.systemui.plugins.clocks.ClockFaceController.Companion.updateTheme
-import com.android.systemui.plugins.clocks.TimeFormatKind
-import com.android.systemui.plugins.clocks.WeatherData
+import com.android.systemui.customization.clocks.utils.ContextUtils.getSafeStatusBarHeight
+import com.android.systemui.plugins.keyguard.data.model.WeatherData
+import com.android.systemui.plugins.keyguard.ui.clocks.ClockAxisStyle
+import com.android.systemui.plugins.keyguard.ui.clocks.ClockController
+import com.android.systemui.plugins.keyguard.ui.clocks.ClockFaceController.Companion.updateTheme
+import com.android.systemui.plugins.keyguard.ui.clocks.TimeFormatKind
 import com.android.systemui.shared.Flags
 import com.android.systemui.shared.clocks.ClockRegistry
 import com.android.wallpaper.util.ScreenSizeCalculator

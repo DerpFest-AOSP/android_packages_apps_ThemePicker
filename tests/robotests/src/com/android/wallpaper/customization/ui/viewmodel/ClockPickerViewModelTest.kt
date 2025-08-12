@@ -28,7 +28,7 @@ import com.android.customization.picker.clock.ui.viewmodel.ClockColorViewModel
 import com.android.customization.picker.clock.ui.viewmodel.ClockSettingsViewModel
 import com.android.customization.picker.color.data.repository.FakeColorPickerRepository2
 import com.android.customization.picker.color.domain.interactor.ColorPickerInteractor2
-import com.android.systemui.plugins.clocks.AxisPresetConfig.IndexedStyle
+import com.android.systemui.plugins.keyguard.ui.clocks.AxisPresetConfig.IndexedStyle
 import com.android.systemui.shared.customization.data.content.FakeCustomizationProviderClient
 import com.android.themepicker.R
 import com.android.wallpaper.customization.ui.viewmodel.ClockPickerViewModel.Tab
