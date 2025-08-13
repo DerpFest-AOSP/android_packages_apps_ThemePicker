@@ -515,6 +515,13 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                                         .into(it)
                                     it.colorFilter = null
                                 }
+                            } else {
+                                optionPackThemeIconHome?.setImageResource(
+                                    R.drawable.ic_pack_theme_24px
+                                )
+                                optionPackThemeIconLock?.setImageResource(
+                                    R.drawable.ic_pack_theme_24px
+                                )
                             }
                         }
                     }
