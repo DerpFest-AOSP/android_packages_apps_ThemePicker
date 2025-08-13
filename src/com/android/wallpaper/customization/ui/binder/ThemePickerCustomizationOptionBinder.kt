@@ -19,6 +19,7 @@ package com.android.wallpaper.customization.ui.binder
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.provider.Settings
 import android.view.View
@@ -70,8 +71,11 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.DisposableHandle
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -273,6 +277,8 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 .first { it.first == ThemePickerHomeCustomizationOption.COLOR_CONTRAST }
                 .second
         optionColorContrast.setOnClickListener { navigateToColorContrastSettingsActivity.invoke() }
+        val backgroundScope =
+            CoroutineScope(Dispatchers.IO + Job() + CoroutineName(BACKGROUND_CONTEXT))
 
         ColorUpdateBinder.bind(
             setColor = { color ->
@@ -530,10 +536,30 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                             intent ->
                             if (intent != null) {
                                 optionPackThemeHome?.setOnClickListener {
-                                    navigateToPackThemeActivity.invoke(intent)
+                                    backgroundScope.launch {
+                                        if (isActivityAvailable(view.context, intent)) {
+                                            navigateToPackThemeActivity.invoke(intent)
+                                        } else {
+                                            showNoPackThemeIntentErrorMessage(
+                                                lifecycleOwner,
+                                                view,
+                                                optionsViewModel,
+                                            )
+                                        }
+                                    }
                                 }
                                 optionPackThemeLock?.setOnClickListener {
-                                    navigateToPackThemeActivity.invoke(intent)
+                                    backgroundScope.launch {
+                                        if (isActivityAvailable(view.context, intent)) {
+                                            navigateToPackThemeActivity.invoke(intent)
+                                        } else {
+                                            showNoPackThemeIntentErrorMessage(
+                                                lifecycleOwner,
+                                                view,
+                                                optionsViewModel,
+                                            )
+                                        }
+                                    }
                                 }
                             } else {
                                 optionPackThemeHome?.setOnClickListener({
@@ -630,6 +656,13 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
 
     // Track the current show clock flag. If it turns from false to true, animate fade-in.
     private var isClockCurrentlyShown: Boolean? = null
+
+    private suspend fun isActivityAvailable(context: Context, intent: Intent): Boolean {
+        val packageManager: PackageManager = context.packageManager
+        val activities =
+            packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+        return activities.isNotEmpty()
+    }
 
     private fun showNoPackThemeIntentErrorMessage(
         lifecycleOwner: LifecycleOwner,
@@ -786,5 +819,6 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
 
     companion object {
         private const val THUMBNAIL_CORNER_RADIUS = 18
+        private const val BACKGROUND_CONTEXT = "backgroundContext"
     }
 }
