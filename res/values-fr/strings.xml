@@ -54,7 +54,7 @@
     <string name="clock_style_sharp" msgid="453991773733285628">"sharp"</string>
     <string name="grid_title" msgid="1688173478777254123">"Grille d\'applications"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Forme et mise en page"</string>
-    <string name="grid_layout" msgid="370175667652663686">"Mise en page"</string>
+    <string name="grid_layout" msgid="370175667652663686">"Disposition"</string>
     <string name="app_icons_title" msgid="8953944517006998975">"Icônes"</string>
     <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>, <xliff:g id="ID_2">%2$s</xliff:g>"</string>
     <string name="app_icons_theme_default" msgid="4773453045331265070">"par défaut"</string>
@@ -138,7 +138,7 @@
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Couleur des icônes, du texte… assortie au fond d\'écran"</string>
     <string name="wallpaper_color_title" msgid="5687965239180986458">"Couleur du fond d\'écran"</string>
     <string name="preset_color_tab" msgid="3133391839341329314">"Couleurs de base"</string>
-    <string name="preset_color_tab_2" msgid="1444107326712562538">"Autres couleurs"</string>
+    <string name="preset_color_tab_2" msgid="1444107326712562538">"Autres"</string>
     <string name="preset_color_subheader" msgid="8230588536141279371">"Choisissez une couleur pour vos icônes, l\'horloge, etc."</string>
     <string name="color_changed" msgid="7029571720331641235">"Couleur modifiée"</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"Dynamique"</string>
@@ -175,6 +175,6 @@
     <string name="scroll_forward_and_select" msgid="6156132388656395769">"Balayer à gauche pour changer de clock face"</string>
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"Balayer à droite pour changer de clock face"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"Personnaliser les Horloges"</string>
-    <string name="clock_face_width" msgid="5818129719338363570">"Largeur de la clock face"</string>
+    <string name="clock_face_width" msgid="5818129719338363570">"Largeur du cadran"</string>
     <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, plage de %2$d à %3$d"</string>
 </resources>
