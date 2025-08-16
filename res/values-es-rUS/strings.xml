@@ -54,7 +54,7 @@
     <string name="clock_style_sharp" msgid="453991773733285628">"elegante"</string>
     <string name="grid_title" msgid="1688173478777254123">"Cuadrícula de apps"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Forma y diseño"</string>
-    <string name="grid_layout" msgid="370175667652663686">"Diseño"</string>
+    <string name="grid_layout" msgid="370175667652663686">"Diseño de cuadrícula"</string>
     <string name="app_icons_title" msgid="8953944517006998975">"Íconos"</string>
     <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>, <xliff:g id="ID_2">%2$s</xliff:g>"</string>
     <string name="app_icons_theme_default" msgid="4773453045331265070">"predeterminado"</string>
