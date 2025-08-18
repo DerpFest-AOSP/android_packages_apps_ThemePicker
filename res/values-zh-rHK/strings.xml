@@ -43,7 +43,7 @@
     <string name="clock_size_dynamic" msgid="1023930312455061642">"動態"</string>
     <string name="clock_size_dynamic_description" msgid="2776620745774561662">"時鐘按上鎖畫面內容變更大小"</string>
     <string name="clock_size_large" msgid="3143248715744138979">"大"</string>
-    <string name="clock_size_large_description" msgid="1171001745473029918">"畫面上沒有通知時顯示"</string>
+    <string name="clock_size_large_description" msgid="1171001745473029918">"當畫面上沒有通知時顯示"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"小"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"在螢幕角落顯示小時鐘"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"套用時鐘字型變更"</string>

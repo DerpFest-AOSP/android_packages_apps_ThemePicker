@@ -163,7 +163,7 @@
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"Értesítések megjelenítése a lezárási képernyőn"</string>
     <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"Értesítések a lezárási képernyőn"</string>
     <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Értesítések megjelenítésének és a megjelenített elemek kezelése"</string>
-    <string name="more_settings_section_title" msgid="6854797937797818510">"Több lezárásiképernyő-beállítás"</string>
+    <string name="more_settings_section_title" msgid="6854797937797818510">"További beállítások"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"Adatvédelem, Now Playing és egyebek"</string>
     <string name="more_colors" msgid="3191071655353004591">"További színek"</string>
     <string name="content_description_dynamic_color_option" msgid="2191721655642529886">"Elsődleges dinamikus téma"</string>

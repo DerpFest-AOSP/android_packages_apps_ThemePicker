@@ -43,7 +43,7 @@
     <string name="clock_size_dynamic" msgid="1023930312455061642">"動的"</string>
     <string name="clock_size_dynamic_description" msgid="2776620745774561662">"時計のサイズをロック画面の内容に応じて調整します"</string>
     <string name="clock_size_large" msgid="3143248715744138979">"大"</string>
-    <string name="clock_size_large_description" msgid="1171001745473029918">"通知が表示されていないときに表示されます"</string>
+    <string name="clock_size_large_description" msgid="1171001745473029918">"通知が画面上にない場合に表示する"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"小"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"画面の隅に小さい時計を表示します"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"時計のフォント変更を適用"</string>
