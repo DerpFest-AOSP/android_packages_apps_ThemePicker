@@ -43,9 +43,11 @@ import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptio
 import com.android.wallpaper.effects.EffectsController
 import com.android.wallpaper.effects.FakeEffectsController
 import com.android.wallpaper.module.DefaultRecentWallpaperManager
+import com.android.wallpaper.module.DefaultThirdPartyLiveWallpaperModelFactory
 import com.android.wallpaper.module.Injector
 import com.android.wallpaper.module.PartnerProvider
 import com.android.wallpaper.module.RecentWallpaperManager
+import com.android.wallpaper.module.ThirdPartyLiveWallpaperModelFactory
 import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.module.logging.TestUserEventLogger
 import com.android.wallpaper.module.logging.UserEventLogger
@@ -237,6 +239,12 @@ abstract class ThemePickerTestModule {
     abstract fun bindApplyWallpaperOptionsProvider(
         impl: DefaultApplyWallpaperOptionsProvider
     ): ApplyWallpaperOptionsProvider
+
+    @Binds
+    @Singleton
+    abstract fun bindThirdPartyLiveWallpaperModelFactory(
+        impl: DefaultThirdPartyLiveWallpaperModelFactory
+    ): ThirdPartyLiveWallpaperModelFactory
 
     companion object {
 
