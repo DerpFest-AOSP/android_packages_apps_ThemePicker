@@ -43,7 +43,7 @@
     <string name="clock_size_dynamic" msgid="1023930312455061642">"ਪਰਿਵਰਤਨਸ਼ੀਲ"</string>
     <string name="clock_size_dynamic_description" msgid="2776620745774561662">"ਘੜੀ ਦਾ ਆਕਾਰ ਲਾਕ ਸਕ੍ਰੀਨ ਦੀ ਸਮੱਗਰੀ ਮੁਤਾਬਕ ਬਦਲਦਾ ਹੈ"</string>
     <string name="clock_size_large" msgid="3143248715744138979">"ਵੱਡਾ"</string>
-    <string name="clock_size_large_description" msgid="1171001745473029918">"ਉਦੋਂ ਦਿਖਾਇਆ ਜਾਂਦਾ ਹੈ, ਜਦੋਂ ਸੂਚਨਾਵਾਂ ਦਿਖਾਈ ਨਾ ਦਿੰਦੀਆਂ ਹੋਣ"</string>
+    <string name="clock_size_large_description" msgid="1171001745473029918">"ਘੜੀ ਨੂੰ ਵੱਡਾ ਉਦੋਂ ਦਿਖਾਇਆ ਜਾਂਦਾ ਹੈ, ਜਦੋਂ ਸਕ੍ਰੀਨ \'ਤੇ ਸੂਚਨਾਵਾਂ ਨਾ ਹੋਣ"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"ਛੋਟਾ"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"ਤੁਹਾਡੀ ਸਕ੍ਰੀਨ ਦੇ ਕੋਨੇ \'ਤੇ ਇੱਕ ਛੋਟੀ ਘੜੀ ਦਿਖਾਈ ਦਿੰਦੀ ਹੈ"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"ਘੜੀ ਦੇ ਫ਼ੌਟਾਂ ਵਿੱਚ ਕੀਤੀਆਂ ਤਬਦੀਲੀਆਂ ਲਾਗੂ ਕਰੋ"</string>
@@ -175,6 +175,6 @@
     <string name="scroll_forward_and_select" msgid="6156132388656395769">"ਕੋਈ ਵੱਖਰਾ ਘੜੀ ਦਾ ਡਾਇਲ ਚੁਣਨ ਲਈ ਖੱਬੇ ਪਾਸੇ ਵੱਲ ਸਵਾਈਪ ਕਰੋ"</string>
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"ਕੋਈ ਵੱਖਰਾ ਘੜੀ ਦਾ ਡਾਇਲ ਚੁਣਨ ਲਈ ਸੱਜੇ ਪਾਸੇ ਵੱਲ ਸਵਾਈਪ ਕਰੋ"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"ਵਿਉਂਤਬੱਧ ਘੜੀਆਂ"</string>
-    <string name="clock_face_width" msgid="5818129719338363570">"ਘੜੀ ਦੇ ਡਾਇਲ ਦੀ ਚੌੜਾਈ"</string>
+    <string name="clock_face_width" msgid="5818129719338363570">"ਘੜੀ ਦੇ ਫ਼ੇਸ ਦੀ ਚੌੜਾਈ"</string>
     <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, ਰੇਂਜ %2$d ਤੋਂ %3$d ਤੱਕ"</string>
 </resources>

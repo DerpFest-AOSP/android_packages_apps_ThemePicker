@@ -135,7 +135,7 @@
     <string name="theme_packs_description" msgid="7214401664119395771">"Opis"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Promjena rešetke aplikacije"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Boje pozadine"</string>
-    <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Ikone, tekst i ostalo odgovaraju bojama na pozadini"</string>
+    <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Ikone, tekst i ostalo odgovara bojama pozadine"</string>
     <string name="wallpaper_color_title" msgid="5687965239180986458">"Boja pozadine"</string>
     <string name="preset_color_tab" msgid="3133391839341329314">"Osnovne boje"</string>
     <string name="preset_color_tab_2" msgid="1444107326712562538">"Druge boje"</string>
@@ -155,7 +155,7 @@
     <string name="keyguard_quick_affordance_title" msgid="4242813186995735584">"Prečaci"</string>
     <string name="keyguard_quick_affordance_section_title" msgid="2806304242671717309">"Prečaci"</string>
     <string name="color_contrast_section_title" msgid="7194809124718896091">"Kontrast boja"</string>
-    <string name="color_contrast_default_title" msgid="7954235103549276978">"Zadana"</string>
+    <string name="color_contrast_default_title" msgid="7954235103549276978">"Zadano"</string>
     <string name="color_contrast_medium_title" msgid="8071574793250090215">"Srednja"</string>
     <string name="color_contrast_high_title" msgid="5554685752479470200">"Visoka"</string>
     <string name="keyguard_quick_affordance_two_selected_template" msgid="1757099194522296363">"<xliff:g id="FIRST">%1$s</xliff:g>, <xliff:g id="SECOND">%2$s</xliff:g>"</string>
