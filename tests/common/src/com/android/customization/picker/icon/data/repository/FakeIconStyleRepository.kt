@@ -16,9 +16,12 @@
 
 package com.android.customization.picker.icon.data.repository
 
+import android.stats.style.StyleEnums.APP_ICON_STYLE_THEMED
+import android.stats.style.StyleEnums.APP_ICON_STYLE_UNSPECIFIED
 import com.android.customization.picker.icon.shared.model.IconStyle
 import com.android.customization.picker.icon.shared.model.IconStyleModel
 import com.android.customization.picker.icon.shared.model.ThemePickerIconStyle
+import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.testing.FakePreviewUtils
 import com.android.wallpaper.util.BasePreviewUtils
 import javax.inject.Inject
@@ -69,6 +72,16 @@ class FakeIconStyleRepository @Inject constructor() : IconStyleRepository {
             _selectedIconStyle.value = iconStyle
         }
         return shouldApplySuccessfully
+    }
+
+    override suspend fun getIconStyleForLogging(): Int {
+        if (BaseFlags.get().isExtendibleThemeManager()) {
+            val iconStyle = selectedIconStyle.value
+            return iconStyle.loggingId ?: APP_ICON_STYLE_UNSPECIFIED
+        } else {
+            val isThemedIconActivated = isThemedIconActivated.value
+            return if (isThemedIconActivated) APP_ICON_STYLE_THEMED else APP_ICON_STYLE_UNSPECIFIED
+        }
     }
 
     override suspend fun setThemedIconEnabled(enabled: Boolean) {
