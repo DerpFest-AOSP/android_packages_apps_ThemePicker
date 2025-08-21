@@ -17,6 +17,7 @@
 package com.android.wallpaper.customization.ui.viewmodel
 
 import android.content.Context
+import android.stats.style.StyleEnums.APP_ICON_STYLE_UNSPECIFIED
 import android.util.Log
 import com.android.customization.model.grid.ShapeOptionModel
 import com.android.customization.module.logging.ThemesUserEventLogger
@@ -375,8 +376,8 @@ constructor(
                                 val success =
                                     overridingIconStyle?.let { interactor.applyIconStyle(it) }
                                 if (success == true) {
-                                    logger.logThemedIconApplied(
-                                        overridingIconStyle.getIsThemedIcon()
+                                    logger.logIconStyleApplied(
+                                        overridingIconStyle.loggingId ?: APP_ICON_STYLE_UNSPECIFIED
                                     )
                                 } else {
                                     Log.w(TAG, "Apply unsuccessful, no data was updated")
