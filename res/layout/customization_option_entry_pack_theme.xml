@@ -62,7 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/ic_pack_theme_24px"
-            android:contentDescription="@string/pack_theme_preview_card_content_description"
+            android:contentDescription="@null"
             android:layout_centerInParent="true"/>
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
