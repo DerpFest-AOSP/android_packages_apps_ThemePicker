@@ -480,6 +480,8 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 if (BaseFlags.get().isPackThemeEnabled()) {
                     launch {
                         optionsViewModel.packThemeViewModel.packThemeData.collect { packThemeData ->
+                            optionPackThemeHome?.isEnabled = packThemeData.isEnabled
+                            optionPackThemeLock?.isEnabled = packThemeData.isEnabled
                             val homeTitle =
                                 optionPackThemeHome?.findViewById<TextView>(R.id.option_entry_title)
                             val lockTitle =
@@ -492,6 +494,17 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                                 optionPackThemeLock?.findViewById<TextView>(
                                     R.id.option_entry_description
                                 )
+                            if (packThemeData.isEnabled) {
+                                homeTitle?.alpha = 1.0f
+                                lockTitle?.alpha = 1.0f
+                                homeDescription?.alpha = 1.0f
+                                lockDescription?.alpha = 1.0f
+                            } else {
+                                homeTitle?.alpha = DISABLE_TEXT_ALPHA
+                                lockTitle?.alpha = DISABLE_TEXT_ALPHA
+                                homeDescription?.alpha = DISABLE_TEXT_ALPHA
+                                lockDescription?.alpha = DISABLE_TEXT_ALPHA
+                            }
                             if (packThemeData.currentThemePackInfo.title.isNotEmpty()) {
                                 homeTitle?.text = packThemeData.currentThemePackInfo.title
                                 lockTitle?.text = packThemeData.currentThemePackInfo.title
@@ -820,6 +833,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
 
     companion object {
         private const val THUMBNAIL_CORNER_RADIUS = 18
+        private const val DISABLE_TEXT_ALPHA = 0.38f
         private const val BACKGROUND_CONTEXT = "backgroundContext"
     }
 }
