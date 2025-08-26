@@ -123,6 +123,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
 
         val isComposeRefactorEnabled = BaseFlags.get().isComposeRefactorEnabled()
         val isColorPickerUpdateEnabled = BaseFlags.get().isColorPickerUpdateEnabled()
+        val isColorPickerComposeEnabled = BaseFlags.get().isColorPickerComposeEnabled()
 
         val showPackEntry =
             Settings.Secure.getInt(
@@ -617,7 +618,7 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 }
         }
 
-        if (!isColorPickerUpdateEnabled) {
+        if (!isColorPickerUpdateEnabled || !isColorPickerComposeEnabled) {
             customizationOptionFloatingSheetViewMap
                 ?.get(ThemePickerHomeCustomizationOption.COLORS)
                 ?.let {
