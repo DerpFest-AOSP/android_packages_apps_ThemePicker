@@ -107,7 +107,7 @@ class ThemePickerSuggestedEntryBinder @Inject constructor() : PackThemeSuggested
         )
         ColorUpdateBinder.bind(
             setColor = { color ->
-                DrawableCompat.setTint(DrawableCompat.wrap(view.cancelButton.background), color)
+                DrawableCompat.setTint(DrawableCompat.wrap(view.cancelButton.drawable), color)
                 DrawableCompat.setTint(DrawableCompat.wrap(view.icon.background), color)
                 view.suggestedChipText.setTextColor(color)
             },

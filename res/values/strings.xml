@@ -183,9 +183,6 @@
     <!-- Content description of grid preview card. [CHAR_LIMIT=30]-->
     <string name="grid_preview_card_content_description">Grid preview</string>
 
-    <!-- Content description of theme preview card. [CHAR_LIMIT=30]-->
-    <string name="pack_theme_preview_card_content_description">Content Description</string>
-
     <!-- Content description of font preview. [CHAR_LIMIT=30]-->
     <string name="font_preview_content_description">Font preview</string>
 
