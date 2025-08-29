@@ -17,12 +17,12 @@
 package com.android.customization.model.color
 
 import android.content.Context
+import android.content.theming.ThemeStyle
 import android.stats.style.StyleEnums
 import android.view.View
 import androidx.annotation.ColorInt
 import com.android.customization.model.color.ColorOptionsProvider.ColorSource
 import com.android.customization.picker.color.shared.model.ColorType
-import com.android.systemui.monet.Style
 import com.android.themepicker.R
 
 /**
@@ -34,7 +34,7 @@ class ColorOptionImpl(
     isDefault: Boolean,
     private val source: String?,
     seedColor: Int,
-    @Style.Type style: Int,
+    @ThemeStyle.Type style: Int,
     index: Int,
     private val previewInfo: PreviewInfo,
     val type: ColorType,
@@ -77,7 +77,7 @@ class ColorOptionImpl(
         }
     }
 
-    override fun getStyleForLogging(): Int = Style.toString(style).hashCode()
+    override fun getStyleForLogging(): Int = ThemeStyle.toString(style).hashCode()
 
     class Builder {
         var title: String? = null
@@ -89,7 +89,7 @@ class ColorOptionImpl(
         @ColorSource var source: String? = null
         var isDefault = false
         @ColorInt var seedColor = 0
-        @Style.Type var style = Style.TONAL_SPOT
+        @ThemeStyle.Type var style = ThemeStyle.TONAL_SPOT
         var index = 0
         var packages: MutableMap<String, String?> = HashMap()
         var type = ColorType.WALLPAPER_COLOR

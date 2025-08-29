@@ -31,6 +31,7 @@ import static com.android.customization.model.color.ColorOptionsProvider.OVERLAY
 import android.app.WallpaperColors;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.theming.ThemeStyle;
 import android.database.ContentObserver;
 import android.graphics.Color;
 import android.net.Uri;
@@ -48,7 +49,6 @@ import com.android.customization.model.ResourceConstants;
 import com.android.customization.model.color.ColorOptionsProvider.ColorSource;
 import com.android.customization.model.theme.OverlayManagerCompat;
 import com.android.customization.module.logging.ThemesUserEventLogger;
-import com.android.systemui.monet.Style;
 import com.android.themepicker.R;
 
 import org.json.JSONArray;
@@ -170,7 +170,7 @@ public class ColorCustomizationManager implements CustomizationManager<ColorOpti
                 overlaysJson.put(OVERLAY_COLOR_SOURCE, colorOption.getSource());
                 overlaysJson.put(OVERLAY_COLOR_INDEX, String.valueOf(colorOption.getIndex()));
                 overlaysJson.put(OVERLAY_THEME_STYLE,
-                        String.valueOf(Style.toString(colorOption.getStyle())));
+                        String.valueOf(ThemeStyle.toString(colorOption.getStyle())));
 
                 // OVERLAY_COLOR_BOTH is only for wallpaper color case, not preset.
                 if (!COLOR_SOURCE_PRESET.equals(colorOption.getSource())) {
@@ -273,7 +273,7 @@ public class ColorCustomizationManager implements CustomizationManager<ColorOpti
 
     /**
      * @return The style of the currently applied color. One of enum values in
-     * {@link com.android.systemui.monet.Style}.
+     * {@link ThemeStyle}.
      */
     public @Nullable String getCurrentStyle() {
         if (mCurrentStyle == null) {

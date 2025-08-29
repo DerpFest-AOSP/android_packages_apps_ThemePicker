@@ -16,6 +16,7 @@
  */
 package com.android.customization.picker.color.data.repository
 
+import android.content.theming.ThemeStyle
 import android.graphics.Color
 import com.android.customization.model.ResourceConstants
 import com.android.customization.model.color.ColorOption
@@ -23,7 +24,6 @@ import com.android.customization.model.color.ColorOptionImpl
 import com.android.customization.model.color.ColorOptionsProvider
 import com.android.customization.model.color.ColorUtils.toColorString
 import com.android.customization.picker.color.shared.model.ColorType
-import com.android.systemui.monet.Style
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -138,7 +138,7 @@ class FakeColorPickerRepository2 @Inject constructor() : ColorPickerRepository2 
         return builder.build()
     }
 
-    fun buildPresetOption(@Style.Type style: Int, seedColor: Int): ColorOptionImpl {
+    fun buildPresetOption(@ThemeStyle.Type style: Int, seedColor: Int): ColorOptionImpl {
         val builder = ColorOptionImpl.Builder()
         builder.lightColors =
             intArrayOf(Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT)
@@ -176,7 +176,7 @@ class FakeColorPickerRepository2 @Inject constructor() : ColorPickerRepository2 
 
     fun buildWallpaperOption(
         source: String,
-        @Style.Type style: Int,
+        @ThemeStyle.Type style: Int,
         seedColor: Int,
     ): ColorOptionImpl {
         val builder = ColorOptionImpl.Builder()

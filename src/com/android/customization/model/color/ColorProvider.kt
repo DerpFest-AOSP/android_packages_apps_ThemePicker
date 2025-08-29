@@ -20,6 +20,7 @@ import android.app.WallpaperManager
 import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Resources
+import android.content.theming.ThemeStyle
 import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils.setAlphaComponent
 import androidx.lifecycle.LifecycleOwner
@@ -37,7 +38,6 @@ import com.android.customization.model.color.ColorOptionsProvider.COLOR_SOURCE_L
 import com.android.customization.model.color.ColorUtils.toColorString
 import com.android.customization.picker.color.shared.model.ColorType
 import com.android.systemui.monet.ColorScheme
-import com.android.systemui.monet.Style
 import com.android.themepicker.R
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.module.InjectorProvider
@@ -57,7 +57,7 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
 
     companion object {
         const val themeStyleEnabled = true
-        val styleSize = if (themeStyleEnabled) Style.values().size else 1
+        val styleSize = if (themeStyleEnabled) ThemeStyle.values().size else 1
         private const val TAG = "ColorProvider"
         private const val MAX_SEED_COLORS = 4
         private const val MAX_PRESET_COLORS = 4
@@ -67,11 +67,16 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
     private var loaderJob: Job? = null
     private val monetEnabled = ColorUtils.isMonetEnabled(context)
     // TODO(b/202145216): Use style method to fetch the list of style.
-    @Style.Type
+    @ThemeStyle.Type
     private var styleList =
         if (themeStyleEnabled)
-            arrayOf(Style.TONAL_SPOT, Style.SPRITZ, Style.VIBRANT, Style.EXPRESSIVE)
-        else arrayOf(Style.TONAL_SPOT)
+            arrayOf(
+                ThemeStyle.TONAL_SPOT,
+                ThemeStyle.SPRITZ,
+                ThemeStyle.VIBRANT,
+                ThemeStyle.EXPRESSIVE,
+            )
+        else arrayOf(ThemeStyle.TONAL_SPOT)
 
     private var monochromeBundleName: String? = null
 
@@ -218,13 +223,13 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
             )
             builder.title =
                 when (style) {
-                    Style.TONAL_SPOT ->
+                    ThemeStyle.TONAL_SPOT ->
                         context.getString(R.string.content_description_dynamic_color_option)
-                    Style.SPRITZ ->
+                    ThemeStyle.SPRITZ ->
                         context.getString(R.string.content_description_neutral_color_option)
-                    Style.VIBRANT ->
+                    ThemeStyle.VIBRANT ->
                         context.getString(R.string.content_description_vibrant_color_option)
-                    Style.EXPRESSIVE ->
+                    ThemeStyle.EXPRESSIVE ->
                         context.getString(R.string.content_description_expressive_color_option)
                     else -> context.getString(R.string.content_description_dynamic_color_option)
                 }
@@ -313,7 +318,8 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
     private fun getDarkPresetColorPreview(colorScheme: ColorScheme): IntArray {
         val colors =
             when (colorScheme.style) {
-                Style.FRUIT_SALAD -> intArrayOf(colorScheme.accent3.s100, colorScheme.accent1.s200)
+                ThemeStyle.FRUIT_SALAD ->
+                    intArrayOf(colorScheme.accent3.s100, colorScheme.accent1.s200)
                 else -> intArrayOf(colorScheme.accent1.s200, colorScheme.accent1.s200)
             }
         return intArrayOf(colors[0], colors[1], colors[0], colors[1])
@@ -326,7 +332,7 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
     private fun getLightPresetColorPreview(colorScheme: ColorScheme): IntArray {
         val colors =
             when (colorScheme.style) {
-                Style.FRUIT_SALAD ->
+                ThemeStyle.FRUIT_SALAD ->
                     intArrayOf(
                         colorScheme.accent3.getAtTone(450f),
                         colorScheme.accent1.getAtTone(550f),
@@ -361,15 +367,16 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
                         } catch (e: Resources.NotFoundException) {
                             null
                         }
-                    @Style.Type
+                    @ThemeStyle.Type
                     val style =
                         try {
-                            if (styleName != null) Style.valueOf(styleName) else Style.TONAL_SPOT
+                            if (styleName != null) ThemeStyle.valueOf(styleName)
+                            else ThemeStyle.TONAL_SPOT
                         } catch (e: IllegalArgumentException) {
-                            Style.TONAL_SPOT
+                            ThemeStyle.TONAL_SPOT
                         }
 
-                    if (style == Style.MONOCHROMATIC) {
+                    if (style == ThemeStyle.MONOCHROMATIC) {
                         if (
                             !InjectorProvider.getInjector()
                                 .getFlags()
@@ -412,7 +419,7 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
     private fun buildPreset(
         bundleName: String,
         index: Int,
-        @Style.Type style: Int? = null,
+        @ThemeStyle.Type style: Int? = null,
         type: ColorType = ColorType.PRESET_COLOR,
         isNewPickerUi: Boolean,
     ): ColorOptionImpl {
@@ -438,7 +445,7 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
             darkColorScheme = ColorScheme(colorFromStub, /* darkTheme= */ true, style)
 
             when (style) {
-                Style.MONOCHROMATIC -> {
+                ThemeStyle.MONOCHROMATIC -> {
                     darkColors = getDarkMonochromePreview(darkColorScheme)
                     lightColors = getLightMonochromePreview(lightColorScheme)
                 }
@@ -466,7 +473,7 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
                         buildPreset(
                             bundleName = it,
                             index = -1,
-                            style = Style.MONOCHROMATIC,
+                            style = ThemeStyle.MONOCHROMATIC,
                             type = ColorType.WALLPAPER_COLOR,
                             isNewPickerUi = isNewPickerUi,
                         ),
