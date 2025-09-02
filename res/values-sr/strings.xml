@@ -68,7 +68,6 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Задржи актуелну позадину"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Преглед стила"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Преглед мреже"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"Опис садржаја"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Преглед фонта"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Преглед иконе"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Преглед боје"</string>
@@ -130,9 +129,7 @@
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Привремено је онемогућено због уштеде батерије"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Тематске иконе"</string>
     <string name="themed_icon_beta_title" msgid="5433087142610402812">"Тематске иконе (бета)"</string>
-    <string name="pack_theme_title" msgid="8859400282820047298">"Наслов"</string>
     <string name="beta_title" msgid="8703819523760746458">"Бета"</string>
-    <string name="theme_packs_description" msgid="7214401664119395771">"Опис"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Промените мрежу апликација"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Боје позадине"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Иконе, текст и друго уклапају се са бојама позадине"</string>

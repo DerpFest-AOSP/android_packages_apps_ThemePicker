@@ -68,7 +68,6 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"अहिले कै वालपेपर राख्नुहोस्"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"शैलीको प्रिभ्यु"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"ग्रिडको प्रिभ्यु"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"सामग्रीको वर्णन"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"फन्टको प्रिभ्यू"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"आइकनको प्रिभ्यू"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"रङको प्रिभ्यू"</string>
@@ -130,9 +129,7 @@
     <string name="mode_disabled_msg" msgid="9196245518435936512">"ब्याट्री सेभर अन भएकाले केही समयका लागि अफ गरिएको छ"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"थिमयुक्त आइकन"</string>
     <string name="themed_icon_beta_title" msgid="5433087142610402812">"थिमयुक्त आइकनहरू (बिटा)"</string>
-    <string name="pack_theme_title" msgid="8859400282820047298">"शीर्षक"</string>
     <string name="beta_title" msgid="8703819523760746458">"बिटा"</string>
-    <string name="theme_packs_description" msgid="7214401664119395771">"वर्णन"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"एप ग्रिड बदल्नुहोस्"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"वालपेपरका रङहरू"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"तपाईंको वालपेपरका रङसँग मिल्ने आइकन, टेक्स्ट तथा अन्य कुराहरू"</string>
