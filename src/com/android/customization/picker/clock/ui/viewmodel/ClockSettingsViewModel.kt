@@ -16,6 +16,7 @@
 package com.android.customization.picker.clock.ui.viewmodel
 
 import android.content.Context
+import android.content.theming.ThemeStyle
 import androidx.core.graphics.ColorUtils
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -32,7 +33,6 @@ import com.android.customization.picker.color.shared.model.ColorOptionModel
 import com.android.customization.picker.color.shared.model.ColorType
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.systemui.monet.ColorScheme
-import com.android.systemui.monet.Style
 import com.android.themepicker.R
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel
@@ -147,8 +147,9 @@ private constructor(
                         ColorScheme(
                                 /* seed= */ colorModel.color,
                                 /* darkTheme= */ false,
-                                /* style= */ if (colorModel.colorId == "GRAY") Style.MONOCHROMATIC
-                                else Style.RAINBOW,
+                                /* style= */ if (colorModel.colorId == "GRAY")
+                                    ThemeStyle.MONOCHROMATIC
+                                else ThemeStyle.RAINBOW,
                             )
                             .accent1
                             .getAtTone(450f)

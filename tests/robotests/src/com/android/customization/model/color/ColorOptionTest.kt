@@ -15,13 +15,13 @@
  */
 package com.android.customization.model.color
 
+import android.content.theming.ThemeStyle
 import android.graphics.Color
 import com.android.customization.model.ResourceConstants.OVERLAY_CATEGORY_SYSTEM_PALETTE
 import com.android.customization.model.color.ColorOptionsProvider.COLOR_SOURCE_HOME
 import com.android.customization.model.color.ColorOptionsProvider.COLOR_SOURCE_LOCK
 import com.android.customization.model.color.ColorOptionsProvider.COLOR_SOURCE_PRESET
 import com.android.customization.picker.color.shared.model.ColorType
-import com.android.systemui.monet.Style
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.Rule
@@ -56,7 +56,7 @@ class ColorOptionTest {
                 false,
                 source,
                 12345,
-                Style.TONAL_SPOT,
+                ThemeStyle.TONAL_SPOT,
                 /* index= */ 0,
                 ColorOptionImpl.PreviewInfo(intArrayOf(0), intArrayOf(0)),
                 ColorType.WALLPAPER_COLOR,
@@ -66,13 +66,13 @@ class ColorOptionTest {
 
     @Test
     fun colorOption_style() {
-        testColorOptionStyle(Style.TONAL_SPOT)
-        testColorOptionStyle(Style.SPRITZ)
-        testColorOptionStyle(Style.VIBRANT)
-        testColorOptionStyle(Style.EXPRESSIVE)
+        testColorOptionStyle(ThemeStyle.TONAL_SPOT)
+        testColorOptionStyle(ThemeStyle.SPRITZ)
+        testColorOptionStyle(ThemeStyle.VIBRANT)
+        testColorOptionStyle(ThemeStyle.EXPRESSIVE)
     }
 
-    private fun testColorOptionStyle(@Style.Type style: Int) {
+    private fun testColorOptionStyle(@ThemeStyle.Type style: Int) {
         val colorOption: ColorOption =
             ColorOptionImpl(
                 "fake color",
@@ -104,7 +104,7 @@ class ColorOptionTest {
                 /* isDefault= */ false,
                 "fake_source",
                 12345,
-                Style.TONAL_SPOT,
+                ThemeStyle.TONAL_SPOT,
                 index,
                 ColorOptionImpl.PreviewInfo(intArrayOf(0), intArrayOf(0)),
                 ColorType.WALLPAPER_COLOR,
@@ -127,7 +127,7 @@ class ColorOptionTest {
                 /* isDefault= */ false,
                 "fake_source",
                 seedColor,
-                Style.TONAL_SPOT,
+                ThemeStyle.TONAL_SPOT,
                 0,
                 ColorOptionImpl.PreviewInfo(intArrayOf(0), intArrayOf(0)),
                 ColorType.WALLPAPER_COLOR,
@@ -152,7 +152,7 @@ class ColorOptionTest {
             isDefault,
             source,
             12345,
-            Style.TONAL_SPOT,
+            ThemeStyle.TONAL_SPOT,
             /* index= */ 0,
             ColorOptionImpl.PreviewInfo(intArrayOf(0), intArrayOf(0)),
             ColorType.WALLPAPER_COLOR,
