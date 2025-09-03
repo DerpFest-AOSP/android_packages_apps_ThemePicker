@@ -68,7 +68,6 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Conservar fondo de pantalla actual"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Vista previa do estilo"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Vista previa da grade"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"Descrición do contido"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Vista previa do tipo de letra"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Vista previa da icona"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Vista previa da cor"</string>
@@ -130,9 +129,7 @@
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Desactivouse temporalmente debido ao Aforro de batería"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Iconas temáticas"</string>
     <string name="themed_icon_beta_title" msgid="5433087142610402812">"Iconas temáticas (beta)"</string>
-    <string name="pack_theme_title" msgid="8859400282820047298">"Título"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
-    <string name="theme_packs_description" msgid="7214401664119395771">"Descrición"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Cambia a grade de aplicacións"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Cores do fondo"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Combina as cores das iconas, o texto e outros co fondo"</string>

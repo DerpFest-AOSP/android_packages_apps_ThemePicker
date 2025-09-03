@@ -68,7 +68,6 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"လက်ရှိနောက်ခံပုံ ဆက်ထားရန်"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"ပုံစံ အစမ်းကြည့်ရှုခြင်း"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"ဇယားကွက် အစမ်းကြည့်ရှုခြင်း"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"အကြောင်းအရာ ဖော်ပြချက်"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"ဖောင့် အစမ်းကြည့်ရှုခြင်း"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"သင်္ကေတ အစမ်းကြည့်ရှုခြင်း"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"အရောင် အစမ်းကြည့်ရှုခြင်း"</string>
@@ -130,9 +129,7 @@
     <string name="mode_disabled_msg" msgid="9196245518435936512">"‘ဘက်ထရီ အားထိန်း’ ကြောင့် ယာယီပိတ်ထားသည်"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"အပြင်အဆင်သုံး သင်္ကေတများ"</string>
     <string name="themed_icon_beta_title" msgid="5433087142610402812">"အပြင်အဆင်ဖြင့် သင်္ကေတများ (စမ်းသပ်)"</string>
-    <string name="pack_theme_title" msgid="8859400282820047298">"ခေါင်းစဉ်"</string>
     <string name="beta_title" msgid="8703819523760746458">"စမ်းသပ်"</string>
-    <string name="theme_packs_description" msgid="7214401664119395771">"အကြောင်းအရာ"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"အက်ပ်ဇယား ပြောင်းရန်"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"နောက်ခံအရောင်များ"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"သင်္ကေတ၊ စာသားစသည်တို့သည် သင့်နောက်ခံအရောင်များနှင့် လိုက်ဖက်သည်"</string>

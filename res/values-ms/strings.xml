@@ -68,7 +68,6 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Kekalkan kertas dinding semasa"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Pratonton Gaya"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Pratonton grid"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"Perihalan Kandungan"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Pratonton fon"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Pratonton ikon"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Pratonton warna"</string>
@@ -130,9 +129,7 @@
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Dilumpuhkan sementara disebabkan Penjimat Bateri"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Ikon bertema"</string>
     <string name="themed_icon_beta_title" msgid="5433087142610402812">"Ikon bertema (beta)"</string>
-    <string name="pack_theme_title" msgid="8859400282820047298">"Tajuk"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
-    <string name="theme_packs_description" msgid="7214401664119395771">"Perihalan"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Tukar grid apl"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Warna hiasan latar"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Ikon, teks dan pelbagai padanan warna pada hiasan latar"</string>
