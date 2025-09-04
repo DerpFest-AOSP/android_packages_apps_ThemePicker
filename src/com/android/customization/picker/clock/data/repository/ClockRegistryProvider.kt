@@ -18,8 +18,8 @@ package com.android.customization.picker.clock.data.repository
 import android.app.NotificationManager
 import android.content.ComponentName
 import android.content.Context
+import android.os.Build
 import android.view.LayoutInflater
-import com.android.systemui.plugins.Plugin
 import com.android.systemui.plugins.PluginManager
 import com.android.systemui.shared.clocks.ClockRegistry
 import com.android.systemui.shared.clocks.DefaultClockProvider
@@ -28,6 +28,7 @@ import com.android.systemui.shared.plugins.PluginEnabler
 import com.android.systemui.shared.plugins.PluginInstance
 import com.android.systemui.shared.plugins.PluginManagerImpl
 import com.android.systemui.shared.plugins.PluginPrefs
+import com.android.systemui.shared.plugins.VersionCheckerImpl
 import com.android.systemui.shared.system.UncaughtExceptionPreHandlerManager_Factory
 import com.android.wallpaper.config.BaseFlags
 import java.util.concurrent.Executors
@@ -74,15 +75,12 @@ class ClockRegistryProvider(
 
     private fun createPluginManager(context: Context): PluginManager {
         val privilegedPlugins = listOf<String>()
-        val isDebugDevice = true
 
         val instanceFactory =
             PluginInstance.Factory(
-                this::class.java.classLoader,
-                PluginInstance.InstanceFactory<Plugin>(),
-                PluginInstance.VersionCheckerImpl(),
+                VersionCheckerImpl(),
+                this::class.java.classLoader!!,
                 privilegedPlugins,
-                isDebugDevice,
             )
 
         /*
@@ -121,7 +119,7 @@ class ClockRegistryProvider(
         return PluginManagerImpl(
             context,
             pluginActionManager,
-            isDebugDevice,
+            Build.IS_DEBUGGABLE,
             UncaughtExceptionPreHandlerManager_Factory.create().get(),
             pluginEnabler,
             PluginPrefs(context),
