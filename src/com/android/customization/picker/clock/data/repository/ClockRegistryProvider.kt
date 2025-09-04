@@ -25,6 +25,7 @@ import com.android.systemui.shared.clocks.ClockRegistry
 import com.android.systemui.shared.clocks.DefaultClockProvider
 import com.android.systemui.shared.plugins.PluginActionManager
 import com.android.systemui.shared.plugins.PluginEnabler
+import com.android.systemui.shared.plugins.PluginEnabler.DisableReason
 import com.android.systemui.shared.plugins.PluginInstance
 import com.android.systemui.shared.plugins.PluginManagerImpl
 import com.android.systemui.shared.plugins.PluginPrefs
@@ -90,18 +91,14 @@ class ClockRegistryProvider(
             object : PluginEnabler {
                 override fun setEnabled(component: ComponentName) = Unit
 
-                override fun setDisabled(
-                    component: ComponentName,
-                    @PluginEnabler.DisableReason reason: Int,
-                ) = Unit
+                override fun setDisabled(component: ComponentName, reason: DisableReason) = Unit
 
                 override fun isEnabled(component: ComponentName): Boolean {
                     return true
                 }
 
-                @PluginEnabler.DisableReason
-                override fun getDisableReason(componentName: ComponentName): Int {
-                    return PluginEnabler.ENABLED
+                override fun getDisableReason(componentName: ComponentName): DisableReason {
+                    return DisableReason.ENABLED
                 }
             }
 
