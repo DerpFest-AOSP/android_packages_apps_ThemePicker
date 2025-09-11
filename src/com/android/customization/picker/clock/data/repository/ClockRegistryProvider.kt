@@ -18,7 +18,6 @@ package com.android.customization.picker.clock.data.repository
 import android.app.NotificationManager
 import android.content.ComponentName
 import android.content.Context
-import android.os.Build
 import android.view.LayoutInflater
 import com.android.systemui.plugins.PluginManager
 import com.android.systemui.shared.clocks.ClockRegistry
@@ -75,13 +74,13 @@ class ClockRegistryProvider(
     fun get() = clockRegistry
 
     private fun createPluginManager(context: Context): PluginManager {
-        val privilegedPlugins = listOf<String>()
+        val pluginConfig = PluginManager.Config()
 
         val instanceFactory =
             PluginInstance.Factory(
                 VersionCheckerImpl(),
                 this::class.java.classLoader!!,
-                privilegedPlugins,
+                pluginConfig,
             )
 
         /*
@@ -110,17 +109,16 @@ class ClockRegistryProvider(
                 Executors.newSingleThreadExecutor(),
                 context.getSystemService(NotificationManager::class.java),
                 pluginEnabler,
-                privilegedPlugins,
+                pluginConfig,
                 instanceFactory,
             )
         return PluginManagerImpl(
             context,
             pluginActionManager,
-            Build.IS_DEBUGGABLE,
             UncaughtExceptionPreHandlerManager_Factory.create().get(),
             pluginEnabler,
             PluginPrefs(context),
-            listOf(),
+            pluginConfig,
         )
     }
 }
