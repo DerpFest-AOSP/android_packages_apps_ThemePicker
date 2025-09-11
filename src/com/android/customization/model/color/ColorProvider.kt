@@ -16,7 +16,6 @@
 package com.android.customization.model.color
 
 import android.app.WallpaperColors
-import android.app.WallpaperManager
 import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Resources
@@ -34,12 +33,10 @@ import com.android.customization.model.ResourceConstants.OVERLAY_CATEGORY_COLOR
 import com.android.customization.model.ResourceConstants.OVERLAY_CATEGORY_SYSTEM_PALETTE
 import com.android.customization.model.ResourcesApkProvider
 import com.android.customization.model.color.ColorOptionsProvider.COLOR_SOURCE_HOME
-import com.android.customization.model.color.ColorOptionsProvider.COLOR_SOURCE_LOCK
 import com.android.customization.model.color.ColorUtils.toColorString
 import com.android.customization.picker.color.shared.model.ColorType
 import com.android.systemui.monet.ColorScheme
 import com.android.themepicker.R
-import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.module.InjectorProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -103,22 +100,10 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
         homeWallpaperColors: WallpaperColors?,
         lockWallpaperColors: WallpaperColors?,
     ) {
-        val isNewPickerUi = BaseFlags.get().isNewPickerUi()
-        if (isNewPickerUi) {
-            val wallpaperColorsChanged = this.homeWallpaperColors != homeWallpaperColors
-            if (wallpaperColorsChanged || reload) {
-                loadSeedColors(homeWallpaperColors)
-                this.homeWallpaperColors = homeWallpaperColors
-            }
-        } else {
-            val wallpaperColorsChanged =
-                this.homeWallpaperColors != homeWallpaperColors ||
-                    this.lockWallpaperColors != lockWallpaperColors
-            if (wallpaperColorsChanged || reload) {
-                loadSeedColors(homeWallpaperColors, lockWallpaperColors)
-                this.homeWallpaperColors = homeWallpaperColors
-                this.lockWallpaperColors = lockWallpaperColors
-            }
+        val wallpaperColorsChanged = this.homeWallpaperColors != homeWallpaperColors
+        if (wallpaperColorsChanged || reload) {
+            loadSeedColors(homeWallpaperColors)
+            this.homeWallpaperColors = homeWallpaperColors
         }
 
         scope.launch {
@@ -128,77 +113,39 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
             if (presetColorBundles == null || reload) {
                 loaderJob = launch {
                     try {
-                        loadPreset(isNewPickerUi)
-                        callback?.onOptionsLoaded(buildFinalList(isNewPickerUi))
+                        loadPreset()
+                        callback?.onOptionsLoaded(buildFinalList())
                     } catch (e: Throwable) {
                         colorsAvailable = false
                         callback?.onError(e)
                     }
                 }
             } else {
-                callback?.onOptionsLoaded(buildFinalList(isNewPickerUi))
+                callback?.onOptionsLoaded(buildFinalList())
             }
         }
     }
 
-    private fun isLockScreenWallpaperLastApplied(): Boolean {
-        // The WallpaperId increases every time a new wallpaper is set, so the larger wallpaper id
-        // is the most recently set wallpaper
-        val manager = WallpaperManager.getInstance(mContext)
-        return manager.getWallpaperId(WallpaperManager.FLAG_LOCK) >
-            manager.getWallpaperId(WallpaperManager.FLAG_SYSTEM)
-    }
-
-    private fun loadSeedColors(
-        homeWallpaperColors: WallpaperColors?,
-        lockWallpaperColors: WallpaperColors? = null,
-    ) {
+    private fun loadSeedColors(homeWallpaperColors: WallpaperColors?) {
         if (homeWallpaperColors == null) return
 
         val bundles: MutableList<ColorOption> = ArrayList()
-        val colorsPerSource =
-            if (lockWallpaperColors == null) {
-                MAX_SEED_COLORS
-            } else {
-                MAX_SEED_COLORS / 2
-            }
 
-        if (lockWallpaperColors != null) {
-            val shouldLockColorsGoFirst = isLockScreenWallpaperLastApplied()
-            // First half of the colors
-            buildColorSeeds(
-                if (shouldLockColorsGoFirst) lockWallpaperColors else homeWallpaperColors,
-                colorsPerSource,
-                if (shouldLockColorsGoFirst) COLOR_SOURCE_LOCK else COLOR_SOURCE_HOME,
-                true,
-                bundles,
-            )
-            // Second half of the colors
-            buildColorSeeds(
-                if (shouldLockColorsGoFirst) homeWallpaperColors else lockWallpaperColors,
-                MAX_SEED_COLORS - bundles.size / styleSize,
-                if (shouldLockColorsGoFirst) COLOR_SOURCE_HOME else COLOR_SOURCE_LOCK,
-                false,
-                bundles,
-            )
-        } else {
-            buildColorSeeds(homeWallpaperColors, colorsPerSource, COLOR_SOURCE_HOME, true, bundles)
-        }
+        buildColorSeeds(wallpaperColors = homeWallpaperColors, bundles = bundles)
+
         wallpaperColorBundles = bundles
     }
 
     private fun buildColorSeeds(
         wallpaperColors: WallpaperColors,
-        maxColors: Int,
-        source: String,
-        containsDefault: Boolean,
         bundles: MutableList<ColorOption>,
     ) {
+        val maxColors: Int = MAX_SEED_COLORS / 2
         val seedColors = ColorScheme.getSeedColors(wallpaperColors)
         val defaultSeed = seedColors.first()
-        buildBundle(defaultSeed, 0, containsDefault, source, bundles)
+        buildBundle(defaultSeed, 0, true, bundles)
         for ((i, colorInt) in seedColors.drop(1).take(maxColors - 1).withIndex()) {
-            buildBundle(colorInt, i + 1, false, source, bundles)
+            buildBundle(colorInt, i + 1, false, bundles)
         }
     }
 
@@ -206,7 +153,6 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
         colorInt: Int,
         i: Int,
         isDefault: Boolean,
-        source: String,
         bundles: MutableList<ColorOption>,
     ) {
         // TODO(b/202145216): Measure time cost in the loop.
@@ -233,7 +179,7 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
                         context.getString(R.string.content_description_expressive_color_option)
                     else -> context.getString(R.string.content_description_dynamic_color_option)
                 }
-            builder.source = source
+            builder.source = COLOR_SOURCE_HOME
             builder.style = style
             // Color option index value starts from 1.
             builder.index = i + 1
@@ -346,7 +292,7 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
         return intArrayOf(colors[0], colors[1], colors[0], colors[1])
     }
 
-    private suspend fun loadPreset(isNewPickerUi: Boolean) =
+    private suspend fun loadPreset() =
         withContext(Dispatchers.IO) {
             val bundles: MutableList<ColorOption> = ArrayList()
 
@@ -387,23 +333,9 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
                         hasMonochrome = true
                         monochromeBundleName = bundleName
                     }
-                    bundles.add(
-                        buildPreset(
-                            bundleName = bundleName,
-                            index = index,
-                            style = style,
-                            isNewPickerUi = isNewPickerUi,
-                        )
-                    )
+                    bundles.add(buildPreset(bundleName = bundleName, index = index, style = style))
                 } else {
-                    bundles.add(
-                        buildPreset(
-                            bundleName = bundleName,
-                            index = index,
-                            style = null,
-                            isNewPickerUi = isNewPickerUi,
-                        )
-                    )
+                    bundles.add(buildPreset(bundleName = bundleName, index = index, style = null))
                 }
 
                 index++
@@ -421,7 +353,6 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
         index: Int,
         @ThemeStyle.Type style: Int? = null,
         type: ColorType = ColorType.PRESET_COLOR,
-        isNewPickerUi: Boolean,
     ): ColorOptionImpl {
         val builder = ColorOptionImpl.Builder()
         builder.title = getItemStringFromStub(COLOR_BUNDLE_NAME_PREFIX, bundleName)
@@ -460,7 +391,7 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
         return builder.build()
     }
 
-    private fun buildFinalList(isNewPickerUi: Boolean): List<ColorOption> {
+    private fun buildFinalList(): List<ColorOption> {
         val presetColors = presetColorBundles ?: emptyList()
         val wallpaperColors = wallpaperColorBundles?.toMutableList() ?: mutableListOf()
         // Insert monochrome in the second position if it is enabled and included in preset
@@ -475,7 +406,6 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
                             index = -1,
                             style = ThemeStyle.MONOCHROMATIC,
                             type = ColorType.WALLPAPER_COLOR,
-                            isNewPickerUi = isNewPickerUi,
                         ),
                     )
                 }
