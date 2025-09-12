@@ -37,7 +37,6 @@ import com.android.customization.model.color.ColorUtils.toColorString
 import com.android.customization.picker.color.shared.model.ColorType
 import com.android.systemui.monet.ColorScheme
 import com.android.themepicker.R
-import com.android.wallpaper.module.InjectorProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -323,13 +322,6 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
                         }
 
                     if (style == ThemeStyle.MONOCHROMATIC) {
-                        if (
-                            !InjectorProvider.getInjector()
-                                .getFlags()
-                                .isMonochromaticThemeEnabled(mContext)
-                        ) {
-                            continue
-                        }
                         hasMonochrome = true
                         monochromeBundleName = bundleName
                     }
@@ -396,19 +388,17 @@ class ColorProvider(private val context: Context, stubPackageName: String) :
         val wallpaperColors = wallpaperColorBundles?.toMutableList() ?: mutableListOf()
         // Insert monochrome in the second position if it is enabled and included in preset
         // colors
-        if (InjectorProvider.getInjector().getFlags().isMonochromaticThemeEnabled(mContext)) {
-            monochromeBundleName?.let {
-                if (wallpaperColors.isNotEmpty()) {
-                    wallpaperColors.add(
-                        1,
-                        buildPreset(
-                            bundleName = it,
-                            index = -1,
-                            style = ThemeStyle.MONOCHROMATIC,
-                            type = ColorType.WALLPAPER_COLOR,
-                        ),
-                    )
-                }
+        monochromeBundleName?.let {
+            if (wallpaperColors.isNotEmpty()) {
+                wallpaperColors.add(
+                    1,
+                    buildPreset(
+                        bundleName = it,
+                        index = -1,
+                        style = ThemeStyle.MONOCHROMATIC,
+                        type = ColorType.WALLPAPER_COLOR,
+                    ),
+                )
             }
         }
         return wallpaperColors + presetColors
