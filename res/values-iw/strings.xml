@@ -128,11 +128,11 @@
     <string name="mode_title" msgid="2394873501427436055">"עיצוב כהה"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"מושבת זמנית כי הופעל מצב \'חיסכון בסוללה\'"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"סמלים בעיצוב עקבי"</string>
-    <string name="themed_icon_beta_title" msgid="5433087142610402812">"סמלים מעוצבים (בטא)"</string>
+    <string name="themed_icon_beta_title" msgid="5433087142610402812">"סמלים בעיצוב עקבי (בטא)"</string>
     <string name="beta_title" msgid="8703819523760746458">"בטא"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"שינוי רשת האפליקציות"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"צבעי הטפט"</string>
-    <string name="wallpaper_color_subheader" msgid="4044464573669965670">"הסמלים, הטקסטים ורכיבים אחרים יהיו בצבע זהה לצבעי הטפט"</string>
+    <string name="wallpaper_color_subheader" msgid="4044464573669965670">"הצבע של הסמלים, הטקסטים ורכיבים נוספים יתאים לצבעי הטפט"</string>
     <string name="wallpaper_color_title" msgid="5687965239180986458">"צבע הטפט"</string>
     <string name="preset_color_tab" msgid="3133391839341329314">"הצבעים הבסיסיים"</string>
     <string name="preset_color_tab_2" msgid="1444107326712562538">"צבעים אחרים"</string>

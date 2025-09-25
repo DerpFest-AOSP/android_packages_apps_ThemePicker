@@ -42,7 +42,7 @@
     <string name="clock_size" msgid="5028923902364418263">"Dimensioni"</string>
     <string name="clock_size_dynamic" msgid="1023930312455061642">"Dinamiche"</string>
     <string name="clock_size_dynamic_description" msgid="2776620745774561662">"Le dimensioni dell\'orologio cambiano in base ai contenuti della schermata di blocco"</string>
-    <string name="clock_size_large" msgid="3143248715744138979">"Grandi"</string>
+    <string name="clock_size_large" msgid="3143248715744138979">"Grande"</string>
     <string name="clock_size_large_description" msgid="1171001745473029918">"Mostrato quando le notifiche non sono visibili"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"Piccole"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"Un piccolo orologio visualizzato nell\'angolo dello schermo"</string>

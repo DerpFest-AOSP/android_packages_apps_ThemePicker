@@ -116,7 +116,7 @@
     <string name="use_style_button" msgid="1754493078383627019">"استفاده از <xliff:g id="ID_1">%1$s</xliff:g>"</string>
     <string name="no_thanks" msgid="7286616980115687627">"نه، متشکرم"</string>
     <string name="clock_preview_content_description" msgid="5460561185905717460">"<xliff:g id="ID_1">%1$s</xliff:g> پیش‌نمایش ساعت"</string>
-    <string name="something_went_wrong" msgid="529840112449799117">"متأسفم! مشکلی رخ داد."</string>
+    <string name="something_went_wrong" msgid="529840112449799117">"متأسفانه مشکلی پیش آمد."</string>
     <string name="theme_preview_icons_section_title" msgid="7064768910744000643">"رنگ/نمادها"</string>
     <string name="style_info_description" msgid="2612473574431003251">"پیش‌نمایش قلم، نمادها، شکل و رنگ برنامه"</string>
     <string name="accessibility_custom_font_title" msgid="966867359157303705">"قلم سفارشی"</string>
