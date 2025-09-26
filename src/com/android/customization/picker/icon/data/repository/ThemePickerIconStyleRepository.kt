@@ -80,12 +80,11 @@ constructor(
         }
         emit(previewUtils)
     }
-    val themedIconUri: Flow<Uri?> = previewUtilsFlow.map { it?.getUri(ICON_THEMED) }
 
     override val isCustomizationAvailable: Flow<Boolean> = previewUtilsFlow.map { it != null }
 
     override val isThemedIconActivated: Flow<Boolean> =
-        themedIconUri
+        previewUtilsFlow
             .flatMapLatest {
                 callbackFlow {
                     var disposableHandle: DisposableHandle? = null
@@ -93,16 +92,22 @@ constructor(
                         val contentObserver =
                             object : ContentObserver(null) {
                                 override fun onChange(selfChange: Boolean) {
-                                    trySend(getThemedIconEnabled(it))
+                                    trySend(getThemedIconEnabled(it.getUri(ICON_THEMED)))
                                 }
                             }
+                        // Icons can be set with ICON_THEMED or SET_ICON_THEMED URI
                         contentResolver.registerContentObserver(
-                            it,
+                            it.getUri(ICON_THEMED),
+                            /* notifyForDescendants= */ true,
+                            contentObserver,
+                        )
+                        contentResolver.registerContentObserver(
+                            it.getUri(SET_ICON_THEMED),
                             /* notifyForDescendants= */ true,
                             contentObserver,
                         )
 
-                        trySend(getThemedIconEnabled(it))
+                        trySend(getThemedIconEnabled(it.getUri(ICON_THEMED)))
 
                         disposableHandle = DisposableHandle {
                             contentResolver.unregisterContentObserver(contentObserver)
@@ -182,19 +187,29 @@ constructor(
     }
 
     override suspend fun setThemedIconEnabled(enabled: Boolean) {
-        themedIconUri.first()?.let {
+        previewUtilsFlow.first()?.let {
             val values = ContentValues()
             values.put(COL_ICON_THEMED_VALUE, enabled)
-            contentResolver.update(it, values, /* where= */ null, /* selectionArgs= */ null)
+            contentResolver.update(
+                it.getUri(ICON_THEMED),
+                values,
+                /* where= */ null,
+                /* selectionArgs= */ null,
+            )
         }
     }
 
     override suspend fun setIconStyle(iconStyle: IconStyle): Boolean {
-        themedIconUri.first()?.let {
+        previewUtilsFlow.first()?.let {
             val values = ContentValues()
             values.put(COL_ICON_THEMED_VALUE, iconStyle == ThemePickerIconStyle.MONOCHROME)
             val rowsUpdated =
-                contentResolver.update(it, values, /* where= */ null, /* selectionArgs= */ null)
+                contentResolver.update(
+                    it.getUri(ICON_THEMED),
+                    values,
+                    /* where= */ null,
+                    /* selectionArgs= */ null,
+                )
             return rowsUpdated > 0
         }
         return false
@@ -213,6 +228,7 @@ constructor(
 
     companion object {
         const val ICON_THEMED = "icon_themed"
+        const val SET_ICON_THEMED = "set_icon_themed"
         const val COL_ICON_THEMED_VALUE = "boolean_value"
         private const val ENABLED = 1
     }
