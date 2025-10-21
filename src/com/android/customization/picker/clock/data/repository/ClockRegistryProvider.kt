@@ -74,7 +74,20 @@ class ClockRegistryProvider(
     fun get() = clockRegistry
 
     private fun createPluginManager(context: Context): PluginManager {
-        val pluginConfig = PluginManager.Config()
+        val pluginConfig =
+            PluginManager.Config(
+                listOf(
+                    // TODO(b/452686190): Combine definition w/ SystemUI
+                    "com.android.systemui.clocks.bignum",
+                    "com.android.systemui.clocks.calligraphy",
+                    "com.android.systemui.clocks.growth",
+                    "com.android.systemui.clocks.handwritten",
+                    "com.android.systemui.clocks.inflate",
+                    "com.android.systemui.clocks.metro",
+                    "com.android.systemui.clocks.numoverlap",
+                    "com.android.systemui.clocks.weather",
+                )
+            )
 
         val instanceFactory =
             PluginInstance.Factory(
