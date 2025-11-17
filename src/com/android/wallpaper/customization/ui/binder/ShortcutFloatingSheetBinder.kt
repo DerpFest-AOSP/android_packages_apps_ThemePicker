@@ -22,11 +22,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.get
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.customization.picker.common.ui.view.DoubleRowListItemSpacing
 import com.android.themepicker.R
@@ -113,6 +115,24 @@ object ShortcutFloatingSheetBinder {
                 launch {
                     viewModel.quickAffordances.collect { affordances ->
                         quickAffordanceAdapter.setItems(affordances)
+                    }
+                }
+
+                launch {
+                    viewModel.selectedQuickAffordanceIndex.collect { index ->
+                        quickAffordanceList.post {
+                            val layoutManager =
+                                quickAffordanceList.layoutManager as? LinearLayoutManager
+                                    ?: return@post
+                            val itemView = layoutManager.findViewByPosition(index)
+
+                            if (itemView != null) {
+                                val parentCenter = quickAffordanceList.width / 2
+                                val itemCenter = itemView.left + itemView.width / 2
+                                val scrollBy = itemCenter - parentCenter
+                                quickAffordanceList.smoothScrollBy(scrollBy, 0)
+                            }
+                        }
                     }
                 }
 
@@ -210,15 +230,18 @@ object ShortcutFloatingSheetBinder {
             layoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
             addItemDecoration(
                 DoubleRowListItemSpacing(
-                    context.resources.getDimensionPixelSize(
-                        R.dimen.floating_sheet_content_horizontal_padding
-                    ),
-                    context.resources.getDimensionPixelSize(
-                        R.dimen.floating_sheet_list_item_horizontal_space
-                    ),
-                    context.resources.getDimensionPixelSize(
-                        R.dimen.floating_sheet_list_item_vertical_space
-                    ),
+                    edgeItemSpacePx =
+                        context.resources.getDimensionPixelSize(
+                            R.dimen.floating_sheet_content_horizontal_padding
+                        ),
+                    itemHorizontalSpacePx =
+                        context.resources.getDimensionPixelSize(
+                            R.dimen.floating_sheet_shortcut_list_item_horizontal_space
+                        ),
+                    itemVerticalSpacePx =
+                        context.resources.getDimensionPixelSize(
+                            R.dimen.floating_sheet_list_item_vertical_space
+                        ),
                 )
             )
         }

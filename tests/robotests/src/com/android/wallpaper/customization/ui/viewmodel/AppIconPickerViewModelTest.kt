@@ -19,8 +19,12 @@ package com.android.wallpaper.customization.ui.viewmodel
 import android.content.Context
 import androidx.test.filters.SmallTest
 import com.android.customization.model.grid.FakeShapeGridManager
-import com.android.customization.picker.grid.domain.interactor.AppIconInteractor
+import com.android.customization.module.logging.ThemesUserEventLogger
+import com.android.customization.picker.grid.data.repository.ShapeRepository
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
+import com.android.customization.picker.icon.data.repository.FakeIconStyleRepository
+import com.android.customization.picker.icon.domain.interactor.AppIconInteractor
+import com.android.themepicker.R
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
 import com.android.wallpaper.testing.collectLastValue
@@ -49,16 +53,21 @@ class AppIconPickerViewModelTest {
 
     @get:Rule var hiltRule = HiltAndroidRule(this)
     @Inject lateinit var testScope: TestScope
-    @Inject lateinit var gridOptionsManager: FakeShapeGridManager
     @Inject lateinit var interactor: AppIconInteractor
+    @Inject lateinit var iconStyleRepository: FakeIconStyleRepository
+    @Inject lateinit var shapeManager: FakeShapeGridManager
+    @Inject lateinit var shapeRepository: ShapeRepository
     @Inject @ApplicationContext lateinit var appContext: Context
+    @Inject lateinit var logger: ThemesUserEventLogger
 
     private lateinit var underTest: AppIconPickerViewModel
 
     @Before
     fun setUp() {
         hiltRule.inject()
-        underTest = AppIconPickerViewModel(interactor, testScope.backgroundScope)
+        underTest =
+            AppIconPickerViewModel(appContext, interactor, logger, testScope.backgroundScope)
+        shapeManager.setShapeOptions(FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST)
     }
 
     @After
@@ -67,11 +76,11 @@ class AppIconPickerViewModelTest {
     }
 
     @Test
-    fun selectedShapeKey() =
+    fun selectedShape() =
         testScope.runTest {
-            val selectedShapeKey = collectLastValue(underTest.selectedShapeKey)
+            val selectedShapeKey = collectLastValue(underTest.selectedShape)
 
-            assertThat(selectedShapeKey()).isEqualTo("arch")
+            assertThat(selectedShapeKey()?.key?.value).isEqualTo("arch")
         }
 
     @Test
@@ -125,7 +134,7 @@ class AppIconPickerViewModelTest {
         }
 
     @Test
-    fun onApple_shouldBeNonnull_whenClickOnCircleOption() =
+    fun onApply_shouldBeNonnull_whenClickOnCircleOption() =
         testScope.runTest {
             val shapeOptions = collectLastValue(underTest.shapeOptions)
             val circleOption = shapeOptions()?.firstOrNull { it.key.value == "circle" }
@@ -172,7 +181,7 @@ class AppIconPickerViewModelTest {
         }
 
     @Test
-    fun onApple_shouldBeNonnull_whenToggle() =
+    fun onApply_shouldBeNonnull_whenToggle() =
         testScope.runTest {
             val toggleThemedIcon = collectLastValue(underTest.toggleThemedIcon)
             val onApply = collectLastValue(underTest.onApply)
@@ -183,6 +192,201 @@ class AppIconPickerViewModelTest {
 
             assertThat(onApply()).isNotNull()
         }
+
+    @Test
+    fun selectedShapeOption_shouldUpdate_afterOnApply() =
+        testScope.runTest {
+            val selectedShapeOption = collectLastValue(underTest.selectedShape)
+            val optionItems = collectLastValue(underTest.shapeOptions)
+            val onApply = collectLastValue(underTest.onApply)
+            val on4SidedCookieOptionClick =
+                optionItems()?.get(FakeShapeGridManager.FOUR_SIDED_COOKIE_IDX)?.onClicked?.let {
+                    collectLastValue(it)
+                }
+            checkNotNull(on4SidedCookieOptionClick)
+
+            on4SidedCookieOptionClick()?.invoke()
+            onApply()?.invoke()
+
+            assertShapeItem(
+                optionItem = selectedShapeOption(),
+                key = FakeShapeGridManager.FOUR_SIDED_COOKIE_KEY,
+                payload =
+                    ShapeIconViewModel(
+                        FakeShapeGridManager.FOUR_SIDED_COOKIE_KEY,
+                        FakeShapeGridManager.FOUR_SIDED_COOKIE_PATH,
+                    ),
+                text = Text.Loaded(FakeShapeGridManager.FOUR_SIDED_COOKIE_TITLE),
+                isTextUserVisible = true,
+                isSelected = true,
+                isEnabled = true,
+            )
+        }
+
+    @Test
+    fun isThemedIconEnabled_shouldUpdate_afterOnApply() {
+        testScope.runTest {
+            val isEnabled = collectLastValue(underTest.isThemedIconEnabled)
+            val toggleThemedIcon = collectLastValue(underTest.toggleThemedIcon)
+            val onApply = collectLastValue(underTest.onApply)
+            assertThat(isEnabled()).isFalse()
+
+            toggleThemedIcon()?.invoke()
+            onApply()?.invoke()
+
+            assertThat(isEnabled()).isTrue()
+
+            toggleThemedIcon()?.invoke()
+            onApply()?.invoke()
+
+            assertThat(isEnabled()).isFalse()
+        }
+    }
+
+    @Test
+    fun shapeAndThemedIcon_shouldUpdate_afterOnApply() {
+        testScope.runTest {
+            val selectedShapeOption = collectLastValue(underTest.selectedShape)
+            val optionItems = collectLastValue(underTest.shapeOptions)
+            val onApply = collectLastValue(underTest.onApply)
+            val on4SidedCookieOptionClick =
+                optionItems()?.get(FakeShapeGridManager.FOUR_SIDED_COOKIE_IDX)?.onClicked?.let {
+                    collectLastValue(it)
+                }
+            checkNotNull(on4SidedCookieOptionClick)
+            val isEnabled = collectLastValue(underTest.isThemedIconEnabled)
+            val toggleThemedIcon = collectLastValue(underTest.toggleThemedIcon)
+            assertThat(isEnabled()).isFalse()
+
+            on4SidedCookieOptionClick()?.invoke()
+            toggleThemedIcon()?.invoke()
+            onApply()?.invoke()
+
+            assertShapeItem(
+                optionItem = selectedShapeOption(),
+                key = FakeShapeGridManager.FOUR_SIDED_COOKIE_KEY,
+                payload =
+                    ShapeIconViewModel(
+                        FakeShapeGridManager.FOUR_SIDED_COOKIE_KEY,
+                        FakeShapeGridManager.FOUR_SIDED_COOKIE_PATH,
+                    ),
+                text = Text.Loaded(FakeShapeGridManager.FOUR_SIDED_COOKIE_TITLE),
+                isTextUserVisible = true,
+                isSelected = true,
+                isEnabled = true,
+            )
+            assertThat(isEnabled()).isTrue()
+        }
+    }
+
+    @Test
+    fun tabs_shapeAndStyleAvailable() {
+        testScope.runTest {
+            val tabs = collectLastValue(underTest.tabs)
+
+            val resultTabs = checkNotNull(tabs())
+            assertThat(resultTabs).hasSize(2)
+            assertThat(resultTabs[0].isSelected).isTrue()
+            assertThat(resultTabs[1].isSelected).isFalse()
+        }
+    }
+
+    @Test
+    fun tabs_styleNotAvailable() {
+        testScope.runTest {
+            val tabs = collectLastValue(underTest.tabs)
+            iconStyleRepository.setIsThemedIconAvailable(false)
+
+            val resultTabs = checkNotNull(tabs())
+            assertThat(resultTabs).hasSize(1)
+            assertThat(resultTabs[0].isSelected).isTrue()
+            assertThat(resultTabs[0].text).isEqualTo(appContext.getString(R.string.app_icons_shape))
+        }
+    }
+
+    @Test
+    fun tabs_shapeNotAvailable() {
+        testScope.runTest {
+            val tabs = collectLastValue(underTest.tabs)
+            shapeManager.setShapeOptions(emptyList())
+
+            val resultTabs = checkNotNull(tabs())
+            assertThat(resultTabs).hasSize(1)
+            assertThat(resultTabs[0].isSelected).isTrue()
+            assertThat(resultTabs[0].text).isEqualTo(appContext.getString(R.string.app_icons_style))
+        }
+    }
+
+    @Test
+    fun summary_shouldUpdate_afterOnApply() {
+        testScope.runTest {
+            val summary = collectLastValue(underTest.summary)
+            val optionItems = collectLastValue(underTest.shapeOptions)
+            val onApply = collectLastValue(underTest.onApply)
+            val on4SidedCookieOptionClick =
+                optionItems()?.get(FakeShapeGridManager.FOUR_SIDED_COOKIE_IDX)?.onClicked?.let {
+                    collectLastValue(it)
+                }
+            checkNotNull(on4SidedCookieOptionClick)
+            val isEnabled = collectLastValue(underTest.isThemedIconEnabled)
+            val toggleThemedIcon = collectLastValue(underTest.toggleThemedIcon)
+            assertThat(isEnabled()).isFalse()
+
+            on4SidedCookieOptionClick()?.invoke()
+            toggleThemedIcon()?.invoke()
+            onApply()?.invoke()
+
+            val currentSummary = summary()
+            assertThat(currentSummary?.iconShape)
+                .isEqualTo(
+                    ShapeIconViewModel(
+                        FakeShapeGridManager.FOUR_SIDED_COOKIE_KEY,
+                        FakeShapeGridManager.FOUR_SIDED_COOKIE_PATH,
+                    )
+                )
+            assertThat(currentSummary?.isThemed).isEqualTo(true)
+        }
+    }
+
+    @Test
+    fun summary_shouldOnlyShowTheme_ifNoShapes() {
+        testScope.runTest {
+            shapeManager.setShapeOptions(emptyList())
+            interactor.applyShape("")
+            val summary = collectLastValue(underTest.summary)
+            val currentSummary = summary()
+            assertThat(currentSummary?.description?.asString(appContext)).doesNotMatch(".+,.+")
+        }
+    }
+
+    @Test
+    fun summary_shouldOnlyShowTheme_ifOnlyOneShape() {
+        testScope.runTest {
+            shapeManager.setShapeOptions(shapeManager.getShapeOptions().subList(0, 1))
+            interactor.applyShape("")
+            val summary = collectLastValue(underTest.summary)
+            val currentSummary = summary()
+            assertThat(currentSummary?.description?.asString(appContext)).doesNotMatch(".+,.+")
+        }
+    }
+
+    @Test
+    fun shapeOptionsAvailable_isTrueOnlyIfMoreThanOneOption() {
+        testScope.runTest {
+            val isAvailable = collectLastValue(underTest.isShapeOptionsAvailable)
+
+            // setUp fills the shape options with DEFAULT_SHAPE_OPTION_LIST which has 5 items
+            assertThat(isAvailable()).isEqualTo(true)
+
+            shapeManager.setShapeOptions(shapeManager.getShapeOptions().subList(0, 1))
+            interactor.applyShape("")
+            assertThat(isAvailable()).isEqualTo(false)
+
+            shapeManager.setShapeOptions(emptyList())
+            interactor.applyShape("")
+            assertThat(isAvailable()).isEqualTo(false)
+        }
+    }
 
     private fun TestScope.assertShapeItem(
         optionItem: OptionItemViewModel2<ShapeIconViewModel>?,

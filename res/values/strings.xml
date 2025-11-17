@@ -111,6 +111,18 @@
     <!-- Description for clock font editor axis revert button. [CHAR LIMIT=NONE] -->
     <string name="clock_font_editor_revert">Undo clock font changes</string>
 
+    <!-- Description for a clock style setting that toggles the clock font between one with rounded corners and one without. [CHAR LIMIT=NONE] -->
+    <string name="clock_style_round_clock">Round clock</string>
+
+    <!-- Toast message to notify that the clock style is updated when they tap on the clock face. They can tap again to undo. [CHAR LIMIT=NONE] -->
+    <string name="clock_style_update_toast">Style changed to <xliff:g name="font_name">%1$s</xliff:g>. Tap again to undo.</string>
+
+    <!-- Clock font style of round. It is used in the style update toast message. [CHAR LIMIT=NONE] -->
+    <string name="clock_style_round">round</string>
+
+    <!-- Clock font style of sharp. It is used in the style update toast message. [CHAR LIMIT=NONE] -->
+    <string name="clock_style_sharp">sharp</string>
+
     <!-- Title of a section of the customization picker where the user can select a Grid size for
         the home screen. [CHAR LIMIT=15] -->
     <string name="grid_title">App grid</string>
@@ -122,6 +134,36 @@
     <!-- Tab title that switch to app grid customization section, where people can customization
         the grid layout of the apps -->
     <string name="grid_layout">Layout</string>
+
+    <!-- Title of a section of the customization picker where the user can customize app icon
+     shape and theme for the home screen. [CHAR LIMIT=15] -->
+    <string name="app_icons_title">Icons</string>
+
+    <!-- Description of a section of the customization picker where the user can configure app icon
+        shape and theme, e.g. Circle, themed. [CHAR LIMIT=NONE] -->
+    <string name="app_icons_description"><xliff:g name="shape">%1$s</xliff:g>, <xliff:g name="theme">%2$s</xliff:g></string>
+
+    <!-- Part of the app icon section description, shown when the user's app icons are not themed.
+        [CHAR LIMIT=15] -->
+    <string name="app_icons_theme_default">default</string>
+
+    <!-- Part of the app icon section description, shown when the user has themed icons turned on.
+        [CHAR LIMIT=15] -->
+    <string name="app_icons_theme_themed">themed</string>
+
+    <!-- Label for an icon style option that applies no theming to app icons when selected.
+        [CHAR LIMIT=15] -->
+    <string name="app_icons_style_default">Default</string>
+
+    <!-- Label for an icon style option that applies a monochrome theme to app icons when selected.
+        [CHAR LIMIT=15] -->
+    <string name="app_icons_style_minimal">Minimal</string>
+
+    <!-- Title of a tab to change the app icon shape [CHAR LIMIT=15] -->
+    <string name="app_icons_shape">Shape</string>
+
+    <!-- Title of a tab to change the app icon theme [CHAR LIMIT=15] -->
+    <string name="app_icons_style">Style</string>
 
     <!-- Label for a button that allows the user to apply the currently selected Theme.
         [CHAR LIMIT=20] -->
@@ -142,7 +184,7 @@
     <string name="grid_preview_card_content_description">Grid preview</string>
 
     <!-- Content description of theme preview card. [CHAR_LIMIT=30]-->
-    <string name="pack_theme_preview_card_content_description">Themes preview</string>
+    <string name="pack_theme_preview_card_content_description">Content Description</string>
 
     <!-- Content description of font preview. [CHAR_LIMIT=30]-->
     <string name="font_preview_content_description">Font preview</string>
@@ -351,14 +393,17 @@
     <!-- Title of a section of the customization where the user can select color override for icon. [CHAR LIMIT=30] -->
     <string name="themed_icon_title" msgid="4305612684940220645">Themed icons</string>
 
-    <!-- Title of a section of the customization where the user can select color override for icon. [CHAR LIMIT=30] -->
-    <string name="pack_theme_title" msgid="4305612684940220645">Themes</string>
+    <!-- Title of a section of the customization where the user can select color override for icon. [CHAR LIMIT=40] -->
+    <string name="themed_icon_beta_title">Themed icons (beta)</string>
+
+    <!-- Title of a section of the pack theme where the user enter the theme app. [CHAR LIMIT=30] -->
+    <string name="pack_theme_title">Title</string>
 
     <!-- Title of the tag to indicate beta version. [CHAR LIMIT=6] -->
     <string name="beta_title">Beta</string>
 
     <!-- The description of theme picker entry. [CHAR LIMIT=30] -->
-    <string name="theme_packs_description">Discover Pixel themes</string>
+    <string name="theme_packs_description">Description</string>
 
     <!-- The content description of grid picker entry. [CHAR LIMIT=NONE] -->
     <string name="gird_picker_entry_content_description" msgid="7538418512525897691">Change app grid</string>
@@ -616,4 +661,16 @@
     [CHAR LIMIT=128].
     -->
     <string name="custom_clocks_label">Custom Clocks</string>
+
+    <!--
+    Accessibility label for the Clock face width label.
+    -->
+    <string name="clock_face_width">Clock face width</string>
+
+    <!--
+    Accessibility announcement template for a numerical range.
+    %1$d is the current value, %1$d is the minimum value, %2$d is the maximum value.
+    Example: "value 3, range from 1 to 7". [CHAR LIMIT=none]
+    -->
+    <string name="slider_state_description_template">%1$d, range from %2$d to %3$d</string>
 </resources>

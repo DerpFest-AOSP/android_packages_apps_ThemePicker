@@ -48,15 +48,27 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"Se muestra un pequeño reloj en la esquina de la pantalla"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Aplicar cambios de fuente del reloj"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"Deshacer cambios de fuente del reloj"</string>
+    <string name="clock_style_round_clock" msgid="1694787561051568664">"Reloj redondo"</string>
+    <string name="clock_style_update_toast" msgid="6933583129162805444">"Estilo cambiado a <xliff:g id="ID_1">%1$s</xliff:g>. Toca de nuevo para deshacer."</string>
+    <string name="clock_style_round" msgid="261319982647730366">"redondo"</string>
+    <string name="clock_style_sharp" msgid="453991773733285628">"afilado"</string>
     <string name="grid_title" msgid="1688173478777254123">"Cuadrícula de apps"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Forma y diseño"</string>
     <string name="grid_layout" msgid="370175667652663686">"Diseño"</string>
+    <string name="app_icons_title" msgid="8953944517006998975">"Iconos"</string>
+    <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>, <xliff:g id="ID_2">%2$s</xliff:g>"</string>
+    <string name="app_icons_theme_default" msgid="4773453045331265070">"predeterminado"</string>
+    <string name="app_icons_theme_themed" msgid="6539464818104931856">"temático"</string>
+    <string name="app_icons_style_default" msgid="2568057806991656437">"Predeterminado"</string>
+    <string name="app_icons_style_minimal" msgid="4905227469969513136">"Minimalista"</string>
+    <string name="app_icons_shape" msgid="2539949450435849188">"Forma"</string>
+    <string name="app_icons_style" msgid="993356162262531521">"Estilo"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"Aplicar"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"Toca para editar"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Mantener fondo de pantalla actual"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Previsualizar estilo"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Vista previa de cuadrícula"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"Vista previa de temas"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"Descripción del contenido"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Vista previa de fuente"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Vista previa de icono"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Vista previa de color"</string>
@@ -117,9 +129,10 @@
     <string name="mode_title" msgid="2394873501427436055">"Tema oscuro"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Inhabilitado temporalmente debido a Ahorro de batería"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Iconos temáticos"</string>
-    <string name="pack_theme_title" msgid="3052703041673623611">"Temas"</string>
+    <string name="themed_icon_beta_title" msgid="5433087142610402812">"Iconos temáticos (beta)"</string>
+    <string name="pack_theme_title" msgid="8859400282820047298">"Título"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
-    <string name="theme_packs_description" msgid="4647233199054882039">"Descubre temas de Pixel"</string>
+    <string name="theme_packs_description" msgid="7214401664119395771">"Descripción"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Cambiar cuadrícula de aplicaciones"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Colores del fondo"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Combina el color de iconos, texto y más con el del fondo"</string>
@@ -141,15 +154,15 @@
     <string name="keyguard_quick_affordance_title" msgid="4242813186995735584">"Accesos directos"</string>
     <string name="keyguard_quick_affordance_section_title" msgid="2806304242671717309">"Accesos directos"</string>
     <string name="color_contrast_section_title" msgid="7194809124718896091">"Contraste de color"</string>
-    <string name="color_contrast_default_title" msgid="7954235103549276978">"Predeterm."</string>
+    <string name="color_contrast_default_title" msgid="7954235103549276978">"Predeterminado"</string>
     <string name="color_contrast_medium_title" msgid="8071574793250090215">"Medio"</string>
     <string name="color_contrast_high_title" msgid="5554685752479470200">"Alto"</string>
     <string name="keyguard_quick_affordance_two_selected_template" msgid="1757099194522296363">"<xliff:g id="FIRST">%1$s</xliff:g>, <xliff:g id="SECOND">%2$s</xliff:g>"</string>
     <string name="keyguard_quick_affordance_none_selected" msgid="8494127020144112003">"Ninguno"</string>
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"Mostrar notificaciones en la pantalla de bloqueo"</string>
-    <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"Notif. en la pantalla de bloqueo"</string>
+    <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"Notificaciones en pantalla de bloqueo"</string>
     <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Gestiona cómo aparecen las notificaciones y qué se muestra"</string>
-    <string name="more_settings_section_title" msgid="6854797937797818510">"Más ajustes (pantalla de bloqueo)"</string>
+    <string name="more_settings_section_title" msgid="6854797937797818510">"Más ajustes de pantalla de bloqueo"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"Privacidad, Está sonando y más"</string>
     <string name="more_colors" msgid="3191071655353004591">"Más colores"</string>
     <string name="content_description_dynamic_color_option" msgid="2191721655642529886">"Tema dinámico principal"</string>
@@ -161,4 +174,6 @@
     <string name="scroll_forward_and_select" msgid="6156132388656395769">"Desliza hacia la izquierda para elegir otro formato de reloj"</string>
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"Desliza hacia la derecha para elegir otro formato de reloj"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"Relojes personalizados"</string>
+    <string name="clock_face_width" msgid="5818129719338363570">"Anchura de la pantalla del reloj"</string>
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, intervalo de %2$d a %3$d"</string>
 </resources>

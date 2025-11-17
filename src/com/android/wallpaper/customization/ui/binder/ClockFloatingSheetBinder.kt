@@ -16,18 +16,15 @@
 
 package com.android.wallpaper.customization.ui.binder
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.ValueAnimator
 import android.content.Context
-import android.content.res.Configuration.UI_MODE_NIGHT_MASK
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -42,16 +39,21 @@ import com.android.customization.picker.color.ui.view.ColorOptionIconView2
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.customization.picker.common.ui.view.SingleRowListItemSpacing
 import com.android.themepicker.R
+import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.CLOCK
 import com.android.wallpaper.customization.ui.viewmodel.ClockFloatingSheetHeightsViewModel
 import com.android.wallpaper.customization.ui.viewmodel.ClockPickerViewModel.ClockStyleModel
 import com.android.wallpaper.customization.ui.viewmodel.ClockPickerViewModel.Tab
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
+import com.android.wallpaper.picker.category.ui.binder.SectionsBinder.removeItemDecorations
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.view.FloatingToolbar
 import com.android.wallpaper.picker.customization.ui.view.adapter.FloatingToolbarTabAdapter
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.option.ui.adapter.OptionItemAdapter2
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.slider.LabelFormatter
 import com.google.android.material.slider.Slider
@@ -69,7 +71,6 @@ import kotlinx.coroutines.launch
 object ClockFloatingSheetBinder {
     private const val SLIDER_ENABLED_ALPHA = 1f
     private const val SLIDER_DISABLED_ALPHA = .3f
-    private const val ANIMATION_DURATION = 200L
 
     private val _clockFloatingSheetHeights: MutableStateFlow<ClockFloatingSheetHeightsViewModel> =
         MutableStateFlow(ClockFloatingSheetHeightsViewModel())
@@ -89,6 +90,7 @@ object ClockFloatingSheetBinder {
         val tabs: FloatingToolbar = view.requireViewById(R.id.floating_toolbar)
         val tabContainer =
             tabs.findViewById<ViewGroup>(com.android.wallpaper.R.id.floating_toolbar_tab_container)
+        val isDesktopUi: Boolean = BaseFlags.get().shouldShowDesktopUi(view.context)
         ColorUpdateBinder.bind(
             setColor = { color ->
                 DrawableCompat.setTint(DrawableCompat.wrap(tabContainer.background), color)
@@ -131,10 +133,39 @@ object ClockFloatingSheetBinder {
             )
         val clockStyleList: RecyclerView = view.requireViewById(R.id.clock_style_list)
         clockStyleList.initStyleList(appContext, clockStyleAdapter)
-        val axisPresetSlider: Slider =
-            clockStyleContent.requireViewById(R.id.clock_axis_preset_slider)
+        val clockStyleListContainer: View = view.requireViewById(R.id.clock_style_list_container)
 
-        // Clock color
+        val axisPresetSliderContainer: View =
+            clockStyleContent.requireViewById(R.id.clock_face_width_container)
+        val axisPresetSlider =
+            clockStyleContent.requireViewById<Slider>(R.id.clock_axis_preset_slider).also {
+                SliderColorBinder.bind(
+                    slider = it,
+                    colorUpdateViewModel = colorUpdateViewModel,
+                    shouldAnimateColor = isFloatingSheetActive,
+                    lifecycleOwner = lifecycleOwner,
+                )
+            }
+
+        val sliderLabel = appContext.getString(R.string.clock_face_width)
+        axisPresetSlider.contentDescription = sliderLabel
+
+        axisPresetSlider.setLabelFormatter { value ->
+            val mappedValueInt = Math.round(value + 1.0f)
+            mappedValueInt.toString()
+        }
+
+        ColorUpdateBinder.bind(
+            setColor = { color ->
+                axisPresetSliderContainer
+                    .requireViewById<TextView>(R.id.clock_face_width_label)
+                    .setTextColor(color)
+            },
+            color = colorUpdateViewModel.colorOnSurfaceVariant,
+            shouldAnimate = isClockStyleActive,
+            lifecycleOwner = lifecycleOwner,
+        )
+
         val clockColorContent: View = view.requireViewById(R.id.clock_floating_sheet_color_content)
 
         val clockColorAdapter =
@@ -147,15 +178,18 @@ object ClockFloatingSheetBinder {
         val clockColorList: RecyclerView = view.requireViewById(R.id.clock_color_list)
         clockColorList.adapter = clockColorAdapter
         clockColorList.layoutManager =
-            LinearLayoutManager(appContext, LinearLayoutManager.HORIZONTAL, false)
+            if (isDesktopUi) FlexboxLayoutManager(appContext, FlexDirection.ROW, FlexWrap.WRAP)
+            else LinearLayoutManager(appContext, LinearLayoutManager.HORIZONTAL, false)
 
-        val clockColorSlider: Slider = view.requireViewById(R.id.clock_color_slider)
-        SliderColorBinder.bind(
-            slider = clockColorSlider,
-            colorUpdateViewModel = colorUpdateViewModel,
-            shouldAnimateColor = isFloatingSheetActive,
-            lifecycleOwner = lifecycleOwner,
-        )
+        val clockColorSlider =
+            view.requireViewById<Slider>(R.id.clock_color_slider).also {
+                SliderColorBinder.bind(
+                    slider = it,
+                    colorUpdateViewModel = colorUpdateViewModel,
+                    shouldAnimateColor = isFloatingSheetActive,
+                    lifecycleOwner = lifecycleOwner,
+                )
+            }
 
         clockColorSlider.apply {
             valueFrom = ClockMetadataModel.MIN_COLOR_TONE_PROGRESS.toFloat()
@@ -166,6 +200,17 @@ object ClockFloatingSheetBinder {
                     viewModel.onSliderProgressChanged(value.roundToInt())
                 }
             }
+            addOnSliderTouchListener(
+                object : OnSliderTouchListener {
+                    override fun onStartTrackingTouch(slider: Slider) {
+                        // Do nothing intended
+                    }
+
+                    override fun onStopTrackingTouch(slider: Slider) {
+                        viewModel.onSliderTouchUpProgressChanged(slider.value.roundToInt())
+                    }
+                }
+            )
         }
         val isClockColorActive = {
             isFloatingSheetActive() && viewModel.selectedTab.value == Tab.COLOR
@@ -205,6 +250,7 @@ object ClockFloatingSheetBinder {
             shouldAnimate = isClockStyleActive,
             lifecycleOwner = lifecycleOwner,
         )
+
         ColorUpdateBinder.bind(
             setColor = { color ->
                 clockSizeContent
@@ -220,15 +266,17 @@ object ClockFloatingSheetBinder {
             object : OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
                     if (
-                        clockStyleContent.height != 0 &&
-                            axisPresetSlider.height != 0 &&
-                            _clockFloatingSheetHeights.value.axisPresetSliderHeight == null &&
-                            _clockFloatingSheetHeights.value.clockStyleContentHeight == null
+                        clockStyleListContainer.height != 0 &&
+                            axisPresetSliderContainer.height != 0 &&
+                            (_clockFloatingSheetHeights.value.clockStyleContentHeight !=
+                                clockStyleListContainer.height ||
+                                _clockFloatingSheetHeights.value.axisPresetSliderHeight !=
+                                    axisPresetSliderContainer.height)
                     ) {
                         _clockFloatingSheetHeights.value =
                             _clockFloatingSheetHeights.value.copy(
-                                clockStyleContentHeight = clockStyleContent.height,
-                                axisPresetSliderHeight = axisPresetSlider.height,
+                                clockStyleContentHeight = clockStyleListContainer.height,
+                                axisPresetSliderHeight = axisPresetSliderContainer.height,
                             )
                         clockStyleContent.viewTreeObserver.removeOnGlobalLayoutListener(this)
                     }
@@ -241,7 +289,8 @@ object ClockFloatingSheetBinder {
                 override fun onGlobalLayout() {
                     if (
                         clockColorContent.height != 0 &&
-                            _clockFloatingSheetHeights.value.clockColorContentHeight == null
+                            _clockFloatingSheetHeights.value.clockColorContentHeight !=
+                                clockColorContent.height
                     ) {
                         _clockFloatingSheetHeights.value =
                             _clockFloatingSheetHeights.value.copy(
@@ -258,7 +307,8 @@ object ClockFloatingSheetBinder {
                 override fun onGlobalLayout() {
                     if (
                         clockSizeContent.height != 0 &&
-                            _clockFloatingSheetHeights.value.clockSizeContentHeight == null
+                            _clockFloatingSheetHeights.value.clockSizeContentHeight !=
+                                clockSizeContent.height
                     ) {
                         _clockFloatingSheetHeights.value =
                             _clockFloatingSheetHeights.value.copy(
@@ -270,6 +320,12 @@ object ClockFloatingSheetBinder {
             }
         )
 
+        val clockStyleContentVerticalPadding =
+            view.resources.getDimensionPixelSize(R.dimen.floating_sheet_content_vertical_padding)
+        val clockStyleContentSliderMargin =
+            view.resources.getDimensionPixelSize(
+                R.dimen.clock_axis_control_slider_row_margin_vertical
+            )
         lifecycleOwner.lifecycleScope.launch {
             var currentTab: Tab = Tab.STYLE
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -294,12 +350,22 @@ object ClockFloatingSheetBinder {
                             clockSizeContentHeight ?: return@collect
                             axisPresetSliderHeight ?: return@collect
 
+                            clockStyleContent.isVisible = currentTab == Tab.STYLE
+                            clockColorContent.isVisible = currentTab == Tab.COLOR
+                            clockSizeContent.isVisible = currentTab == Tab.SIZE
+
                             val fromHeight = floatingSheetContainer.height
                             val toHeight =
                                 when (selectedTab) {
                                     Tab.STYLE ->
-                                        if (shouldShowPresetSlider) clockStyleContentHeight
-                                        else clockStyleContentHeight - axisPresetSliderHeight
+                                        if (shouldShowPresetSlider)
+                                            clockStyleContentHeight +
+                                                axisPresetSliderHeight +
+                                                2 * clockStyleContentVerticalPadding +
+                                                clockStyleContentSliderMargin
+                                        else
+                                            clockStyleContentHeight +
+                                                2 * clockStyleContentVerticalPadding
                                     Tab.COLOR -> clockColorContentHeight
                                     Tab.SIZE -> clockSizeContentHeight
                                 }
@@ -309,53 +375,58 @@ object ClockFloatingSheetBinder {
                                     Tab.COLOR -> clockColorContent
                                     Tab.SIZE -> clockSizeContent
                                 }
-                            val shouldCurrentContentFadeOut = currentTab != selectedTab
-                            // Start to animate the content height
-                            ValueAnimator.ofInt(fromHeight, toHeight)
-                                .apply {
-                                    addUpdateListener { valueAnimator ->
-                                        val value = valueAnimator.animatedValue as Int
-                                        floatingSheetContainer.layoutParams =
-                                            floatingSheetContainer.layoutParams.apply {
-                                                height = value
-                                            }
-                                        if (shouldCurrentContentFadeOut) {
-                                            currentContent.alpha =
-                                                getAlpha(fromHeight, toHeight, value)
-                                        }
-                                    }
-                                    duration = ANIMATION_DURATION
-                                    addListener(
-                                        object : AnimatorListenerAdapter() {
-                                            override fun onAnimationEnd(animation: Animator) {
-                                                clockStyleContent.isVisible =
-                                                    selectedTab == Tab.STYLE
-                                                clockStyleContent.alpha = 1f
-                                                clockColorContent.isVisible =
-                                                    selectedTab == Tab.COLOR
-                                                clockColorContent.alpha = 1f
-                                                clockSizeContent.isVisible = selectedTab == Tab.SIZE
-                                                clockSizeContent.alpha = 1f
-                                            }
-                                        }
-                                    )
+                            val selectedContent: View =
+                                when (selectedTab) {
+                                    Tab.STYLE -> clockStyleContent
+                                    Tab.COLOR -> clockColorContent
+                                    Tab.SIZE -> clockSizeContent
                                 }
-                                .start()
+                            val fromContent =
+                                if (currentTab != selectedTab) currentContent else null
+                            val toContent = if (currentTab != selectedTab) selectedContent else null
+                            FloatingSheetHeightAnimationBinder.bind(
+                                floatingSheetContainer,
+                                fromHeight,
+                                toHeight,
+                                fromContent,
+                                toContent,
+                            )
                             currentTab = selectedTab
                         }
                 }
 
                 launch {
-                    viewModel.shouldShowPresetSlider.collect { axisPresetSlider.isVisible = it }
+                    viewModel.shouldShowPresetSlider.collect {
+                        axisPresetSliderContainer.isVisible = it
+                    }
                 }
 
                 launch {
                     viewModel.clockStyleOptions.collect { styleOptions ->
                         clockStyleAdapter.setItems(styleOptions) {
+                            val dividerIndex =
+                                styleOptions.indexOfLast { it.payload?.hasPresets ?: false }
                             var indexToFocus = styleOptions.indexOfFirst { it.isSelected.value }
                             indexToFocus = if (indexToFocus < 0) 0 else indexToFocus
                             (clockStyleList.layoutManager as LinearLayoutManager)
                                 .scrollToPositionWithOffset(indexToFocus, 0)
+                            clockStyleList.removeItemDecorations()
+                            clockStyleList.addItemDecoration(
+                                SingleRowListItemSpacing(
+                                    view.context.resources.getDimensionPixelSize(
+                                        R.dimen.floating_sheet_content_horizontal_padding
+                                    ),
+                                    view.context.resources.getDimensionPixelSize(
+                                        R.dimen.floating_sheet_list_item_horizontal_space
+                                    ),
+                                    dividerIndex = dividerIndex,
+                                    dividerDrawable =
+                                        ContextCompat.getDrawable(
+                                            view.context,
+                                            R.drawable.option_list_grouping_divider,
+                                        ),
+                                )
+                            )
                         }
                     }
                 }
@@ -365,14 +436,19 @@ object ClockFloatingSheetBinder {
                         clockColorAdapter.setItems(colorOptions) {
                             var indexToFocus = colorOptions.indexOfFirst { it.isSelected.value }
                             indexToFocus = if (indexToFocus < 0) 0 else indexToFocus
-                            (clockColorList.layoutManager as LinearLayoutManager)
-                                .scrollToPositionWithOffset(indexToFocus, 0)
+                            if (isDesktopUi) {
+                                (clockColorList.layoutManager as FlexboxLayoutManager)
+                                    .scrollToPosition(indexToFocus)
+                            } else {
+                                (clockColorList.layoutManager as LinearLayoutManager)
+                                    .scrollToPositionWithOffset(indexToFocus, 0)
+                            }
                         }
                     }
                 }
 
                 launch {
-                    viewModel.previewingSliderProgress.collect { progress ->
+                    viewModel.previewingColorSliderProgress.collect { progress ->
                         clockColorSlider.value = progress.toFloat()
                     }
                 }
@@ -382,6 +458,45 @@ object ClockFloatingSheetBinder {
                         clockColorSlider.isEnabled = isEnabled
                         clockColorSlider.alpha =
                             if (isEnabled) SLIDER_ENABLED_ALPHA else SLIDER_DISABLED_ALPHA
+                    }
+                }
+
+                launch {
+                    viewModel.previewingClockColorOptionIndex.collect { indexToFocus ->
+                        clockColorList.post {
+                            val layoutManager =
+                                if (isDesktopUi)
+                                    clockColorList.layoutManager as? FlexboxLayoutManager
+                                        ?: return@post
+                                else
+                                    clockColorList.layoutManager as? LinearLayoutManager
+                                        ?: return@post
+                            val itemView = layoutManager.findViewByPosition(indexToFocus)
+
+                            if (itemView != null) {
+                                val parentCenter = clockColorList.width / 2
+                                val itemCenter = itemView.left + itemView.width / 2 + itemView.width
+                                val scrollBy = itemCenter - parentCenter
+                                clockColorList.smoothScrollBy(scrollBy, 0)
+                            }
+                        }
+                    }
+                }
+
+                launch {
+                    viewModel.previewingClockStyleOptionIndex.collect { indexToFocus ->
+                        clockStyleList.post {
+                            val layoutManager =
+                                clockStyleList.layoutManager as? LinearLayoutManager ?: return@post
+                            val itemView = layoutManager.findViewByPosition(indexToFocus)
+
+                            if (itemView != null) {
+                                val parentCenter = clockStyleList.width / 2
+                                val itemCenter = itemView.left + itemView.width / 2
+                                val scrollBy = itemCenter - parentCenter
+                                clockStyleList.smoothScrollBy(scrollBy, 0)
+                            }
+                        }
                     }
                 }
 
@@ -428,12 +543,23 @@ object ClockFloatingSheetBinder {
                                 override fun onStartTrackingTouch(slider: Slider) {}
 
                                 override fun onStopTrackingTouch(slider: Slider) {
-                                    axisPresetsSliderViewModel.onSliderStopTrackingTouch(
-                                        slider.value
-                                    )
+                                    if (!optionsViewModel.isAccessibilityEnabled(slider.context)) {
+                                        axisPresetsSliderViewModel.onSliderStopTrackingTouch(
+                                            slider.value
+                                        )
+                                    }
                                 }
                             }
                         )
+                        axisPresetSlider.clearOnChangeListeners()
+                        axisPresetSlider.addOnChangeListener { slider, value, fromUser ->
+                            updateAccessibilityStateDescription(slider, slider.context)
+
+                            if (optionsViewModel.isAccessibilityEnabled(slider.context)) {
+                                axisPresetsSliderViewModel.onSliderStopTrackingTouch(value)
+                            }
+                            updateAccessibilityStateDescription(axisPresetSlider, slider.context)
+                        }
                     }
                 }
 
@@ -442,6 +568,20 @@ object ClockFloatingSheetBinder {
                 }
             }
         }
+    }
+
+    private fun updateAccessibilityStateDescription(slider: Slider, appContext: Context) {
+        val currentValueInt = Math.round(slider.value + 1.0f)
+        val minInt = (slider.valueFrom + 1.0f).toInt()
+        val maxInt = (slider.valueTo + 1.0f).toInt()
+
+        slider.stateDescription =
+            appContext.getString(
+                R.string.slider_state_description_template,
+                currentValueInt,
+                minInt,
+                maxInt,
+            )
     }
 
     private fun createClockStyleOptionItemAdapter(
@@ -468,16 +608,6 @@ object ClockFloatingSheetBinder {
     ) {
         this.adapter = adapter
         layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        addItemDecoration(
-            SingleRowListItemSpacing(
-                context.resources.getDimensionPixelSize(
-                    R.dimen.floating_sheet_content_horizontal_padding
-                ),
-                context.resources.getDimensionPixelSize(
-                    R.dimen.floating_sheet_list_item_horizontal_space
-                ),
-            )
-        )
     }
 
     private fun createClockColorOptionItemAdapter(
@@ -492,12 +622,10 @@ object ClockFloatingSheetBinder {
             bindPayload = { itemView: View, colorIcon: ColorOptionIconViewModel ->
                 val colorOptionIconView: ColorOptionIconView2 =
                     itemView.requireViewById(com.android.wallpaper.R.id.background)
-                val night = uiMode and UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
                 val binding =
                     ColorOptionIconBinder2.bind(
                         view = colorOptionIconView,
                         viewModel = colorIcon,
-                        darkTheme = night,
                         colorUpdateViewModel = colorUpdateViewModel,
                         shouldAnimateColor = shouldAnimateColor,
                         lifecycleOwner = lifecycleOwner,
@@ -507,8 +635,4 @@ object ClockFloatingSheetBinder {
             colorUpdateViewModel = WeakReference(colorUpdateViewModel),
             shouldAnimateColor = shouldAnimateColor,
         )
-
-    // Alpha is 1 when current height is from height, and 0 when current height is to height.
-    private fun getAlpha(fromHeight: Int, toHeight: Int, currentHeight: Int): Float =
-        (1 - (currentHeight - fromHeight).toFloat() / (toHeight - fromHeight).toFloat())
 }

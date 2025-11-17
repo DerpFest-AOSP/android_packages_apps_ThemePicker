@@ -76,8 +76,9 @@ private constructor(
                     context = applicationContext,
                     authority =
                         applicationContext.getString(
-                            com.android.wallpaper.R.string.lock_screen_preview_provider_authority,
+                            com.android.wallpaper.R.string.lock_screen_preview_provider_authority
                         ),
+                    screen = Screen.LOCK_SCREEN,
                 ),
             initialExtrasProvider = {
                 Bundle().apply {
@@ -85,18 +86,15 @@ private constructor(
                         KeyguardPreviewConstants.KEY_INITIALLY_SELECTED_SLOT_ID,
                         selectedSlotId.value,
                     )
-                    putBoolean(
-                        KeyguardPreviewConstants.KEY_HIGHLIGHT_QUICK_AFFORDANCES,
-                        true,
-                    )
+                    putBoolean(KeyguardPreviewConstants.KEY_HIGHLIGHT_QUICK_AFFORDANCES, true)
                 }
             },
             wallpaperInfoProvider = { forceReload ->
                 suspendCancellableCoroutine { continuation ->
-                    wallpaperInfoFactory.createCurrentWallpaperInfos(
-                        context,
-                        forceReload,
-                    ) { homeWallpaper, lockWallpaper, _ ->
+                    wallpaperInfoFactory.createCurrentWallpaperInfos(context, forceReload) {
+                        homeWallpaper,
+                        lockWallpaper,
+                        _ ->
                         continuation.resume(lockWallpaper ?: homeWallpaper, null)
                     }
                 }
@@ -109,10 +107,7 @@ private constructor(
     private val _selectedSlotId = MutableStateFlow<String?>(null)
     /** The ID of the selected slot. */
     val selectedSlotId: StateFlow<String> =
-        combine(
-                quickAffordanceInteractor.slots,
-                _selectedSlotId,
-            ) { slots, selectedSlotIdOrNull ->
+        combine(quickAffordanceInteractor.slots, _selectedSlotId) { slots, selectedSlotIdOrNull ->
                 if (selectedSlotIdOrNull != null) {
                     slots.first { slot -> slot.id == selectedSlotIdOrNull }
                 } else {
@@ -186,20 +181,14 @@ private constructor(
      * or different affordances in the currently-selected slot or when slot selection changes.
      */
     private val selectedAffordanceIds: Flow<Set<String>> =
-        combine(
-                quickAffordanceInteractor.selections,
-                selectedSlotId,
-            ) { selections, selectedSlotId ->
+        combine(quickAffordanceInteractor.selections, selectedSlotId) { selections, selectedSlotId
+                ->
                 selections
                     .filter { selection -> selection.slotId == selectedSlotId }
                     .map { selection -> selection.affordanceId }
                     .toSet()
             }
-            .shareIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                replay = 1,
-            )
+            .shareIn(scope = viewModelScope, started = SharingStarted.WhileSubscribed(), replay = 1)
 
     /** The list of all available quick affordances for the selected slot. */
     val quickAffordances: Flow<List<OptionItemViewModel<Icon>>> =
@@ -210,10 +199,7 @@ private constructor(
                     slotId = selectedSlotId,
                     isSelected = isNoneSelected,
                     onSelected =
-                        combine(
-                            isNoneSelected,
-                            selectedSlotId,
-                        ) { isSelected, selectedSlotId ->
+                        combine(isNoneSelected, selectedSlotId) { isSelected, selectedSlotId ->
                             if (!isSelected) {
                                 {
                                     viewModelScope.launch {
@@ -229,7 +215,7 @@ private constructor(
                             } else {
                                 null
                             }
-                        }
+                        },
                 )
             ) +
                 affordances.map { affordance ->
@@ -248,10 +234,8 @@ private constructor(
                         isSelected = isSelectedFlow,
                         onClicked =
                             if (affordance.isEnabled) {
-                                combine(
-                                    isSelectedFlow,
-                                    selectedSlotId,
-                                ) { isSelected, selectedSlotId ->
+                                combine(isSelectedFlow, selectedSlotId) { isSelected, selectedSlotId
+                                    ->
                                     if (!isSelected) {
                                         {
                                             viewModelScope.launch {
@@ -310,10 +294,7 @@ private constructor(
                 icon1 =
                     icon1
                         ?: if (icon2 == null) {
-                            Icon.Resource(
-                                res = R.drawable.link_off,
-                                contentDescription = null,
-                            )
+                            Icon.Resource(res = R.drawable.link_off, contentDescription = null)
                         } else {
                             null
                         },
@@ -351,9 +332,7 @@ private constructor(
         _activityStartRequests.value = null
     }
 
-    private fun requestActivityStart(
-        intent: Intent,
-    ) {
+    private fun requestActivityStart(intent: Intent) {
         _activityStartRequests.value = intent
     }
 
@@ -366,11 +345,7 @@ private constructor(
     ) {
         _dialog.value =
             DialogViewModel(
-                icon =
-                    Icon.Loaded(
-                        drawable = icon,
-                        contentDescription = null,
-                    ),
+                icon = Icon.Loaded(drawable = icon, contentDescription = null),
                 headline = Text.Resource(R.string.keyguard_affordance_enablement_dialog_headline),
                 message = Text.Loaded(explanation),
                 buttons =
@@ -389,7 +364,7 @@ private constructor(
                                         }
                                     ),
                                 style = ButtonStyle.Secondary,
-                            ),
+                            )
                         )
 
                         if (actionText != null) {
@@ -399,8 +374,8 @@ private constructor(
                                     style = ButtonStyle.Primary,
                                     onClicked = {
                                         actionIntent?.let { intent -> requestActivityStart(intent) }
-                                    }
-                                ),
+                                    },
+                                )
                             )
                         }
                     },

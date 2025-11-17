@@ -48,15 +48,27 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"ನಿಮ್ಮ ಸ್ಕ್ರೀನ್‌ನ ಮೂಲೆಯಲ್ಲಿ ಸಣ್ಣ ಗಡಿಯಾರವೊಂದು ಕಾಣಿಸುತ್ತದೆ"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"ಕ್ಲಾಕ್ ಫಾಂಟ್ ಬದಲಾವಣೆಗಳನ್ನು ಅನ್ವಯಿಸಿ"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"ಕ್ಲಾಕ್ ಫಾಂಟ್ ಬದಲಾವಣೆಗಳನ್ನು ರದ್ದುಗೊಳಿಸಿ"</string>
+    <string name="clock_style_round_clock" msgid="1694787561051568664">"ಗೋಲಾಕಾರದ ಗಡಿಯಾದ"</string>
+    <string name="clock_style_update_toast" msgid="6933583129162805444">"ಶೈಲಿಯನ್ನು <xliff:g id="ID_1">%1$s</xliff:g> ಗೆ ಬದಲಾಯಿಸಲಾಗಿದೆ. ರದ್ದುಗೊಳಿಸಲು ಮತ್ತೊಮ್ಮೆ ಟ್ಯಾಪ್ ಮಾಡಿ."</string>
+    <string name="clock_style_round" msgid="261319982647730366">"ಸುತ್ತು"</string>
+    <string name="clock_style_sharp" msgid="453991773733285628">"ಚೂಪಾಗಿರುವ"</string>
     <string name="grid_title" msgid="1688173478777254123">"ಆ್ಯಪ್ ಗ್ರಿಡ್"</string>
-    <string name="shape_and_grid_title" msgid="9092477491363761054">"ಆ್ಯಪ್ ಆಕಾರ, ಲೇಔಟ್"</string>
+    <string name="shape_and_grid_title" msgid="9092477491363761054">"ಆ್ಯಪ್ ಆಕಾರ ಮತ್ತು ಲೇಔಟ್"</string>
     <string name="grid_layout" msgid="370175667652663686">"ಲೇಔಟ್"</string>
+    <string name="app_icons_title" msgid="8953944517006998975">"ಐಕಾನ್‌ಗಳು"</string>
+    <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>, <xliff:g id="ID_2">%2$s</xliff:g>"</string>
+    <string name="app_icons_theme_default" msgid="4773453045331265070">"ಡಿಫಾಲ್ಟ್"</string>
+    <string name="app_icons_theme_themed" msgid="6539464818104931856">"ಥೀಮ್‌ ಆಧಾರಿತ"</string>
+    <string name="app_icons_style_default" msgid="2568057806991656437">"ಡಿಫಾಲ್ಟ್"</string>
+    <string name="app_icons_style_minimal" msgid="4905227469969513136">"ಕನಿಷ್ಠ"</string>
+    <string name="app_icons_shape" msgid="2539949450435849188">"ಆಕಾರ"</string>
+    <string name="app_icons_style" msgid="993356162262531521">"ಸ್ಟೈಲ್"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"ಅನ್ವಯಿಸಿ"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"ಎಡಿಟ್ ಮಾಡಲು ಟ್ಯಾಪ್ ಮಾಡಿ"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"ಪ್ರಸ್ತುತ ವಾಲ್‌ಪೇಪರ್ ಅನ್ನು ಉಳಿಸಿ"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"ಶೈಲಿ ಪೂರ್ವವೀಕ್ಷಣೆ"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"ಗ್ರಿಡ್ ಪೂರ್ವವೀಕ್ಷಣೆ"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"ಥೀಮ್‌ಗಳ ಪೂರ್ವವೀಕ್ಷಣೆ"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"ಕಂಟೆಂಟ್‌ ವಿವರಣೆ"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"ಫಾಂಟ್ ಪೂರ್ವವೀಕ್ಷಣೆ"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"ಐಕಾನ್ ಪೂರ್ವವೀಕ್ಷಣೆ"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"ಬಣ್ಣ ಪೂರ್ವವೀಕ್ಷಣೆ"</string>
@@ -117,9 +129,10 @@
     <string name="mode_title" msgid="2394873501427436055">"ಡಾರ್ಕ್ ಥೀಮ್"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"ಬ್ಯಾಟರಿ ಸೇವರ್‌ ಕಾರಣದಿಂದ ತಾತ್ಕಾಲಿಕವಾಗಿ ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"ಥೀಮ್ ಮಾಡಿದ ಐಕಾನ್‌ಗಳು"</string>
-    <string name="pack_theme_title" msgid="3052703041673623611">"ಥೀಮ್‌ಗಳು"</string>
+    <string name="themed_icon_beta_title" msgid="5433087142610402812">"ಥೀಮ್ ಆಧಾರಿತ ಐಕಾನ್‌ಗಳು (ಬೀಟಾ)"</string>
+    <string name="pack_theme_title" msgid="8859400282820047298">"ಶೀರ್ಷಿಕೆ"</string>
     <string name="beta_title" msgid="8703819523760746458">"ಬೀಟಾ"</string>
-    <string name="theme_packs_description" msgid="4647233199054882039">"Pixel ಥೀಮ್‌ಗಳನ್ನು ಅನ್ವೇಷಿಸಿ"</string>
+    <string name="theme_packs_description" msgid="7214401664119395771">"ವಿವರಣೆ"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"ಆ್ಯಪ್ ಗ್ರಿಡ್ ಬದಲಾಯಿಸಿ"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"ವಾಲ್‌ಪೇಪರ್ ಬಣ್ಣಗಳು"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"ಐಕಾನ್‌, ಪಠ್ಯ ಮತ್ತು ಇತ್ಯಾದಿಗಳು ವಾಲ್‌ಪೇಪರ್‌ನಲ್ಲಿನ ಬಣ್ಣಗಳನ್ನು ಹೋಲುತ್ತವೆ"</string>
@@ -161,4 +174,6 @@
     <string name="scroll_forward_and_select" msgid="6156132388656395769">"ಬೇರೊಂದು ಕ್ಲಾಕ್ ಫೇಸ್ ಅನ್ನು ಆಯ್ಕೆಮಾಡಲು ಎಡಕ್ಕೆ ಸ್ವೈಪ್ ಮಾಡಿ"</string>
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"ಬೇರೊಂದು ಕ್ಲಾಕ್ ಫೇಸ್ ಅನ್ನು ಆಯ್ಕೆಮಾಡಲು ಬಲಕ್ಕೆ ಸ್ವೈಪ್ ಮಾಡಿ"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"ಕಸ್ಟಮ್ ಕ್ಲಾಕ್‌ಗಳು"</string>
+    <string name="clock_face_width" msgid="5818129719338363570">"ಗಡಿಯಾರದ ಮುಖದ ಅಗಲ"</string>
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, %2$d ರಿಂದ %3$d ನ ಶ್ರೇಣಿಯಲ್ಲಿದೆ"</string>
 </resources>

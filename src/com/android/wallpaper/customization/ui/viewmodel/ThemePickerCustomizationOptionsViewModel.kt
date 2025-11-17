@@ -16,11 +16,24 @@
 
 package com.android.wallpaper.customization.ui.viewmodel
 
+import android.content.Context
+import android.view.accessibility.AccessibilityManager
 import com.android.customization.picker.mode.ui.viewmodel.DarkModeViewModel
-import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil
+import com.android.wallpaper.config.BaseFlags
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.APP_ICONS
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.GRID
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.CLOCK
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.SHORTCUTS
+import com.android.wallpaper.picker.customization.ui.view.ApplyButton
+import com.android.wallpaper.picker.customization.ui.view.ApplyButton.ApplyButtonState.APPLY_BUTTON_DISABLED
+import com.android.wallpaper.picker.customization.ui.view.ApplyButton.ApplyButtonState.APPLY_BUTTON_ENABLED
+import com.android.wallpaper.picker.customization.ui.view.ApplyButton.ApplyButtonState.APPLY_BUTTON_IN_PROGRESS
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsData
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModelFactory
 import com.android.wallpaper.picker.customization.ui.viewmodel.DefaultCustomizationOptionsViewModel
+import com.android.wallpaper.picker.preview.ui.util.AccessibilityUtil
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -29,6 +42,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -45,28 +59,64 @@ constructor(
     keyguardQuickAffordancePickerViewModel2Factory: KeyguardQuickAffordancePickerViewModel2.Factory,
     colorPickerViewModel2Factory: ColorPickerViewModel2.Factory,
     clockPickerViewModelFactory: ClockPickerViewModel.Factory,
-    shapeGridPickerViewModelFactory: ShapeGridPickerViewModel.Factory,
+    gridPickerViewModelFactory: GridPickerViewModel.Factory,
     appIconPickerViewModelFactory: AppIconPickerViewModel.Factory,
     val colorContrastSectionViewModel: ColorContrastSectionViewModel2,
     val darkModeViewModel: DarkModeViewModel,
     val themedIconViewModel: ThemedIconViewModel,
+    val packThemeViewModel: PackThemeViewModel,
     @Assisted private val viewModelScope: CoroutineScope,
+    @Assisted("destination") initialDeepLinkDestination: String?,
+    @Assisted("shortcutSlotId") initialDeepLinkShortcutSlotId: String?,
 ) : CustomizationOptionsViewModel {
 
     private val defaultCustomizationOptionsViewModel =
-        defaultCustomizationOptionsViewModelFactory.create(viewModelScope)
+        defaultCustomizationOptionsViewModelFactory.create(
+            viewModelScope,
+            initialDeepLinkDestination,
+            initialDeepLinkShortcutSlotId,
+        )
 
     override val wallpaperCarouselViewModel =
         defaultCustomizationOptionsViewModel.wallpaperCarouselViewModel
 
     val clockPickerViewModel = clockPickerViewModelFactory.create(viewModelScope = viewModelScope)
     val keyguardQuickAffordancePickerViewModel2 =
-        keyguardQuickAffordancePickerViewModel2Factory.create(viewModelScope = viewModelScope)
+        keyguardQuickAffordancePickerViewModel2Factory.create(
+            viewModelScope = viewModelScope,
+            initialDeepLinkShortcutSlotId = initialDeepLinkShortcutSlotId,
+        )
     val colorPickerViewModel2 = colorPickerViewModel2Factory.create(viewModelScope = viewModelScope)
-    val shapeGridPickerViewModel =
-        shapeGridPickerViewModelFactory.create(viewModelScope = viewModelScope)
+    val gridPickerViewModel = gridPickerViewModelFactory.create(viewModelScope = viewModelScope)
     val appIconPickerViewModel =
         appIconPickerViewModelFactory.create(viewModelScope = viewModelScope)
+
+    override val customizationOptionsData: Flow<CustomizationOptionsData> =
+        if (BaseFlags.get().isExtendibleThemeManager()) {
+            combine(
+                gridPickerViewModel.isGridCustomizationAvailable,
+                appIconPickerViewModel.isIconStyleAvailable,
+                appIconPickerViewModel.isShapeOptionsAvailable,
+            ) { isGridCustomizationAvailable, isIconStyleAvailable, isShapeOptionsAvailable ->
+                ThemePickerCustomizationOptionsData(
+                    isGridCustomizationAvailable = isGridCustomizationAvailable,
+                    isIconStyleAvailable = isIconStyleAvailable,
+                    isShapeAvailable = isShapeOptionsAvailable,
+                )
+            }
+        } else {
+            combine(
+                gridPickerViewModel.isGridCustomizationAvailable,
+                appIconPickerViewModel.isThemedIconAvailable,
+                appIconPickerViewModel.isShapeOptionsAvailable,
+            ) { isGridCustomizationAvailable, isThemedIconAvailable, isShapeOptionsAvailable ->
+                ThemePickerCustomizationOptionsData(
+                    isGridCustomizationAvailable = isGridCustomizationAvailable,
+                    isIconStyleAvailable = isThemedIconAvailable,
+                    isShapeAvailable = isShapeOptionsAvailable,
+                )
+            }
+        }
 
     private var onApplyJob: Job? = null
 
@@ -76,11 +126,15 @@ constructor(
         defaultCustomizationOptionsViewModel.discardChangesDialogViewModel
 
     override fun handleBackPressed(): Boolean {
-        if (isApplyButtonEnabled.value) {
-            defaultCustomizationOptionsViewModel.showDiscardChangesDialogViewModel()
+        if (applyButtonState.value == APPLY_BUTTON_ENABLED) {
+            defaultCustomizationOptionsViewModel.showDiscardChangesDialogViewModel(
+                // Hide the picker's clock when we start the transition back to the primary screen.
+                onDiscard = { clockPickerViewModel.setShowPickerClockControllerView(false) }
+            )
             return true
         }
-
+        // Hide the picker's clock when we start the transition back to the primary screen.
+        clockPickerViewModel.setShowPickerClockControllerView(false)
         return defaultCustomizationOptionsViewModel.handleBackPressed()
     }
 
@@ -88,19 +142,39 @@ constructor(
         defaultCustomizationOptionsViewModel.resetPreview()
 
         keyguardQuickAffordancePickerViewModel2.resetPreview()
-        shapeGridPickerViewModel.resetPreview()
+        gridPickerViewModel.resetPreview()
+        if (BaseFlags.get().isExtendibleThemeManager()) {
+            appIconPickerViewModel.resetPreview2()
+        } else {
+            appIconPickerViewModel.resetPreview()
+        }
         clockPickerViewModel.resetPreview()
+        // resetPreview happens when transition back to the primary screen ends. Show the keyguard
+        // preview renderer's smartspace and the clock.
+        clockPickerViewModel.setShowKeyguardPreviewRendererSmartspace(true)
         colorPickerViewModel2.resetPreview()
         darkModeViewModel.resetPreview()
+    }
+
+    override fun onTransitionToSecondaryScreenComplete() {
+        defaultCustomizationOptionsViewModel.onTransitionToSecondaryScreenComplete()
+        if (selectedOption.value == CLOCK) {
+            // Show the picker's clock when we complete the transition to land on the secondary
+            // clock customization screen.
+            clockPickerViewModel.setShowPickerClockControllerView(true)
+        }
     }
 
     val onCustomizeClockClicked: Flow<(() -> Unit)?> =
         selectedOption.map {
             if (it == null) {
                 {
-                    defaultCustomizationOptionsViewModel.selectOption(
-                        ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.CLOCK
-                    )
+                    defaultCustomizationOptionsViewModel.selectOption(CLOCK)
+                    // When we are about to transition to the clock customization screen, hide the
+                    // keyguard preview renderer's smartspace as well as the clock. Because, we will
+                    // show the picker's clock controller view clock when the transition ends.
+                    // Please also see clockPickerViewModel.setShowPickerClockControllerView().
+                    clockPickerViewModel.setShowKeyguardPreviewRendererSmartspace(false)
                 }
             } else {
                 null
@@ -110,12 +184,7 @@ constructor(
     val onCustomizeShortcutClicked: Flow<(() -> Unit)?> =
         selectedOption.map {
             if (it == null) {
-                {
-                    defaultCustomizationOptionsViewModel.selectOption(
-                        ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption
-                            .SHORTCUTS
-                    )
-                }
+                { defaultCustomizationOptionsViewModel.selectOption(SHORTCUTS) }
             } else {
                 null
             }
@@ -124,11 +193,16 @@ constructor(
     val onCustomizeColorsClicked: Flow<(() -> Unit)?> =
         selectedOption.map {
             if (it == null) {
-                {
-                    defaultCustomizationOptionsViewModel.selectOption(
-                        ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS
-                    )
-                }
+                { defaultCustomizationOptionsViewModel.selectOption(COLORS) }
+            } else {
+                null
+            }
+        }
+
+    val onCustomizeIconsClicked: Flow<(() -> Unit)?> =
+        selectedOption.map {
+            if (it == null) {
+                { defaultCustomizationOptionsViewModel.selectOption(APP_ICONS) }
             } else {
                 null
             }
@@ -137,29 +211,27 @@ constructor(
     val onCustomizeShapeGridClicked: Flow<(() -> Unit)?> =
         selectedOption.map {
             if (it == null) {
-                {
-                    defaultCustomizationOptionsViewModel.selectOption(
-                        ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
-                            .APP_SHAPE_GRID
-                    )
-                }
+                { defaultCustomizationOptionsViewModel.selectOption(GRID) }
             } else {
                 null
             }
         }
-
+    private val isApplyInProgress: MutableStateFlow<Boolean> = MutableStateFlow(false)
     @OptIn(ExperimentalCoroutinesApi::class)
     val onApplyButtonClicked: Flow<((onComplete: () -> Unit) -> Unit)?> =
         selectedOption
             .flatMapLatest {
                 when (it) {
-                    ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.CLOCK ->
-                        clockPickerViewModel.onApply
-                    ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption
-                        .SHORTCUTS -> keyguardQuickAffordancePickerViewModel2.onApply
-                    ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
-                        .APP_SHAPE_GRID -> shapeGridPickerViewModel.onApply
-                    ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS ->
+                    CLOCK -> clockPickerViewModel.onApply
+                    SHORTCUTS -> keyguardQuickAffordancePickerViewModel2.onApply
+                    GRID -> gridPickerViewModel.onApply
+                    APP_ICONS ->
+                        if (BaseFlags.get().isExtendibleThemeManager()) {
+                            appIconPickerViewModel.onApply2
+                        } else {
+                            appIconPickerViewModel.onApply
+                        }
+                    COLORS ->
                         combine(colorPickerViewModel2.onApply, darkModeViewModel.onApply) {
                             colorOnApply,
                             darkModeOnApply ->
@@ -182,8 +254,10 @@ constructor(
                         if (onApplyJob?.isActive != true) {
                             onApplyJob =
                                 viewModelScope.launch {
+                                    isApplyInProgress.value = true
                                     onApply()
                                     onComplete()
+                                    isApplyInProgress.value = false
                                     onApplyJob = null
                                 }
                         }
@@ -194,18 +268,34 @@ constructor(
             }
             .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    val isApplyButtonEnabled: StateFlow<Boolean> =
-        onApplyButtonClicked
-            .map { it != null }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+    val applyButtonState: StateFlow<ApplyButton.ApplyButtonState> =
+        combine(isApplyInProgress, onApplyButtonClicked) { isApplyInProgress, onApplyButtonClicked
+                ->
+                if (isApplyInProgress) {
+                    APPLY_BUTTON_IN_PROGRESS
+                } else if (onApplyButtonClicked == null) {
+                    APPLY_BUTTON_DISABLED
+                } else {
+                    APPLY_BUTTON_ENABLED
+                }
+            }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), APPLY_BUTTON_DISABLED)
 
     val isApplyButtonVisible: Flow<Boolean> = selectedOption.map { it != null }
+
+    fun isAccessibilityEnabled(context: Context): Boolean {
+        return AccessibilityUtil.isAccessibilityEnabled(
+            context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+        )
+    }
 
     @ViewModelScoped
     @AssistedFactory
     interface Factory : CustomizationOptionsViewModelFactory {
         override fun create(
-            viewModelScope: CoroutineScope
+            viewModelScope: CoroutineScope,
+            @Assisted("destination") initialDeepLinkDestination: String?,
+            @Assisted("shortcutSlotId") initialDeepLinkShortcutSlotId: String?,
         ): ThemePickerCustomizationOptionsViewModel
     }
 }

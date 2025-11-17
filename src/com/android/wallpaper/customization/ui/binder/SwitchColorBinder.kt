@@ -44,6 +44,7 @@ object SwitchColorBinder {
     ): Binding {
         val bindingThumb: ColorUpdateBinder.Binding
         val bindingTrack: ColorUpdateBinder.Binding
+        val bindingThumbIcon: ColorUpdateBinder.Binding
         if (isChecked) {
             switch.trackDecorationTintList = ColorStateList.valueOf(COLOR_TRANSPARENT)
             bindingThumb =
@@ -56,6 +57,15 @@ object SwitchColorBinder {
             bindingTrack =
                 ColorUpdateBinder.bind(
                     setColor = { color -> switch.trackTintList = ColorStateList.valueOf(color) },
+                    color = colorUpdateViewModel.colorPrimary,
+                    shouldAnimate = shouldAnimateColor,
+                    lifecycleOwner = lifecycleOwner,
+                )
+            bindingThumbIcon =
+                ColorUpdateBinder.bind(
+                    setColor = { color ->
+                        switch.thumbIconTintList = ColorStateList.valueOf(color)
+                    },
                     color = colorUpdateViewModel.colorPrimary,
                     shouldAnimate = shouldAnimateColor,
                     lifecycleOwner = lifecycleOwner,
@@ -78,11 +88,29 @@ object SwitchColorBinder {
                     shouldAnimate = shouldAnimateColor,
                     lifecycleOwner = lifecycleOwner,
                 )
+            bindingThumbIcon =
+                ColorUpdateBinder.bind(
+                    setColor = { color ->
+                        switch.thumbIconTintList = ColorStateList.valueOf(color)
+                    },
+                    color = colorUpdateViewModel.colorSurfaceContainerHighest,
+                    shouldAnimate = shouldAnimateColor,
+                    lifecycleOwner = lifecycleOwner,
+                )
         }
+        val bindingText: ColorUpdateBinder.Binding =
+            ColorUpdateBinder.bind(
+                setColor = { color -> switch.setTextColor(color) },
+                color = colorUpdateViewModel.colorOnSurface,
+                shouldAnimate = shouldAnimateColor,
+                lifecycleOwner = lifecycleOwner,
+            )
         return object : Binding {
             override fun destroy() {
                 bindingThumb.destroy()
                 bindingTrack.destroy()
+                bindingThumbIcon.destroy()
+                bindingText.destroy()
             }
         }
     }

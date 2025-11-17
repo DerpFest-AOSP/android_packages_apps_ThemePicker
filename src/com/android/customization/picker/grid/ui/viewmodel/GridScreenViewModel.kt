@@ -68,6 +68,7 @@ class GridScreenViewModel(context: Context, private val interactor: GridInteract
                                 columns = option.cols,
                                 rows = option.rows,
                                 path = iconShapePath,
+                                drawable = interactor.getGridOptionDrawable(option.iconId),
                             ),
                         text = text,
                         contentDescription =

@@ -48,15 +48,27 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"Mały zegar wyświetlany w rogu ekranu"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Zastosuj zmiany czcionki zegara"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"Cofnij zmiany czcionki zegara"</string>
+    <string name="clock_style_round_clock" msgid="1694787561051568664">"Okrągły zegar"</string>
+    <string name="clock_style_update_toast" msgid="6933583129162805444">"Styl został zmieniony na <xliff:g id="ID_1">%1$s</xliff:g>. Kliknij ponownie, aby cofnąć."</string>
+    <string name="clock_style_round" msgid="261319982647730366">"zaokrąglone krawędzie"</string>
+    <string name="clock_style_sharp" msgid="453991773733285628">"ostre krawędzie"</string>
     <string name="grid_title" msgid="1688173478777254123">"Siatka aplikacji"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Kształt i układ aplikacji"</string>
     <string name="grid_layout" msgid="370175667652663686">"Układ"</string>
+    <string name="app_icons_title" msgid="8953944517006998975">"Ikony"</string>
+    <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>, <xliff:g id="ID_2">%2$s</xliff:g>"</string>
+    <string name="app_icons_theme_default" msgid="4773453045331265070">"domyślne"</string>
+    <string name="app_icons_theme_themed" msgid="6539464818104931856">"z motywem"</string>
+    <string name="app_icons_style_default" msgid="2568057806991656437">"Domyślny"</string>
+    <string name="app_icons_style_minimal" msgid="4905227469969513136">"Minimalistyczny"</string>
+    <string name="app_icons_shape" msgid="2539949450435849188">"Kształt"</string>
+    <string name="app_icons_style" msgid="993356162262531521">"Styl"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"Zastosuj"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"Kliknij, by edytować"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Pozostaw bieżącą tapetę"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Podgląd stylu"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Podgląd siatki"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"Podgląd motywów"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"Opis zawartości"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Podgląd czcionki"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Podgląd ikony"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Podgląd koloru"</string>
@@ -117,9 +129,10 @@
     <string name="mode_title" msgid="2394873501427436055">"Ciemny motyw"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Tymczasowo wyłączono z powodu oszczędzania baterii"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Ikony z motywem"</string>
-    <string name="pack_theme_title" msgid="3052703041673623611">"Motywy"</string>
+    <string name="themed_icon_beta_title" msgid="5433087142610402812">"Ikony z motywem (beta)"</string>
+    <string name="pack_theme_title" msgid="8859400282820047298">"Tytuł"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
-    <string name="theme_packs_description" msgid="4647233199054882039">"Odkrywaj motywy Pixela"</string>
+    <string name="theme_packs_description" msgid="7214401664119395771">"Opis"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Zmień siatkę aplikacji"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Kolory tapety"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Ikony, tekst i inne elementy pasują do koloru tapety"</string>
@@ -161,4 +174,6 @@
     <string name="scroll_forward_and_select" msgid="6156132388656395769">"Przesuń w lewo, aby wybrać inną tarczę zegara"</string>
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"Przesuń w prawo, aby wybrać inną tarczę zegara"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"Zegary niestandardowe"</string>
+    <string name="clock_face_width" msgid="5818129719338363570">"Szerokość tarczy zegara"</string>
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, zakres od %2$d do %3$d"</string>
 </resources>

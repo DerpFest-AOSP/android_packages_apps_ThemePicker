@@ -48,15 +48,27 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"Un piccolo orologio visualizzato nell\'angolo dello schermo"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Applica le modifiche al carattere dell\'orologio"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"Annulla le modifiche al carattere dell\'orologio"</string>
+    <string name="clock_style_round_clock" msgid="1694787561051568664">"Orologio rotondo"</string>
+    <string name="clock_style_update_toast" msgid="6933583129162805444">"Stile modificato in <xliff:g id="ID_1">%1$s</xliff:g>. Tocca di nuovo per annullare."</string>
+    <string name="clock_style_round" msgid="261319982647730366">"arrotondato"</string>
+    <string name="clock_style_sharp" msgid="453991773733285628">"nitido"</string>
     <string name="grid_title" msgid="1688173478777254123">"Griglia di app"</string>
-    <string name="shape_and_grid_title" msgid="9092477491363761054">"Layout/Forma app"</string>
+    <string name="shape_and_grid_title" msgid="9092477491363761054">"Layout e forma app"</string>
     <string name="grid_layout" msgid="370175667652663686">"Layout"</string>
+    <string name="app_icons_title" msgid="8953944517006998975">"Icone"</string>
+    <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>, <xliff:g id="ID_2">%2$s</xliff:g>"</string>
+    <string name="app_icons_theme_default" msgid="4773453045331265070">"predefinite"</string>
+    <string name="app_icons_theme_themed" msgid="6539464818104931856">"a tema"</string>
+    <string name="app_icons_style_default" msgid="2568057806991656437">"Predefinito"</string>
+    <string name="app_icons_style_minimal" msgid="4905227469969513136">"Minimal"</string>
+    <string name="app_icons_shape" msgid="2539949450435849188">"Forma"</string>
+    <string name="app_icons_style" msgid="993356162262531521">"Stile"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"Applica"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"Tocca per modificare"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Mantieni lo sfondo corrente"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Anteprima stile"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Anteprima griglia"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"Anteprima dei temi"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"Descrizione dei contenuti"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Anteprima carattere"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Anteprima icona"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Anteprima colore"</string>
@@ -117,9 +129,10 @@
     <string name="mode_title" msgid="2394873501427436055">"Tema scuro"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Opzione disattivata temporaneamente per risparmio energetico"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Icone a tema"</string>
-    <string name="pack_theme_title" msgid="3052703041673623611">"Temi"</string>
+    <string name="themed_icon_beta_title" msgid="5433087142610402812">"Icone a tema (beta)"</string>
+    <string name="pack_theme_title" msgid="8859400282820047298">"Titolo"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
-    <string name="theme_packs_description" msgid="4647233199054882039">"Scopri i temi Pixel"</string>
+    <string name="theme_packs_description" msgid="7214401664119395771">"Descrizione"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Cambia griglia di app"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Colori di sfondo"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Icone, testo e altro si adattano ai colori dello sfondo"</string>
@@ -161,4 +174,6 @@
     <string name="scroll_forward_and_select" msgid="6156132388656395769">"Scorri a sinistra per selezionare un altro quadrante"</string>
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"Scorri a destra per selezionare un altro quadrante"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"Quadranti personalizzati"</string>
+    <string name="clock_face_width" msgid="5818129719338363570">"Larghezza del quadrante orologio"</string>
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, intervallo da %2$d a %3$d"</string>
 </resources>

@@ -48,15 +48,27 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"Mali sat se prikazuje u uglu vašeg ekrana"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Primjena promjena fonta na satu"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"Poništavanje promjena fonta na satu"</string>
+    <string name="clock_style_round_clock" msgid="1694787561051568664">"Okrugli sat"</string>
+    <string name="clock_style_update_toast" msgid="6933583129162805444">"Promijenjeno je na stil <xliff:g id="ID_1">%1$s</xliff:g>. Ponovo dodirnite da poništite."</string>
+    <string name="clock_style_round" msgid="261319982647730366">"zaobljeno"</string>
+    <string name="clock_style_sharp" msgid="453991773733285628">"oštro"</string>
     <string name="grid_title" msgid="1688173478777254123">"Mreža aplikacija"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Oblik i raspored apl."</string>
     <string name="grid_layout" msgid="370175667652663686">"Raspored"</string>
+    <string name="app_icons_title" msgid="8953944517006998975">"Ikone"</string>
+    <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>, <xliff:g id="ID_2">%2$s</xliff:g>"</string>
+    <string name="app_icons_theme_default" msgid="4773453045331265070">"zadano"</string>
+    <string name="app_icons_theme_themed" msgid="6539464818104931856">"tematsko"</string>
+    <string name="app_icons_style_default" msgid="2568057806991656437">"Zadano"</string>
+    <string name="app_icons_style_minimal" msgid="4905227469969513136">"Minimalno"</string>
+    <string name="app_icons_shape" msgid="2539949450435849188">"Oblik"</string>
+    <string name="app_icons_style" msgid="993356162262531521">"Stil"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"Primijeni"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"Dodirnite da uredite"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Zadrži trenutnu pozadinsku sliku"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Pregled stila"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Pregled mreže"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"Pregled tema"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"Opis sadržaja"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Pregled fonta"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Pregled ikone"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Pregled boje"</string>
@@ -117,9 +129,10 @@
     <string name="mode_title" msgid="2394873501427436055">"Tamna tema"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Privremeno onemogućeno zbog uštede baterije"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Tematske ikone"</string>
-    <string name="pack_theme_title" msgid="3052703041673623611">"Teme"</string>
+    <string name="themed_icon_beta_title" msgid="5433087142610402812">"Tematske ikone (beta verzija)"</string>
+    <string name="pack_theme_title" msgid="8859400282820047298">"Naslov"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
-    <string name="theme_packs_description" msgid="4647233199054882039">"Otkrijte Pixel teme"</string>
+    <string name="theme_packs_description" msgid="7214401664119395771">"Opis"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Promjena mreže aplikacije"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Boje pozadinske slike"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Ikone, tekst i drugo odgovara bojama pozadinske slike"</string>
@@ -161,4 +174,6 @@
     <string name="scroll_forward_and_select" msgid="6156132388656395769">"Odabir drugog brojčanika prevlačenjem ulijevo"</string>
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"Odabir drugog brojčanika prevlačenjem udesno"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"Prilagođeni satovi"</string>
+    <string name="clock_face_width" msgid="5818129719338363570">"Širina brojčanika"</string>
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, raspon od %2$d do %3$d"</string>
 </resources>

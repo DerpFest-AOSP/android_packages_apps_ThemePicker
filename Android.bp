@@ -63,6 +63,7 @@ android_library {
     static_libs: [
         "guava",
         "monet",
+        "libmonet",
         "renderscript_toolkit",
         "WallpaperPicker2Lib",
         "SettingsLibSettingsTheme",

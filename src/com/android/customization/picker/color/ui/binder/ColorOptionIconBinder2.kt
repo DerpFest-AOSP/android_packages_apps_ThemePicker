@@ -21,6 +21,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.android.customization.picker.color.ui.view.ColorOptionIconView2
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
+import com.android.wallpaper.picker.customization.ui.binder.DarkModeUpdateBinder
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 
 object ColorOptionIconBinder2 {
@@ -33,36 +34,38 @@ object ColorOptionIconBinder2 {
     fun bind(
         view: ColorOptionIconView2,
         viewModel: ColorOptionIconViewModel,
-        darkTheme: Boolean,
         colorUpdateViewModel: ColorUpdateViewModel,
         shouldAnimateColor: () -> Boolean,
         lifecycleOwner: LifecycleOwner,
     ): Binding {
-        val binding =
+        val colorBinding =
             ColorUpdateBinder.bind(
                 setColor = { color -> view.bindStrokeColor(color) },
                 color = colorUpdateViewModel.colorPrimary,
                 shouldAnimate = shouldAnimateColor,
                 lifecycleOwner = lifecycleOwner,
             )
-        if (darkTheme) {
-            view.bindColor(
-                viewModel.darkThemeColor0,
-                viewModel.darkThemeColor1,
-                viewModel.darkThemeColor2,
-                viewModel.darkThemeColor3,
+        view.bindColor(
+            viewModel.lightThemeColor0,
+            viewModel.lightThemeColor1,
+            viewModel.lightThemeColor2,
+            viewModel.lightThemeColor3,
+            viewModel.darkThemeColor0,
+            viewModel.darkThemeColor1,
+            viewModel.darkThemeColor2,
+            viewModel.darkThemeColor3,
+        )
+        val darkModeBinding =
+            DarkModeUpdateBinder.bind(
+                onProgressChange = { progress -> view.setDarkThemeProgress(progress) },
+                colorUpdateViewModel = colorUpdateViewModel,
+                shouldAnimate = shouldAnimateColor,
+                lifecycleOwner = lifecycleOwner,
             )
-        } else {
-            view.bindColor(
-                viewModel.lightThemeColor0,
-                viewModel.lightThemeColor1,
-                viewModel.lightThemeColor2,
-                viewModel.lightThemeColor3,
-            )
-        }
         return object : Binding {
             override fun destroy() {
-                binding.destroy()
+                colorBinding.destroy()
+                darkModeBinding.destroy()
             }
         }
     }

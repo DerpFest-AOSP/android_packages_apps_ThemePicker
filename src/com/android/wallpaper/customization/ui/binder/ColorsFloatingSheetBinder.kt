@@ -16,12 +16,11 @@
 
 package com.android.wallpaper.customization.ui.binder
 
-import android.content.res.Configuration.UI_MODE_NIGHT_MASK
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.get
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -60,7 +59,6 @@ object ColorsFloatingSheetBinder {
         ColorUpdateBinder.bind(
             setColor = { color ->
                 view.requireViewById<TextView>(R.id.color_type_tab_subhead).setTextColor(color)
-                view.requireViewById<TextView>(R.id.dark_mode_toggle_title).setTextColor(color)
             },
             color = colorUpdateViewModel.colorOnSurface,
             shouldAnimate = isFloatingSheetActive,
@@ -103,7 +101,6 @@ object ColorsFloatingSheetBinder {
 
         val colorsAdapter =
             createOptionItemAdapter(
-                uiMode = view.resources.configuration.uiMode,
                 colorUpdateViewModel = colorUpdateViewModel,
                 shouldAnimateColor = isFloatingSheetActive,
                 lifecycleOwner = lifecycleOwner,
@@ -137,9 +134,27 @@ object ColorsFloatingSheetBinder {
                     colorsViewModel.colorOptions.collect { colorOptions ->
                         colorsAdapter.setItems(colorOptions) {
                             var indexToFocus = colorOptions.indexOfFirst { it.isSelected.value }
+
                             indexToFocus = if (indexToFocus < 0) 0 else indexToFocus
                             (colorsList.layoutManager as LinearLayoutManager)
                                 .scrollToPositionWithOffset(indexToFocus, 0)
+                        }
+                    }
+                }
+
+                launch {
+                    colorsViewModel.previewingColorOptionIndex.collect { indexToFocus ->
+                        colorsList.post {
+                            val layoutManager =
+                                colorsList.layoutManager as? LinearLayoutManager ?: return@post
+                            val itemView = layoutManager.findViewByPosition(indexToFocus)
+
+                            if (itemView != null) {
+                                val parentCenter = colorsList.width / 2
+                                val itemCenter = itemView.left + itemView.width / 2
+                                val scrollBy = itemCenter - parentCenter
+                                colorsList.smoothScrollBy(scrollBy, 0)
+                            }
                         }
                     }
                 }
@@ -172,7 +187,6 @@ object ColorsFloatingSheetBinder {
     }
 
     private fun createOptionItemAdapter(
-        uiMode: Int,
         colorUpdateViewModel: ColorUpdateViewModel,
         shouldAnimateColor: () -> Boolean,
         lifecycleOwner: LifecycleOwner,
@@ -185,12 +199,10 @@ object ColorsFloatingSheetBinder {
                     itemView.requireViewById<ColorOptionIconView2>(
                         com.android.wallpaper.R.id.background
                     )
-                val night = uiMode and UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
                 val binding =
                     ColorOptionIconBinder2.bind(
                         view = colorOptionIconView,
                         viewModel = colorIcon,
-                        darkTheme = night,
                         colorUpdateViewModel = colorUpdateViewModel,
                         shouldAnimateColor = shouldAnimateColor,
                         lifecycleOwner = lifecycleOwner,

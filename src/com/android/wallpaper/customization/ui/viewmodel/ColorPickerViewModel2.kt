@@ -61,6 +61,9 @@ constructor(
     private val overridingColorOption = MutableStateFlow<ColorOption?>(null)
     val previewingColorOption = overridingColorOption.asStateFlow()
 
+    val _previewingColorOptionIndex = MutableStateFlow<Int>(0)
+    val previewingColorOptionIndex = _previewingColorOptionIndex.asStateFlow()
+
     private val selectedColorTypeTabId = MutableStateFlow<ColorType?>(null)
 
     /** View-models for each color tab. */
@@ -119,7 +122,7 @@ constructor(
             colorOptions
                 .map { colorOptionEntry ->
                     colorOptionEntry.key to
-                        colorOptionEntry.value.map { colorOption ->
+                        colorOptionEntry.value.mapIndexed { index, colorOption ->
                             colorOption as ColorOptionImpl
                             val isSelectedFlow: StateFlow<Boolean> =
                                 combine(previewingColorOption, selectedColorOption) {
@@ -149,6 +152,7 @@ constructor(
                                             {
                                                 viewModelScope.launch {
                                                     overridingColorOption.value = colorOption
+                                                    _previewingColorOptionIndex.value = index
                                                 }
                                             }
                                         }

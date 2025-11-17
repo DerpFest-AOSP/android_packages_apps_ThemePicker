@@ -41,4 +41,7 @@
         <item>com.android.dialer</item>
         <item>org.lineageos.glimpse</item>
     </array>
+
+    <!-- Package name of the Camera app to be used when previewing icon shape and theme -->
+    <string name="camera_package" translatable="false">com.android.camera2</string>
 </resources>

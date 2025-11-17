@@ -48,15 +48,27 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"Në këndin e ekranit shfaqet një orë e vogël"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Zbato ndryshimet e fontit të orës"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"Zhbëj ndryshimet e fontit të orës"</string>
+    <string name="clock_style_round_clock" msgid="1694787561051568664">"Orë rrethore"</string>
+    <string name="clock_style_update_toast" msgid="6933583129162805444">"Stili u ndryshua në <xliff:g id="ID_1">%1$s</xliff:g>. Trokit përsëri për ta zhbërë."</string>
+    <string name="clock_style_round" msgid="261319982647730366">"rrethor"</string>
+    <string name="clock_style_sharp" msgid="453991773733285628">"i mprehtë"</string>
     <string name="grid_title" msgid="1688173478777254123">"Rrjeta e aplikacioneve"</string>
-    <string name="shape_and_grid_title" msgid="9092477491363761054">"Forma e struktura e aplikacionit"</string>
+    <string name="shape_and_grid_title" msgid="9092477491363761054">"Forma dhe struktura e apl."</string>
     <string name="grid_layout" msgid="370175667652663686">"Struktura"</string>
+    <string name="app_icons_title" msgid="8953944517006998975">"Ikonat"</string>
+    <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>, <xliff:g id="ID_2">%2$s</xliff:g>"</string>
+    <string name="app_icons_theme_default" msgid="4773453045331265070">"e parazgjedhur"</string>
+    <string name="app_icons_theme_themed" msgid="6539464818104931856">"me temë"</string>
+    <string name="app_icons_style_default" msgid="2568057806991656437">"E parazgjedhur"</string>
+    <string name="app_icons_style_minimal" msgid="4905227469969513136">"Minimale"</string>
+    <string name="app_icons_shape" msgid="2539949450435849188">"Forma"</string>
+    <string name="app_icons_style" msgid="993356162262531521">"Stili"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"Zbato"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"Trokit për të modifikuar"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Mbaj imazhin aktual të sfondit"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Pamja paraprake e stilit"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Pamja paraprake e rrjetës"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"Pamja paraprake e temave"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"Përshkrimi i përmbajtjes"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Pamja paraprake e fontit"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Pamja paraprake e ikonës"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Pamja paraprake e ngjyrave"</string>
@@ -117,9 +129,10 @@
     <string name="mode_title" msgid="2394873501427436055">"Tema e errët"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Çaktivizuar për shkak të \"Kursyesit të baterisë\""</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Ikona me temë"</string>
-    <string name="pack_theme_title" msgid="3052703041673623611">"Temat"</string>
+    <string name="themed_icon_beta_title" msgid="5433087142610402812">"Ikonat me temë (beta)"</string>
+    <string name="pack_theme_title" msgid="8859400282820047298">"Titulli"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
-    <string name="theme_packs_description" msgid="4647233199054882039">"Zbulo temat e Pixel"</string>
+    <string name="theme_packs_description" msgid="7214401664119395771">"Përshkrimi"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Ndrysho rrjetën e aplikacioneve"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Ngjyra imazhi sfondi"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Imazhi i sfondit: ikona, tekst dhe ngjyra të përputhura"</string>
@@ -161,4 +174,6 @@
     <string name="scroll_forward_and_select" msgid="6156132388656395769">"Rrëshqit shpejt majtas për të zgjedhur një tjetër fushë ore"</string>
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"Rrëshqit shpejt djathtas për të zgjedhur një tjetër fushë ore"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"Fusha ore të personalizuara"</string>
+    <string name="clock_face_width" msgid="5818129719338363570">"Gjerësia e fushës së orës"</string>
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, diapazoni nga %2$d deri në %3$d"</string>
 </resources>

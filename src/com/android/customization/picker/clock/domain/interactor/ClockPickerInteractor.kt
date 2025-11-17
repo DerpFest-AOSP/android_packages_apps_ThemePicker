@@ -102,7 +102,7 @@ constructor(
         selectedColorId: String?,
         @IntRange(from = 0, to = 100) colorToneProgress: Int?,
         @ColorInt seedColor: Int?,
-        axisSettings: ClockAxisStyle,
+        axisSettings: ClockAxisStyle?,
     ) {
         setClockOption(
             ClockSnapshotModel(

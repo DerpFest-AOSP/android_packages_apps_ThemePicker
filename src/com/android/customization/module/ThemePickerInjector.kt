@@ -410,6 +410,7 @@ constructor(
                     applicationScope = getApplicationCoroutineScope(),
                     repository =
                         GridRepositoryImpl(
+                            appContext = appContext,
                             applicationScope = getApplicationCoroutineScope(),
                             manager = GridOptionsManager.getInstance(context),
                             backgroundDispatcher = bgDispatcher,

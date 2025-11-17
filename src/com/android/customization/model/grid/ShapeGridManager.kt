@@ -17,14 +17,42 @@
 package com.android.customization.model.grid
 
 import android.graphics.drawable.Drawable
+import kotlinx.coroutines.flow.Flow
 
 interface ShapeGridManager {
+    /**
+     * Get a list of grid options.
+     *
+     * @return It will return an empty list if there are no available grid options.
+     */
+    suspend fun getGridOptions(): List<GridOptionModel>
 
-    suspend fun getGridOptions(): List<GridOptionModel>?
+    /**
+     * A flow representing whether shape and grid customization option provider is available.
+     * Collecting from this flow also triggers a retry to get customization provider if it is not
+     * available.
+     */
+    val isCustomizationAvailable: Flow<Boolean>
 
-    suspend fun getShapeOptions(): List<ShapeOptionModel>?
+    /**
+     * A flow of the current list of grid options, updated when the grid options change.
+     *
+     * @return It will return an empty list if there are no available grid options.
+     */
+    val gridOptions: Flow<List<GridOptionModel>>
 
-    fun applyShapeGridOption(shapeKey: String, gridKey: String): Int
+    /**
+     * A flow of the current list of shape options, updated when the shape options change.
+     *
+     * @return It will return an empty list if there are no available shape options.
+     */
+    val shapeOptions: Flow<List<ShapeOptionModel>>
+
+    suspend fun getShapeOptions(): List<ShapeOptionModel>
+
+    fun applyGridOption(gridKey: String)
+
+    fun applyShapeOption(shapeKey: String)
 
     fun getGridOptionDrawable(iconId: Int): Drawable?
 }

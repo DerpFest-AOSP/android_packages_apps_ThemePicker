@@ -17,29 +17,54 @@
 package com.android.customization.model.grid
 
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import androidx.core.graphics.drawable.toDrawable
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 @Singleton
 class FakeShapeGridManager @Inject constructor() : ShapeGridManager {
 
-    val gridOptionDrawable0: Drawable = ColorDrawable(Color.BLUE)
-    val gridOptionDrawable1: Drawable = ColorDrawable(Color.GREEN)
+    val gridOptionDrawable0: Drawable = Color.BLUE.toDrawable()
+    val gridOptionDrawable1: Drawable = Color.GREEN.toDrawable()
 
-    private var gridOptions: List<GridOptionModel>? = DEFAULT_GRID_OPTION_LIST
+    private val _gridOptions: MutableStateFlow<List<GridOptionModel>> =
+        MutableStateFlow(DEFAULT_GRID_OPTION_LIST)
 
-    private var shapeOptions: List<ShapeOptionModel>? = DEFAULT_SHAPE_OPTION_LIST
+    private val _shapeOptions: MutableStateFlow<List<ShapeOptionModel>> =
+        MutableStateFlow(DEFAULT_SHAPE_OPTION_LIST)
 
-    override suspend fun getGridOptions(): List<GridOptionModel>? = gridOptions
+    fun setGridOptions(gridOptions: List<GridOptionModel>) {
+        this._gridOptions.value = gridOptions
+    }
 
-    override suspend fun getShapeOptions(): List<ShapeOptionModel>? = shapeOptions
+    fun setShapeOptions(shapeOptions: List<ShapeOptionModel>) {
+        this._shapeOptions.value = shapeOptions
+    }
 
-    override fun applyShapeGridOption(shapeKey: String, gridKey: String): Int {
-        shapeOptions = shapeOptions?.map { it.copy(isCurrent = it.key == shapeKey) }
-        gridOptions = gridOptions?.map { it.copy(isCurrent = it.key == gridKey) }
-        return 0
+    private val _isCustomizationAvailable = MutableStateFlow(true)
+    override val isCustomizationAvailable: Flow<Boolean> = _isCustomizationAvailable.asStateFlow()
+
+    fun setIsCustomizationAvailable(isAvailable: Boolean) {
+        this._isCustomizationAvailable.value = isAvailable
+    }
+
+    override val gridOptions: Flow<List<GridOptionModel>> = _gridOptions.asStateFlow()
+    override val shapeOptions: Flow<List<ShapeOptionModel>> = _shapeOptions.asStateFlow()
+
+    override suspend fun getGridOptions(): List<GridOptionModel> = _gridOptions.value
+
+    override suspend fun getShapeOptions(): List<ShapeOptionModel> = _shapeOptions.value
+
+    override fun applyGridOption(gridKey: String) {
+        _gridOptions.value = _gridOptions.value.map { it.copy(isCurrent = it.key == gridKey) }
+    }
+
+    override fun applyShapeOption(shapeKey: String) {
+        _shapeOptions.value = _shapeOptions.value.map { it.copy(isCurrent = it.key == shapeKey) }
     }
 
     override fun getGridOptionDrawable(iconId: Int): Drawable? {
@@ -109,5 +134,11 @@ class FakeShapeGridManager @Inject constructor() : ShapeGridManager {
                     isCurrent = false,
                 ),
             )
+
+        const val FOUR_SIDED_COOKIE_IDX = 1
+        private val FOUR_SIDED_COOKIE_MODEL = DEFAULT_SHAPE_OPTION_LIST[FOUR_SIDED_COOKIE_IDX]
+        val FOUR_SIDED_COOKIE_KEY = FOUR_SIDED_COOKIE_MODEL.key
+        val FOUR_SIDED_COOKIE_TITLE = FOUR_SIDED_COOKIE_MODEL.title
+        val FOUR_SIDED_COOKIE_PATH = FOUR_SIDED_COOKIE_MODEL.path
     }
 }

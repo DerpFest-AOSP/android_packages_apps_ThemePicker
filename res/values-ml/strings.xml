@@ -48,15 +48,27 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"സ്ക്രീനിന്റെ മൂലയിൽ ഒരു ചെറിയ ക്ലോക്ക് കാണിക്കുന്നു"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"ക്ലോക്ക് ഫോണ്ട് മാറ്റങ്ങൾ ബാധകമാക്കുക"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"ക്ലോക്ക് ഫോണ്ട് മാറ്റങ്ങൾ പഴയപടിയാക്കുക"</string>
+    <string name="clock_style_round_clock" msgid="1694787561051568664">"റൗണ്ട് ക്ലോക്ക്"</string>
+    <string name="clock_style_update_toast" msgid="6933583129162805444">"സ്‌റ്റൈൽ <xliff:g id="ID_1">%1$s</xliff:g> എന്നതിലേക്ക് മാറ്റി. പഴയപടിയാക്കാൻ വീണ്ടും ടാപ്പ് ചെയ്യുക."</string>
+    <string name="clock_style_round" msgid="261319982647730366">"റൗണ്ട്"</string>
+    <string name="clock_style_sharp" msgid="453991773733285628">"ഷാർപ്പ്"</string>
     <string name="grid_title" msgid="1688173478777254123">"ആപ്പ് ഗ്രിഡ്"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"ആപ്പ് രൂപവും ലേഔട്ടും"</string>
     <string name="grid_layout" msgid="370175667652663686">"ലേഔട്ട്"</string>
+    <string name="app_icons_title" msgid="8953944517006998975">"ഐക്കണുകൾ"</string>
+    <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>, <xliff:g id="ID_2">%2$s</xliff:g>"</string>
+    <string name="app_icons_theme_default" msgid="4773453045331265070">"ഡിഫോൾട്ട്"</string>
+    <string name="app_icons_theme_themed" msgid="6539464818104931856">"തീമിലുള്ളത്"</string>
+    <string name="app_icons_style_default" msgid="2568057806991656437">"ഡിഫോൾട്ട്"</string>
+    <string name="app_icons_style_minimal" msgid="4905227469969513136">"മിനിമൽ"</string>
+    <string name="app_icons_shape" msgid="2539949450435849188">"ആകൃതി"</string>
+    <string name="app_icons_style" msgid="993356162262531521">"സ്റ്റൈൽ"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"പ്രയോഗിക്കുക"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"എഡിറ്റ് ചെയ്യാൻ ടാപ്പ് ചെയ്യുക"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"നിലവിലെ വാൾപേപ്പർ നിലനിർത്തുക"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"സ്‌റ്റൈൽ പ്രിവ്യൂ"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"ഗ്രിഡ് പ്രിവ്യൂ"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"തീമുകളുടെ പ്രിവ്യൂ"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"ഉള്ളടക്കത്തിന്റെ വിവരണം"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"ഫോണ്ട് പ്രിവ്യൂ"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"ഐക്കൺ പ്രിവ്യൂ"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"വർണ്ണ പ്രിവ്യൂ"</string>
@@ -117,9 +129,10 @@
     <string name="mode_title" msgid="2394873501427436055">"ഡാർക്ക് തീം"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"ബാറ്ററി സേവർ കാരണം തൽക്കാലം പ്രവർത്തനരഹിതമാണ്"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"തീമുള്ള ഐക്കണുകൾ"</string>
-    <string name="pack_theme_title" msgid="3052703041673623611">"തീമുകൾ"</string>
+    <string name="themed_icon_beta_title" msgid="5433087142610402812">"തീം അധിഷ്ഠിത ഐക്കണുകൾ (ബീറ്റ)"</string>
+    <string name="pack_theme_title" msgid="8859400282820047298">"പേര്"</string>
     <string name="beta_title" msgid="8703819523760746458">"ബീറ്റ"</string>
-    <string name="theme_packs_description" msgid="4647233199054882039">"ഡിസ്‌ക്കവർ Pixel തീമുകൾ"</string>
+    <string name="theme_packs_description" msgid="7214401664119395771">"വിവരണം"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"ആപ്പ് ഗ്രിഡ് മാറ്റുക"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"വാൾപേപ്പർ നിറങ്ങൾ"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"വാൾപേപ്പർ നിറത്തിനിണങ്ങുന്ന ഐക്കണും ടെക്സ്റ്റും മറ്റും"</string>
@@ -161,4 +174,6 @@
     <string name="scroll_forward_and_select" msgid="6156132388656395769">"മറ്റൊരു ക്ലോക്ക് ഫേസ് തിരഞ്ഞെടുക്കാൻ ഇടതുഭാഗത്തേക്ക് സ്വൈപ്പ് ചെയ്യുക"</string>
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"മറ്റൊരു ക്ലോക്ക് ഫേസ് തിരഞ്ഞെടുക്കാൻ വലതുഭാഗത്തേക്ക് സ്വൈപ്പ് ചെയ്യുക"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"ഇഷ്‌ടാനുസൃത ക്ലോക്കുകൾ"</string>
+    <string name="clock_face_width" msgid="5818129719338363570">"ക്ലോക്ക് ഫെയ്‌സിന്റെ വീതി"</string>
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, ശ്രേണി %2$d മുതൽ %3$d വരെയാണ്"</string>
 </resources>

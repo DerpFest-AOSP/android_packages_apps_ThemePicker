@@ -48,15 +48,27 @@
     <string name="clock_size_small_description" msgid="4089511196955732480">"May makikitang maliit na orasan sa sulok ng iyong screen"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Ilapat ang mga pagbabago sa font ng orasan"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"I-undo ang mga pagbabago sa font ng orasan"</string>
+    <string name="clock_style_round_clock" msgid="1694787561051568664">"Bilog na orasan"</string>
+    <string name="clock_style_update_toast" msgid="6933583129162805444">"Ginawang <xliff:g id="ID_1">%1$s</xliff:g> ang istilo. I-tap ulit para i-undo."</string>
+    <string name="clock_style_round" msgid="261319982647730366">"round"</string>
+    <string name="clock_style_sharp" msgid="453991773733285628">"sharp"</string>
     <string name="grid_title" msgid="1688173478777254123">"Grid ng app"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Shape ng app at layout"</string>
     <string name="grid_layout" msgid="370175667652663686">"Layout"</string>
+    <string name="app_icons_title" msgid="8953944517006998975">"Mga Icon"</string>
+    <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>, <xliff:g id="ID_2">%2$s</xliff:g>"</string>
+    <string name="app_icons_theme_default" msgid="4773453045331265070">"default"</string>
+    <string name="app_icons_theme_themed" msgid="6539464818104931856">"may tema"</string>
+    <string name="app_icons_style_default" msgid="2568057806991656437">"Default"</string>
+    <string name="app_icons_style_minimal" msgid="4905227469969513136">"Minimal"</string>
+    <string name="app_icons_shape" msgid="2539949450435849188">"Hugis"</string>
+    <string name="app_icons_style" msgid="993356162262531521">"Istilo"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"Ilapat"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"I-tap para ma-edit"</string>
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Gamitin ang kasalukuyang wallpaper"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Preview ng istilo"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Preview ng grid"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="2964867375123559641">"Preview ng mga tema"</string>
+    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"Paglalarawan ng Content"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Preview ng font"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Preview ng icon"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Preview ng kulay"</string>
@@ -117,9 +129,10 @@
     <string name="mode_title" msgid="2394873501427436055">"Madilim na tema"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Pansamantalang na-disable dahil sa Pantipid ng Baterya"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Mga may temang icon"</string>
-    <string name="pack_theme_title" msgid="3052703041673623611">"Mga Tema"</string>
+    <string name="themed_icon_beta_title" msgid="5433087142610402812">"Mga may temang icon (beta)"</string>
+    <string name="pack_theme_title" msgid="8859400282820047298">"Pamagat"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
-    <string name="theme_packs_description" msgid="4647233199054882039">"Tuklasin ang mga tema ng Pixel"</string>
+    <string name="theme_packs_description" msgid="7214401664119395771">"Paglalarawan"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Baguhin ang grid ng app"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Kulay ng wallpaper"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Icon, text, higit pang tumutugmang kulay sa wallpaper"</string>
@@ -161,4 +174,6 @@
     <string name="scroll_forward_and_select" msgid="6156132388656395769">"Mag-swipe pakaliwa para pumili ng ibang clock face"</string>
     <string name="scroll_backward_and_select" msgid="5472202348434803757">"Mag-swipe pakanan para pumili ng ibang clock face"</string>
     <string name="custom_clocks_label" msgid="8168419717593569347">"Mga Custom na Orasan"</string>
+    <string name="clock_face_width" msgid="5818129719338363570">"Lapad ng clock face"</string>
+    <string name="slider_state_description_template" msgid="1028160527998877233">"%1$d, mula %2$d hanggang %3$d"</string>
 </resources>
