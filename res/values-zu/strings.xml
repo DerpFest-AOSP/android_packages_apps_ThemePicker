@@ -68,7 +68,6 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Gcina isithombe sangemuva samanje"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Ukubuka kuqala kwesitayela"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Ukubuka kuqala kwe-grid"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"Incazelo Yekhontenti"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Ukubuka kuqala ifonti"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Ukubuka kuqala isithonjana"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Ukubuka kuqala umbala"</string>
@@ -130,9 +129,7 @@
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Kukhutshaziwe okwesikhashana ngenxa Yesilondolozi Sebhethri"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Izithonjana ezinetimu"</string>
     <string name="themed_icon_beta_title" msgid="5433087142610402812">"Izithonjana ezinetimu (i-beta)"</string>
-    <string name="pack_theme_title" msgid="8859400282820047298">"Isihloko"</string>
     <string name="beta_title" msgid="8703819523760746458">"I-beta"</string>
-    <string name="theme_packs_description" msgid="7214401664119395771">"Incazelo"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Shintsha igridi ye-app"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Imibala yesithombe sangemuva"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Izithonjana, umbhalo, neminye imibala efana nesithombe sakho sangemuva"</string>
@@ -144,6 +141,7 @@
     <string name="adaptive_color_title" msgid="1336508599235896205">"Okuguqukayo"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"Imibala yesistimu"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"Imibala"</string>
+    <string name="screen_saver_title" msgid="4178511806237734356">"Isigcinisikrini"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"Isinqamuleli sangakwesokunxele"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"Isinqamuleli sangakwesokudla"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"Lutho"</string>

@@ -21,5 +21,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 /** Repository for accessing pack theme data settings. */
 interface PackThemeRepository {
-    val packThemeData: StateFlow<PackThemeData?>
+    val packThemeData: StateFlow<PackThemeData>
+
+    fun refetchPackTheme()
 }

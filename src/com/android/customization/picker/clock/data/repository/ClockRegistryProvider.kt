@@ -19,15 +19,16 @@ import android.app.NotificationManager
 import android.content.ComponentName
 import android.content.Context
 import android.view.LayoutInflater
-import com.android.systemui.plugins.Plugin
 import com.android.systemui.plugins.PluginManager
 import com.android.systemui.shared.clocks.ClockRegistry
 import com.android.systemui.shared.clocks.DefaultClockProvider
 import com.android.systemui.shared.plugins.PluginActionManager
 import com.android.systemui.shared.plugins.PluginEnabler
+import com.android.systemui.shared.plugins.PluginEnabler.DisableReason
 import com.android.systemui.shared.plugins.PluginInstance
 import com.android.systemui.shared.plugins.PluginManagerImpl
 import com.android.systemui.shared.plugins.PluginPrefs
+import com.android.systemui.shared.plugins.VersionCheckerImpl
 import com.android.systemui.shared.system.UncaughtExceptionPreHandlerManager_Factory
 import com.android.wallpaper.config.BaseFlags
 import java.util.concurrent.Executors
@@ -73,16 +74,26 @@ class ClockRegistryProvider(
     fun get() = clockRegistry
 
     private fun createPluginManager(context: Context): PluginManager {
-        val privilegedPlugins = listOf<String>()
-        val isDebugDevice = true
+        val pluginConfig =
+            PluginManager.Config(
+                listOf(
+                    // TODO(b/452686190): Combine definition w/ SystemUI
+                    "com.android.systemui.clocks.bignum",
+                    "com.android.systemui.clocks.calligraphy",
+                    "com.android.systemui.clocks.growth",
+                    "com.android.systemui.clocks.handwritten",
+                    "com.android.systemui.clocks.inflate",
+                    "com.android.systemui.clocks.metro",
+                    "com.android.systemui.clocks.numoverlap",
+                    "com.android.systemui.clocks.weather",
+                )
+            )
 
         val instanceFactory =
             PluginInstance.Factory(
-                this::class.java.classLoader,
-                PluginInstance.InstanceFactory<Plugin>(),
-                PluginInstance.VersionCheckerImpl(),
-                privilegedPlugins,
-                isDebugDevice,
+                VersionCheckerImpl(),
+                this::class.java.classLoader!!,
+                pluginConfig,
             )
 
         /*
@@ -92,18 +103,14 @@ class ClockRegistryProvider(
             object : PluginEnabler {
                 override fun setEnabled(component: ComponentName) = Unit
 
-                override fun setDisabled(
-                    component: ComponentName,
-                    @PluginEnabler.DisableReason reason: Int,
-                ) = Unit
+                override fun setDisabled(component: ComponentName, reason: DisableReason) = Unit
 
                 override fun isEnabled(component: ComponentName): Boolean {
                     return true
                 }
 
-                @PluginEnabler.DisableReason
-                override fun getDisableReason(componentName: ComponentName): Int {
-                    return PluginEnabler.ENABLED
+                override fun getDisableReason(componentName: ComponentName): DisableReason {
+                    return DisableReason.ENABLED
                 }
             }
 
@@ -115,17 +122,16 @@ class ClockRegistryProvider(
                 Executors.newSingleThreadExecutor(),
                 context.getSystemService(NotificationManager::class.java),
                 pluginEnabler,
-                privilegedPlugins,
+                pluginConfig,
                 instanceFactory,
             )
         return PluginManagerImpl(
             context,
             pluginActionManager,
-            isDebugDevice,
             UncaughtExceptionPreHandlerManager_Factory.create().get(),
             pluginEnabler,
             PluginPrefs(context),
-            listOf(),
+            pluginConfig,
         )
     }
 }

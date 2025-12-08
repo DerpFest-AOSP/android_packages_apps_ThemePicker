@@ -17,6 +17,7 @@
 package com.android.wallpaper.customization.ui.viewmodel
 
 import android.content.Context
+import android.content.theming.ThemeStyle
 import android.stats.style.StyleEnums
 import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
@@ -27,7 +28,6 @@ import com.android.customization.picker.color.domain.interactor.ColorPickerInter
 import com.android.customization.picker.color.shared.model.ColorType
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.customization.picker.mode.data.repository.DarkModeStateRepository
-import com.android.systemui.monet.Style
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.FloatingToolbarTabViewModel
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel2
@@ -43,7 +43,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
@@ -101,7 +103,7 @@ class ColorPickerViewModel2Test {
     }
 
     @Test
-    fun onApply_suspendsUntilOnApplyCompleteIsCalled() =
+    fun onApply_suspendsUntilColorUpdate() =
         testScope.runTest {
             val colorTypes = collectLastValue(underTest.colorTypeTabs)
             val colorOptions = collectLastValue(underTest.colorOptions)
@@ -122,17 +124,39 @@ class ColorPickerViewModel2Test {
         }
 
     @Test
+    fun onApply_suspendsUntilTimeout() =
+        testScope.runTest {
+            val colorTypes = collectLastValue(underTest.colorTypeTabs)
+            val colorOptions = collectLastValue(underTest.colorOptions)
+            val onApply = collectLastValue(underTest.onApply)
+
+            // Select "Wallpaper colors" tab
+            colorTypes()?.get(0)?.onClick?.invoke()
+            // Select a color option to preview
+            selectColorOption(colorOptions, 1)
+            // Apply the selected color option
+            val job = testScope.launch { onApply()?.invoke() }
+
+            assertThat(job.isActive).isTrue()
+
+            advanceTimeBy(ColorPickerViewModel2.COLOR_UPDATE_TIMEOUT_MILLIS)
+            runCurrent()
+
+            assertThat(job.isActive).isFalse()
+        }
+
+    @Test
     fun onApply_wallpaperColor_shouldLogColor() =
         testScope.runTest {
             repository.setOptions(
                 listOf(
                     repository.buildWallpaperOption(
                         ColorOptionsProvider.COLOR_SOURCE_LOCK,
-                        Style.EXPRESSIVE,
+                        ThemeStyle.EXPRESSIVE,
                         121212,
                     )
                 ),
-                listOf(repository.buildPresetOption(Style.FRUIT_SALAD, -54321)),
+                listOf(repository.buildPresetOption(ThemeStyle.FRUIT_SALAD, -54321)),
                 ColorType.PRESET_COLOR,
                 0,
             )
@@ -150,7 +174,7 @@ class ColorPickerViewModel2Test {
             assertThat(logger.themeColorSource)
                 .isEqualTo(StyleEnums.COLOR_SOURCE_LOCK_SCREEN_WALLPAPER)
             assertThat(logger.themeColorStyle)
-                .isEqualTo(Style.toString(Style.EXPRESSIVE).hashCode())
+                .isEqualTo(ThemeStyle.toString(ThemeStyle.EXPRESSIVE).hashCode())
             assertThat(logger.themeSeedColor).isEqualTo(121212)
         }
 
@@ -161,11 +185,11 @@ class ColorPickerViewModel2Test {
                 listOf(
                     repository.buildWallpaperOption(
                         ColorOptionsProvider.COLOR_SOURCE_LOCK,
-                        Style.EXPRESSIVE,
+                        ThemeStyle.EXPRESSIVE,
                         121212,
                     )
                 ),
-                listOf(repository.buildPresetOption(Style.FRUIT_SALAD, -54321)),
+                listOf(repository.buildPresetOption(ThemeStyle.FRUIT_SALAD, -54321)),
                 ColorType.WALLPAPER_COLOR,
                 0,
             )
@@ -182,8 +206,40 @@ class ColorPickerViewModel2Test {
 
             assertThat(logger.themeColorSource).isEqualTo(StyleEnums.COLOR_SOURCE_PRESET_COLOR)
             assertThat(logger.themeColorStyle)
-                .isEqualTo(Style.toString(Style.FRUIT_SALAD).hashCode())
+                .isEqualTo(ThemeStyle.toString(ThemeStyle.FRUIT_SALAD).hashCode())
             assertThat(logger.themeSeedColor).isEqualTo(-54321)
+        }
+
+    @Test
+    fun onApply_failure_shouldNotLogColor() =
+        testScope.runTest {
+            repository.setOptions(
+                listOf(
+                    repository.buildWallpaperOption(
+                        ColorOptionsProvider.COLOR_SOURCE_LOCK,
+                        ThemeStyle.EXPRESSIVE,
+                        121212,
+                    )
+                ),
+                listOf(repository.buildPresetOption(ThemeStyle.FRUIT_SALAD, -54321)),
+                ColorType.PRESET_COLOR,
+                0,
+            )
+
+            val colorTypes = collectLastValue(underTest.colorTypeTabs)
+            val colorOptions = collectLastValue(underTest.colorOptions)
+
+            repository.applySuccess = false
+            // Select "Wallpaper colors" tab
+            colorTypes()?.get(0)?.onClick?.invoke()
+            // Select a color option to preview
+            selectColorOption(colorOptions, 0)
+            // Apply the selected color option
+            applySelectedColorOption()
+
+            assertThat(logger.themeColorSource).isEqualTo(StyleEnums.COLOR_SOURCE_UNSPECIFIED)
+            assertThat(logger.themeColorStyle).isEqualTo(-1)
+            assertThat(logger.themeSeedColor).isEqualTo(-1)
         }
 
     @Test

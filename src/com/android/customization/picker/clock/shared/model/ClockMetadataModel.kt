@@ -20,7 +20,7 @@ package com.android.customization.picker.clock.shared.model
 import android.graphics.drawable.Drawable
 import androidx.annotation.ColorInt
 import androidx.annotation.IntRange
-import com.android.systemui.plugins.clocks.AxisPresetConfig
+import com.android.systemui.plugins.keyguard.ui.clocks.AxisPresetConfig
 
 /** Model for clock metadata. */
 data class ClockMetadataModel(

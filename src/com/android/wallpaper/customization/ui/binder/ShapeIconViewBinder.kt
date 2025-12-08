@@ -25,6 +25,7 @@ import android.widget.ImageView
 import androidx.lifecycle.LifecycleOwner
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
 import com.android.wallpaper.customization.ui.view.ShapeTileDrawable
+import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import kotlinx.coroutines.DisposableHandle
@@ -36,7 +37,45 @@ object ShapeIconViewBinder {
         view.setImageDrawable(ShapeTileDrawable(view.context, shapeIcon.path))
     }
 
-    fun bindPreviewIcon(
+    fun bindIconStyleAndShapePreviewIcon(
+        view: ImageView,
+        icon: Icon?,
+        shapeIcon: ShapeIconViewModel? = null,
+        colorUpdateViewModel: ColorUpdateViewModel,
+        shouldAnimateColor: () -> Boolean,
+        lifecycleOwner: LifecycleOwner,
+    ): DisposableHandle? {
+        val iconDrawable = icon?.getDrawable(view.context)
+        val shapeIconDrawable =
+            if (iconDrawable is ShapeTileDrawable) {
+                ShapeTileDrawable(
+                    context = view.context,
+                    path = shapeIcon?.path,
+                    icon = iconDrawable.icon?.constantState?.newDrawable(),
+                    isThemed = iconDrawable.isThemed,
+                )
+            } else if (shapeIcon?.path != null) {
+                ShapeTileDrawable(
+                    context = view.context,
+                    path = shapeIcon.path,
+                    icon = iconDrawable,
+                    isThemed = false,
+                )
+            } else iconDrawable
+        view.setImageDrawable(shapeIconDrawable)
+        val disposableHandle =
+            if (shapeIconDrawable is ShapeTileDrawable && shapeIconDrawable.isThemed) {
+                bindPreviewIconColor(
+                    shapeTileDrawable = shapeIconDrawable,
+                    colorUpdateViewModel = colorUpdateViewModel,
+                    shouldAnimateColor = shouldAnimateColor,
+                    lifecycleOwner = lifecycleOwner,
+                )
+            } else null
+        return disposableHandle
+    }
+
+    fun bindShapeAndThemedIconPreviewIcon(
         view: ImageView,
         appIconDrawable: AdaptiveIconDrawable?,
         shapeIcon: ShapeIconViewModel? = null,

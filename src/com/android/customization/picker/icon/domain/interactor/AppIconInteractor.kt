@@ -19,6 +19,7 @@ package com.android.customization.picker.icon.domain.interactor
 import com.android.customization.model.grid.ShapeOptionModel
 import com.android.customization.picker.grid.data.repository.ShapeRepository
 import com.android.customization.picker.icon.data.repository.IconStyleRepository
+import com.android.customization.picker.icon.shared.model.IconStyle
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
@@ -42,11 +43,11 @@ constructor(
 
     val isShapeOptionsAvailable: Flow<Boolean> = shapeRepository.isShapeOptionsAvailable
 
-    val isThemedIconAvailable: Flow<Boolean> = iconStyleRepository.isThemedIconAvailable
+    val isThemedIconAvailable: Flow<Boolean> = iconStyleRepository.isCustomizationAvailable
 
     val isThemedIconEnabled: Flow<Boolean> = iconStyleRepository.isThemedIconActivated
 
-    val iconStyles = iconStyleRepository.iconStyles
+    val iconStyleModels = iconStyleRepository.iconStyleModels
 
     val selectedIconStyle = iconStyleRepository.selectedIconStyle
 
@@ -54,4 +55,7 @@ constructor(
         iconStyleRepository.setThemedIconEnabled(enabled)
 
     suspend fun applyShape(shapeKey: String) = shapeRepository.applyShape(shapeKey)
+
+    suspend fun applyIconStyle(iconStyle: IconStyle): Boolean =
+        iconStyleRepository.setIconStyle(iconStyle)
 }

@@ -68,7 +68,6 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Jelenlegi háttérkép megtartása"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Stílus előnézete"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Rács előnézete"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"Tartalomleírás"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Betűtípus előnézete"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Ikon előnézete"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Szín előnézete"</string>
@@ -130,9 +129,7 @@
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Átmenetileg kikapcsolva az Akkumulátorkímélő mód miatt"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Tematikus ikonok"</string>
     <string name="themed_icon_beta_title" msgid="5433087142610402812">"Tematikus ikonok (béta)"</string>
-    <string name="pack_theme_title" msgid="8859400282820047298">"Cím"</string>
     <string name="beta_title" msgid="8703819523760746458">"Béta"</string>
-    <string name="theme_packs_description" msgid="7214401664119395771">"Leírás"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Alkalmazásrács módosítása"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Háttérképszínek"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"A háttérképpel egyező színű ikonok, szövegek és egyebek"</string>
@@ -144,6 +141,7 @@
     <string name="adaptive_color_title" msgid="1336508599235896205">"Dinamikus"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"A rendszer színei"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"Színek"</string>
+    <string name="screen_saver_title" msgid="4178511806237734356">"Képernyőkímélő"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"Bal parancsikon"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"Jobb parancsikon"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"Nincs"</string>
@@ -162,7 +160,7 @@
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"Értesítések megjelenítése a lezárási képernyőn"</string>
     <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"Értesítések a lezárási képernyőn"</string>
     <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Értesítések megjelenítésének és a megjelenített elemek kezelése"</string>
-    <string name="more_settings_section_title" msgid="6854797937797818510">"Több lezárásiképernyő-beállítás"</string>
+    <string name="more_settings_section_title" msgid="6854797937797818510">"További beállítások"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"Adatvédelem, Now Playing és egyebek"</string>
     <string name="more_colors" msgid="3191071655353004591">"További színek"</string>
     <string name="content_description_dynamic_color_option" msgid="2191721655642529886">"Elsődleges dinamikus téma"</string>

@@ -40,11 +40,11 @@
     <string name="clock_color_gray" msgid="9221530636948859231">"Серый"</string>
     <string name="clock_color_teal" msgid="7499223425741344251">"Темно-бирюзовый"</string>
     <string name="clock_size" msgid="5028923902364418263">"Размер"</string>
-    <string name="clock_size_dynamic" msgid="1023930312455061642">"Динамический"</string>
-    <string name="clock_size_dynamic_description" msgid="2776620745774561662">"Размер часов меняется в зависимости от контента на заблокированном экране"</string>
-    <string name="clock_size_large" msgid="3143248715744138979">"Большой"</string>
-    <string name="clock_size_large_description" msgid="1171001745473029918">"Часы показываются, когда не видны уведомления"</string>
-    <string name="clock_size_small" msgid="2280449912094164133">"Маленький"</string>
+    <string name="clock_size_dynamic" msgid="1023930312455061642">"Автовыбор"</string>
+    <string name="clock_size_dynamic_description" msgid="2776620745774561662">"Зависит от контента на заблокированном экране"</string>
+    <string name="clock_size_large" msgid="3143248715744138979">"Крупные часы"</string>
+    <string name="clock_size_large_description" msgid="1171001745473029918">"Показывать, когда не видны уведомления"</string>
+    <string name="clock_size_small" msgid="2280449912094164133">"Маленькие часы"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"Небольшие часы в углу экрана"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"Применить изменения в шрифтах часов"</string>
     <string name="clock_font_editor_revert" msgid="5307491447405753061">"Отменить изменения в шрифтах часов"</string>
@@ -68,7 +68,6 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Использовать текущие обои"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Предварительный просмотр стиля"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Предварительный просмотр сетки"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"Описание контента"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Предпросмотр шрифта"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Предпросмотр значка"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Предпросмотр цвета"</string>
@@ -130,20 +129,19 @@
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Временно отключено из-за режима энергосбережения"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Тематические значки"</string>
     <string name="themed_icon_beta_title" msgid="5433087142610402812">"Тематические значки (бета)"</string>
-    <string name="pack_theme_title" msgid="8859400282820047298">"Название"</string>
     <string name="beta_title" msgid="8703819523760746458">"Бета"</string>
-    <string name="theme_packs_description" msgid="7214401664119395771">"Описание"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Настроить сетку приложений"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Цвета обоев"</string>
-    <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Значки, текст и др. будут сочетаться по цвету с обоями."</string>
+    <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Значки, текст и многое другое будет сочетаться по цвету с обоями."</string>
     <string name="wallpaper_color_title" msgid="5687965239180986458">"Цвет обоев"</string>
     <string name="preset_color_tab" msgid="3133391839341329314">"Основные цвета"</string>
     <string name="preset_color_tab_2" msgid="1444107326712562538">"Другие цвета"</string>
-    <string name="preset_color_subheader" msgid="8230588536141279371">"Выбирайте цвета для значков, часов и не только."</string>
+    <string name="preset_color_subheader" msgid="8230588536141279371">"Выберите любой цвет для значков, часов и не только."</string>
     <string name="color_changed" msgid="7029571720331641235">"Цвет изменен"</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"Динамически"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"Системная палитра"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"Палитра"</string>
+    <string name="screen_saver_title" msgid="4178511806237734356">"Заставка"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"Ярлык слева"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"Ярлык справа"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"Нет"</string>
@@ -160,9 +158,9 @@
     <string name="keyguard_quick_affordance_two_selected_template" msgid="1757099194522296363">"<xliff:g id="FIRST">%1$s</xliff:g>, <xliff:g id="SECOND">%2$s</xliff:g>"</string>
     <string name="keyguard_quick_affordance_none_selected" msgid="8494127020144112003">"Нет"</string>
     <string name="show_notifications_on_lock_screen" msgid="4157744243084646720">"Показывать уведомления на заблокированном экране"</string>
-    <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"Уведомления на заблок. экране"</string>
-    <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Настройте внешний вид и содержание уведомлений"</string>
-    <string name="more_settings_section_title" msgid="6854797937797818510">"Ещё настройки заблок. экрана"</string>
+    <string name="lock_screen_notifications_section_title" msgid="906673283764252102">"Уведомления на заблокированном экране"</string>
+    <string name="lock_screen_notifications_section_description" msgid="3321937285144466046">"Настроить внешний вид и содержание уведомлений"</string>
+    <string name="more_settings_section_title" msgid="6854797937797818510">"Ещё настройки заблокированного экрана"</string>
     <string name="more_settings_section_description" msgid="1860115709122398325">"Конфиденциальность, функция \"Что сейчас играет?\" и т. д."</string>
     <string name="more_colors" msgid="3191071655353004591">"Ещё цвета"</string>
     <string name="content_description_dynamic_color_option" msgid="2191721655642529886">"Основная динамическая тема"</string>

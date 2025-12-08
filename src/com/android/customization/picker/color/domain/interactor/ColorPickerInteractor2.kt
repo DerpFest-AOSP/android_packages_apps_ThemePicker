@@ -29,7 +29,5 @@ class ColorPickerInteractor2 @Inject constructor(private val repository: ColorPi
     /** List of wallpaper and preset color options on the device, categorized by Color Type */
     val colorOptions = repository.colorOptions
 
-    suspend fun select(colorOption: ColorOption) {
-        repository.select(colorOption)
-    }
+    suspend fun select(colorOption: ColorOption): Boolean = repository.select(colorOption)
 }

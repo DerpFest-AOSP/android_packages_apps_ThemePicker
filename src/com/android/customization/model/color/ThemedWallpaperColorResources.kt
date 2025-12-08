@@ -19,11 +19,11 @@ package com.android.customization.model.color
 import android.R
 import android.app.WallpaperColors
 import android.content.Context
+import android.content.theming.ThemeStyle
 import android.provider.Settings
 import android.util.Log
 import com.android.customization.model.ResourceConstants.OVERLAY_CATEGORY_THEME_STYLE
 import com.android.systemui.monet.ColorScheme
-import com.android.systemui.monet.Style
 import com.android.systemui.shared.settings.data.repository.SecureSettingsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -51,23 +51,23 @@ class ThemedWallpaperColorResources(
         }
     }
 
-    @Style.Type
+    @ThemeStyle.Type
     private suspend fun fetchThemeStyleFromSetting(): Int {
         val overlayPackageJson =
             secureSettingsRepository.getString(Settings.Secure.THEME_CUSTOMIZATION_OVERLAY_PACKAGES)
         return if (!overlayPackageJson.isNullOrEmpty()) {
             try {
                 val jsonObject = JSONObject(overlayPackageJson)
-                Style.valueOf(jsonObject.getString(OVERLAY_CATEGORY_THEME_STYLE))
+                ThemeStyle.valueOf(jsonObject.getString(OVERLAY_CATEGORY_THEME_STYLE))
             } catch (e: (JSONException)) {
                 Log.i(TAG, "Failed to parse THEME_CUSTOMIZATION_OVERLAY_PACKAGES.", e)
-                Style.TONAL_SPOT
+                ThemeStyle.TONAL_SPOT
             } catch (e: IllegalArgumentException) {
                 Log.i(TAG, "Failed to parse THEME_CUSTOMIZATION_OVERLAY_PACKAGES.", e)
-                Style.TONAL_SPOT
+                ThemeStyle.TONAL_SPOT
             }
         } else {
-            Style.TONAL_SPOT
+            ThemeStyle.TONAL_SPOT
         }
     }
 

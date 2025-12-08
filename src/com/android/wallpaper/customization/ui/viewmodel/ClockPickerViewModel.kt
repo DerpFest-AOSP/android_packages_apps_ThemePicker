@@ -31,10 +31,10 @@ import com.android.customization.picker.color.domain.interactor.ColorPickerInter
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
 import com.android.internal.policy.SystemBarUtils
 import com.android.systemui.customization.clocks.R as clocksR
-import com.android.systemui.plugins.clocks.AxisPresetConfig
-import com.android.systemui.plugins.clocks.AxisPresetConfig.IndexedStyle
-import com.android.systemui.plugins.clocks.ClockAxisStyle
-import com.android.systemui.plugins.clocks.ClockPreviewConfig
+import com.android.systemui.plugins.keyguard.ui.clocks.AxisPresetConfig
+import com.android.systemui.plugins.keyguard.ui.clocks.AxisPresetConfig.IndexedStyle
+import com.android.systemui.plugins.keyguard.ui.clocks.ClockAxisStyle
+import com.android.systemui.plugins.keyguard.ui.clocks.ClockPreviewConfig
 import com.android.themepicker.R
 import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
@@ -185,7 +185,7 @@ constructor(
         _showKeyguardPreviewRendererSmartspace.value = show
     }
 
-    private suspend fun getIsShadeLayoutWide() = clockPickerInteractor.getIsShadeLayoutWide()
+    private suspend fun getIsFullWidthShade() = clockPickerInteractor.getIsFullWidthShade()
 
     private suspend fun getUdfpsLocation() = clockPickerInteractor.getUdfpsLocation()
 
@@ -609,7 +609,7 @@ constructor(
 
     suspend fun buildPreviewConfig(previewContext: Context): ClockPreviewConfig {
         return ClockPreviewConfig(
-            isShadeLayoutWide = getIsShadeLayoutWide(),
+            isFullWidthShade = getIsFullWidthShade(),
             isSceneContainerFlagEnabled = false,
             udfpsTop = getUdfpsLocation()?.let { it.centerY - it.radius },
             statusBarHeight = SystemBarUtils.getStatusBarHeight(previewContext),

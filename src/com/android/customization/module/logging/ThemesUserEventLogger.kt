@@ -39,6 +39,8 @@ interface ThemesUserEventLogger : UserEventLogger {
 
     fun logThemedIconApplied(useThemeIcon: Boolean)
 
+    fun logIconStyleApplied(iconStyle: Int)
+
     fun logLockScreenNotificationApplied(showLockScreenNotifications: Boolean)
 
     fun logShortcutApplied(shortcut: String, shortcutSlotId: String)
@@ -63,6 +65,14 @@ interface ThemesUserEventLogger : UserEventLogger {
     )
     @Retention(AnnotationRetention.SOURCE)
     annotation class ClockSize
+
+    @IntDef(
+        StyleEnums.APP_ICON_STYLE_UNSPECIFIED,
+        StyleEnums.APP_ICON_STYLE_THEMED,
+        StyleEnums.APP_ICON_STYLE_EXTENDIBLE_THEME,
+    )
+    @Retention(AnnotationRetention.SOURCE)
+    annotation class AppIconStyle
 
     companion object {
         const val NULL_SEED_COLOR = 0

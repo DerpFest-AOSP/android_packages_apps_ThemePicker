@@ -68,7 +68,6 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Одоогийн дэлгэцийн зургийг хадгалах"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Загварыг урьдчилан үзэх"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Торыг урьдчилан үзэх"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"Агуулгын тайлбар"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Фонтыг урьдчилан үзэх"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Дүрс тэмдгийг урьдчилан үзэх"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Өнгийг урьдчилан үзэх"</string>
@@ -130,9 +129,7 @@
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Батарей хэмнэгчийн улмаас түр зуур идэвхгүй болгосон"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Загварын дүрс тэмдэг"</string>
     <string name="themed_icon_beta_title" msgid="5433087142610402812">"Сэдэвчилсэн дүрс тэмдэг (бета)"</string>
-    <string name="pack_theme_title" msgid="8859400282820047298">"Гарчиг"</string>
     <string name="beta_title" msgid="8703819523760746458">"Бета"</string>
-    <string name="theme_packs_description" msgid="7214401664119395771">"Тайлбар"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Аппын хүснэгтийг өөрчлөх"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Дэлгэцийн зургийн өнгө"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Таны дэлгэцийн зургийн дүрс тэмдэг, текст, бусад таарсан өнгө"</string>
@@ -144,6 +141,7 @@
     <string name="adaptive_color_title" msgid="1336508599235896205">"Динамик"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"Системийн өнгөнүүд"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"Өнгө"</string>
+    <string name="screen_saver_title" msgid="4178511806237734356">"Дэлгэц амраагч"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"Зүүн товчлол"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"Баруун товчлол"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"Байхгүй"</string>

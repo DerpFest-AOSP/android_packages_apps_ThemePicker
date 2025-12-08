@@ -43,7 +43,7 @@
     <string name="clock_size_dynamic" msgid="1023930312455061642">"動的"</string>
     <string name="clock_size_dynamic_description" msgid="2776620745774561662">"時計のサイズをロック画面の内容に応じて調整します"</string>
     <string name="clock_size_large" msgid="3143248715744138979">"大"</string>
-    <string name="clock_size_large_description" msgid="1171001745473029918">"通知が表示されていないときに表示されます"</string>
+    <string name="clock_size_large_description" msgid="1171001745473029918">"通知が画面上にない場合に表示する"</string>
     <string name="clock_size_small" msgid="2280449912094164133">"小"</string>
     <string name="clock_size_small_description" msgid="4089511196955732480">"画面の隅に小さい時計を表示します"</string>
     <string name="clock_font_editor_apply" msgid="5965611025879105293">"時計のフォント変更を適用"</string>
@@ -68,7 +68,6 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"現在の壁紙を保持"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"スタイルのプレビュー"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"グリッドのプレビュー"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"コンテンツの説明"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"フォントのプレビュー"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"アイコンのプレビュー"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"色のプレビュー"</string>
@@ -130,9 +129,7 @@
     <string name="mode_disabled_msg" msgid="9196245518435936512">"バッテリー セーバーにより一時的に無効になりました"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"テーマアイコン"</string>
     <string name="themed_icon_beta_title" msgid="5433087142610402812">"テーマアイコン（ベータ版）"</string>
-    <string name="pack_theme_title" msgid="8859400282820047298">"タイトル"</string>
     <string name="beta_title" msgid="8703819523760746458">"ベータ版"</string>
-    <string name="theme_packs_description" msgid="7214401664119395771">"説明"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"アプリグリッドを変更します"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"壁紙の色"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"壁紙の色に合うアイコン、テキストなど"</string>
@@ -144,6 +141,7 @@
     <string name="adaptive_color_title" msgid="1336508599235896205">"動的"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"システムカラー"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"色"</string>
+    <string name="screen_saver_title" msgid="4178511806237734356">"スクリーン セーバー"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"左ショートカット"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"右ショートカット"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"なし"</string>

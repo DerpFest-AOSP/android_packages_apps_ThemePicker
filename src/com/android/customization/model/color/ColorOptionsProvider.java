@@ -16,6 +16,7 @@
 package com.android.customization.model.color;
 
 import android.app.WallpaperColors;
+import android.content.theming.ThemeStyle;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
@@ -35,7 +36,7 @@ public interface ColorOptionsProvider {
 
     /**
      * Extra setting indicating the style of the color overlays (it can be one of
-     * {@link com.android.systemui.monet.Style}).
+     * {@link ThemeStyle}).
      */
     String OVERLAY_THEME_STYLE = "android.theme.customization.theme_style";
 

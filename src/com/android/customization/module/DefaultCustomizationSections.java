@@ -222,12 +222,10 @@ public final class DefaultCustomizationSections implements CustomizationSections
                                 mThemesUserEventLogger));
 
                 // Color contrast section
-                if (mFlags.isColorContrastControlEnabled()) {
                     sectionControllers.add(
                             new ColorContrastSectionController(new ViewModelProvider(activity,
                                     mColorContrastSectionViewModelFactory)
                                     .get(ColorContrastSectionViewModel.class), lifecycleOwner));
-                }
                 // App grid section.
                 sectionControllers.add(
                         new GridSectionController(

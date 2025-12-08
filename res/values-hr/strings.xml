@@ -68,7 +68,6 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Zadrži trenutačnu pozadinu"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Pregled stila"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Pregled rešetke"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"Opis sadržaja"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Pregled fonta"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Pregled ikone"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Pregled boje"</string>
@@ -130,12 +129,10 @@
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Privremeno onemogućeno zbog štednje baterije"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Tematske ikone"</string>
     <string name="themed_icon_beta_title" msgid="5433087142610402812">"Tematske ikone (beta verzija)"</string>
-    <string name="pack_theme_title" msgid="8859400282820047298">"Naslov"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
-    <string name="theme_packs_description" msgid="7214401664119395771">"Opis"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Promjena rešetke aplikacije"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Boje pozadine"</string>
-    <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Ikone, tekst i ostalo odgovaraju bojama na pozadini"</string>
+    <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Ikone, tekst i ostalo odgovara bojama pozadine"</string>
     <string name="wallpaper_color_title" msgid="5687965239180986458">"Boja pozadine"</string>
     <string name="preset_color_tab" msgid="3133391839341329314">"Osnovne boje"</string>
     <string name="preset_color_tab_2" msgid="1444107326712562538">"Druge boje"</string>
@@ -144,6 +141,7 @@
     <string name="adaptive_color_title" msgid="1336508599235896205">"Dinamično"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"Boje sustava"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"Boje"</string>
+    <string name="screen_saver_title" msgid="4178511806237734356">"Čuvar zaslona"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"Lijevi prečac"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"Desni prečac"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"Ništa"</string>
@@ -154,7 +152,7 @@
     <string name="keyguard_quick_affordance_title" msgid="4242813186995735584">"Prečaci"</string>
     <string name="keyguard_quick_affordance_section_title" msgid="2806304242671717309">"Prečaci"</string>
     <string name="color_contrast_section_title" msgid="7194809124718896091">"Kontrast boja"</string>
-    <string name="color_contrast_default_title" msgid="7954235103549276978">"Zadana"</string>
+    <string name="color_contrast_default_title" msgid="7954235103549276978">"Zadano"</string>
     <string name="color_contrast_medium_title" msgid="8071574793250090215">"Srednja"</string>
     <string name="color_contrast_high_title" msgid="5554685752479470200">"Visoka"</string>
     <string name="keyguard_quick_affordance_two_selected_template" msgid="1757099194522296363">"<xliff:g id="FIRST">%1$s</xliff:g>, <xliff:g id="SECOND">%2$s</xliff:g>"</string>

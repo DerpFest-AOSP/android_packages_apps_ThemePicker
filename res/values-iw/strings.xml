@@ -29,7 +29,7 @@
     <string name="clock_style" msgid="6847711178193804308">"סגנון"</string>
     <string name="clock_color" msgid="8081608867289156163">"צבע"</string>
     <string name="clock_color_title" msgid="4484141281632973058">"צבע השעון"</string>
-    <string name="clock_color_description" msgid="1493964392794026841">"צבע זהה לעיצוב של הטפט או בחירת צבע אחר"</string>
+    <string name="clock_color_description" msgid="1493964392794026841">"אפשר לבחור את העיצוב שזהה לטפט או צבע אחר לגמרי"</string>
     <string name="clock_color_red" msgid="3843504214807597810">"אדום"</string>
     <string name="clock_color_orange" msgid="4175805201144275804">"כתום"</string>
     <string name="clock_color_yellow" msgid="7391699163247349977">"צהוב"</string>
@@ -68,7 +68,6 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"שמירת הטפט הנוכחי"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"תצוגה מקדימה של הסגנון"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"תצוגה מקדימה של הרשת"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"תיאור תוכן"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"תצוגה מקדימה של הגופן"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"תצוגה מקדימה של הסמל"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"תצוגה מקדימה של הצבע"</string>
@@ -129,21 +128,20 @@
     <string name="mode_title" msgid="2394873501427436055">"עיצוב כהה"</string>
     <string name="mode_disabled_msg" msgid="9196245518435936512">"מושבת זמנית כי הופעל מצב \'חיסכון בסוללה\'"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"סמלים בעיצוב עקבי"</string>
-    <string name="themed_icon_beta_title" msgid="5433087142610402812">"סמלים מעוצבים (בטא)"</string>
-    <string name="pack_theme_title" msgid="8859400282820047298">"כותרת"</string>
+    <string name="themed_icon_beta_title" msgid="5433087142610402812">"סמלים בעיצוב עקבי (בטא)"</string>
     <string name="beta_title" msgid="8703819523760746458">"בטא"</string>
-    <string name="theme_packs_description" msgid="7214401664119395771">"תיאור"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"שינוי רשת האפליקציות"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"צבעי הטפט"</string>
-    <string name="wallpaper_color_subheader" msgid="4044464573669965670">"הסמלים, הטקסטים ורכיבים אחרים יהיו בצבע זהה לצבעי הטפט"</string>
+    <string name="wallpaper_color_subheader" msgid="4044464573669965670">"הצבע של הסמלים, הטקסטים ורכיבים נוספים יתאים לצבעי הטפט"</string>
     <string name="wallpaper_color_title" msgid="5687965239180986458">"צבע הטפט"</string>
     <string name="preset_color_tab" msgid="3133391839341329314">"הצבעים הבסיסיים"</string>
     <string name="preset_color_tab_2" msgid="1444107326712562538">"צבעים אחרים"</string>
-    <string name="preset_color_subheader" msgid="8230588536141279371">"בוחרים צבע לסמלים, לשעון ועוד"</string>
+    <string name="preset_color_subheader" msgid="8230588536141279371">"אפשר לבחור צבע לסמלים, לשעון ועוד"</string>
     <string name="color_changed" msgid="7029571720331641235">"הצבע השתנה"</string>
     <string name="adaptive_color_title" msgid="1336508599235896205">"דינמי"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"צבעי המערכת"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"צבעים"</string>
+    <string name="screen_saver_title" msgid="4178511806237734356">"שומר מסך"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"קיצור דרך שמאלי"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"קיצור דרך ימני"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"ללא"</string>

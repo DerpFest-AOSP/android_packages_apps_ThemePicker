@@ -16,17 +16,19 @@
 
 package com.android.customization.picker.icon.shared.model
 
+import android.stats.style.StyleEnums.APP_ICON_STYLE_THEMED
+import android.stats.style.StyleEnums.APP_ICON_STYLE_UNSPECIFIED
+import com.android.customization.module.logging.ThemesUserEventLogger.AppIconStyle
 import com.android.themepicker.R
 
-enum class ThemePickerIconStyle(override val nameResId: Int) : IconStyle {
-    DEFAULT(R.string.app_icons_style_default),
-    MONOCHROME(R.string.app_icons_style_minimal);
+enum class ThemePickerIconStyle(
+    override val nameResId: Int,
+    @AppIconStyle override val loggingId: Int = APP_ICON_STYLE_UNSPECIFIED,
+) : IconStyle {
+    DEFAULT(R.string.app_icons_style_default, APP_ICON_STYLE_UNSPECIFIED),
+    MONOCHROME(R.string.app_icons_style_minimal, APP_ICON_STYLE_THEMED);
 
     override fun getIsThemedIcon(): Boolean {
         return this == MONOCHROME
-    }
-
-    override fun getIsExternalLink(): Boolean {
-        return false
     }
 }

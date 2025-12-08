@@ -26,4 +26,8 @@ import kotlinx.coroutines.flow.emptyFlow
 @Singleton
 class ThemePickerPackThemeInteractor @Inject constructor() : PackThemeInteractor {
     override val packThemeData: Flow<PackThemeData> = emptyFlow()
+
+    override fun refetchPackTheme() {}
+
+    override val noAppErrorMessage: String = ""
 }

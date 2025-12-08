@@ -17,6 +17,7 @@ package com.android.customization.model.color
 
 import android.app.WallpaperColors
 import android.content.Context
+import android.content.theming.ThemeStyle
 import android.graphics.Color
 import androidx.test.core.app.ApplicationProvider
 import com.android.customization.model.CustomizationManager
@@ -30,7 +31,6 @@ import com.android.customization.model.color.ColorOptionsProvider.OVERLAY_COLOR_
 import com.android.customization.model.color.ColorOptionsProvider.OVERLAY_THEME_STYLE
 import com.android.customization.model.theme.OverlayManagerCompat
 import com.android.customization.picker.color.shared.model.ColorType
-import com.android.systemui.monet.Style
 import com.google.common.truth.Truth.assertThat
 import com.google.common.util.concurrent.MoreExecutors
 import org.json.JSONObject
@@ -71,7 +71,7 @@ class ColorCustomizationManagerTest {
     @Test
     fun testParseSettings() {
         val source = COLOR_SOURCE_HOME
-        @Style.Type val style = Style.SPRITZ
+        @ThemeStyle.Type val style = ThemeStyle.SPRITZ
         val someColor = "aabbcc"
         val someOtherColor = "bbccdd"
         val settings =
@@ -79,7 +79,7 @@ class ColorCustomizationManagerTest {
                 OVERLAY_CATEGORY_SYSTEM_PALETTE to someColor,
                 OVERLAY_CATEGORY_COLOR to someOtherColor,
                 OVERLAY_COLOR_SOURCE to source,
-                OVERLAY_THEME_STYLE to Style.toString(style),
+                OVERLAY_THEME_STYLE to ThemeStyle.toString(style),
                 ColorOption.TIMESTAMP_FIELD to "12345",
             )
         val json = JSONObject(settings).toString()
@@ -87,7 +87,7 @@ class ColorCustomizationManagerTest {
         manager.parseSettings(json)
 
         assertThat(manager.currentColorSource).isEqualTo(source)
-        assertThat(manager.currentStyle).isEqualTo(Style.toString(style))
+        assertThat(manager.currentStyle).isEqualTo(ThemeStyle.toString(style))
         assertThat(manager.currentOverlays.size).isEqualTo(2)
         assertThat(manager.currentOverlays[OVERLAY_CATEGORY_COLOR]).isEqualTo(someOtherColor)
         assertThat(manager.currentOverlays[OVERLAY_CATEGORY_SYSTEM_PALETTE]).isEqualTo(someColor)
@@ -145,7 +145,7 @@ class ColorCustomizationManagerTest {
             /* isDefault= */ false,
             COLOR_SOURCE_PRESET,
             12345,
-            Style.TONAL_SPOT,
+            ThemeStyle.TONAL_SPOT,
             index,
             ColorOptionImpl.PreviewInfo(intArrayOf(0), intArrayOf(0)),
             ColorType.PRESET_COLOR,
@@ -159,7 +159,7 @@ class ColorCustomizationManagerTest {
             /* isDefault= */ false,
             COLOR_SOURCE_HOME,
             12345,
-            Style.TONAL_SPOT,
+            ThemeStyle.TONAL_SPOT,
             index,
             ColorOptionImpl.PreviewInfo(intArrayOf(0), intArrayOf(0)),
             ColorType.WALLPAPER_COLOR,

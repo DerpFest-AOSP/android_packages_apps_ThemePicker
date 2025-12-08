@@ -68,7 +68,6 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Διατήρηση τρέχουσας ταπετσαρίας"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Προεπισκόπηση στιλ"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Προεπισκόπηση πλέγματος"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"Περιγραφή περιεχομένου"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Προεπισκόπηση γραμματοσειράς"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Προεπισκόπηση εικονιδίου"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Προεπισκόπηση χρώματος"</string>
@@ -130,9 +129,7 @@
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Απενεργοποιήθηκε προσωρινά λόγω Εξοικονόμησης μπαταρίας"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Θεματικά εικονίδια"</string>
     <string name="themed_icon_beta_title" msgid="5433087142610402812">"Θεματικά εικονίδια (beta)"</string>
-    <string name="pack_theme_title" msgid="8859400282820047298">"Τίτλος"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
-    <string name="theme_packs_description" msgid="7214401664119395771">"Περιγραφή"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Αλλαγή πλέγματος εφαρμογής"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Χρώματα ταπετσαρίας"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Εικονίδια, κείμενο και χρώματα στην ταπετσαρία σας"</string>
@@ -144,6 +141,7 @@
     <string name="adaptive_color_title" msgid="1336508599235896205">"Δυναμική"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"Χρώματα συστήματος"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"Χρώματα"</string>
+    <string name="screen_saver_title" msgid="4178511806237734356">"Προφύλαξη οθόνης"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"Αριστερή συντόμ."</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"Δεξιά συντόμευση"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"Καμία"</string>

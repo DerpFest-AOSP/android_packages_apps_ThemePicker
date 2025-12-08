@@ -68,7 +68,6 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Giữ hình nền hiện tại"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Xem trước kiểu"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Xem trước lưới"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"Mô tả nội dung"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Xem trước phông chữ"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Xem trước biểu tượng"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Xem trước màu"</string>
@@ -130,9 +129,7 @@
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Tạm thời tắt do tính năng của Trình tiết kiệm pin"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Biểu tượng theo chủ đề"</string>
     <string name="themed_icon_beta_title" msgid="5433087142610402812">"Biểu tượng theo chủ đề (thử nghiệm)"</string>
-    <string name="pack_theme_title" msgid="8859400282820047298">"Tiêu đề"</string>
     <string name="beta_title" msgid="8703819523760746458">"Thử nghiệm"</string>
-    <string name="theme_packs_description" msgid="7214401664119395771">"Nội dung mô tả"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Thay đổi lưới ứng dụng"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Màu hình nền"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Biểu tượng, văn bản, v.v. phù hợp với màu trên hình nền"</string>
@@ -144,6 +141,7 @@
     <string name="adaptive_color_title" msgid="1336508599235896205">"Động"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"Màu hệ thống"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"Màu"</string>
+    <string name="screen_saver_title" msgid="4178511806237734356">"Trình bảo vệ màn hình"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"Lối tắt bên trái"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"Lối tắt bên phải"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"Không có"</string>

@@ -17,8 +17,6 @@ package com.android.customization.module.logging
 
 import android.app.WallpaperManager
 import android.content.Intent
-import android.stats.style.StyleEnums.APP_ICON_STYLE_THEMED
-import android.stats.style.StyleEnums.APP_ICON_STYLE_UNSPECIFIED
 import android.stats.style.StyleEnums.APP_LAUNCHED
 import android.stats.style.StyleEnums.CLOCK_APPLIED
 import android.stats.style.StyleEnums.CLOCK_COLOR_APPLIED
@@ -68,6 +66,7 @@ import com.android.customization.model.color.ColorCustomizationManager
 import com.android.customization.model.grid.GridOptionModel
 import com.android.customization.model.grid.ShapeGridManager
 import com.android.customization.model.grid.ShapeOptionModel
+import com.android.customization.module.logging.ThemesUserEventLogger.AppIconStyle
 import com.android.customization.module.logging.ThemesUserEventLogger.ClockSize
 import com.android.customization.module.logging.ThemesUserEventLogger.ColorSource
 import com.android.customization.picker.clock.data.repository.ClockPickerRepository
@@ -91,6 +90,7 @@ import com.android.wallpaper.util.LaunchSourceUtils
 import io.grpc.Status
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeoutOrNull
 
@@ -124,7 +124,7 @@ constructor(
             .setColorVariant(colorManager.currentStyleForLogging)
             .setSeedColor(colorManager.currentSeedColorForLogging)
             .setShapePackageHash(shapeGridManager.getSelectedShapeIdHash())
-            .setAppIconStyle(iconStyleRepository.getAppIconStyle())
+            .setAppIconStyle(iconStyleRepository.getIconStyleForLogging())
             .setLauncherGrid(shapeGridManager.getSelectedGridInt())
             .setClockPackageHash(selectedClockLoggingData.clockIdHash)
             .setClockSeedColor(selectedClockLoggingData.clockSeedColor)
@@ -269,6 +269,14 @@ constructor(
             .log()
     }
 
+    override fun logIconStyleApplied(@AppIconStyle iconStyle: Int) {
+        sysUiStatsLoggerFactory
+            .get(THEMED_ICON_APPLIED)
+            .setAppSessionId(appSessionId.getId())
+            .setAppIconStyle(iconStyle)
+            .log()
+    }
+
     override fun logLockScreenNotificationApplied(showLockScreenNotifications: Boolean) {
         sysUiStatsLoggerFactory
             .get(LOCK_SCREEN_NOTIFICATION_APPLIED)
@@ -317,6 +325,7 @@ constructor(
         sysUiStatsLoggerFactory
             .get(CURATED_PHOTOS_FETCH_END)
             .setAppSessionId(appSessionId.getId())
+            .setEffectResultCode(status.code.value())
             .setTimeElapsed(timeElapsedMillis)
             .log()
     }
@@ -435,24 +444,18 @@ constructor(
         return selectedGrid?.getLauncherGridInt() ?: 0
     }
 
-    private suspend fun IconStyleRepository.getAppIconStyle(): Int {
-        val isThemedIconActivated =
-            withTimeoutOrNull(TIMEOUT_MILLIS) { isThemedIconActivated.first() } ?: false
-        return if (isThemedIconActivated) APP_ICON_STYLE_THEMED else APP_ICON_STYLE_UNSPECIFIED
-    }
-
     private suspend fun ClockPickerRepository.getSelectedClockLoggingData():
         SelectedClockLoggingData {
         val selectedClock =
             try {
-                withTimeoutOrNull(TIMEOUT_MILLIS) { selectedClock.first() }
+                withTimeoutOrNull(TIMEOUT) { selectedClock.first() }
             } catch (e: Exception) {
                 Log.e(TAG, "Fail to get selected clock. Skip logging selected clock.", e)
                 null
             }
         val selectedClockSize =
             try {
-                withTimeoutOrNull(TIMEOUT_MILLIS) { selectedClockSize.first() }
+                withTimeoutOrNull(TIMEOUT) { selectedClockSize.first() }
             } catch (e: Exception) {
                 Log.e(TAG, "Fail to get selected clock size. Skip logging selected clock size.", e)
                 null
@@ -489,6 +492,6 @@ constructor(
 
     companion object {
         private const val TAG = "ThemesUserEventLoggerImpl"
-        private const val TIMEOUT_MILLIS = 5000L
+        val TIMEOUT = 5000.milliseconds
     }
 }

@@ -21,7 +21,7 @@ import android.text.TextUtils
 import android.util.Log
 import com.android.customization.picker.clock.data.repository.ClockPickerRepository
 import com.android.customization.picker.clock.shared.model.ClockSnapshotModel
-import com.android.systemui.plugins.clocks.ClockAxisStyle
+import com.android.systemui.plugins.keyguard.ui.clocks.ClockAxisStyle
 import com.android.wallpaper.picker.undo.domain.interactor.SnapshotRestorer
 import com.android.wallpaper.picker.undo.domain.interactor.SnapshotStore
 import com.android.wallpaper.picker.undo.shared.model.RestorableSnapshot

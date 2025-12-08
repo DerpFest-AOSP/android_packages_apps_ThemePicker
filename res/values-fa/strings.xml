@@ -68,7 +68,6 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"حفظ کاغذدیواری کنونی"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"پیش‌نمایش سبک"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"پیش‌نمایش جدول"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"شرح محتوا"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"پیش‌نمایش قلم"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"پیش‌نمایش نماد"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"پیش‌نمایش رنگ"</string>
@@ -117,7 +116,7 @@
     <string name="use_style_button" msgid="1754493078383627019">"استفاده از <xliff:g id="ID_1">%1$s</xliff:g>"</string>
     <string name="no_thanks" msgid="7286616980115687627">"نه، متشکرم"</string>
     <string name="clock_preview_content_description" msgid="5460561185905717460">"<xliff:g id="ID_1">%1$s</xliff:g> پیش‌نمایش ساعت"</string>
-    <string name="something_went_wrong" msgid="529840112449799117">"متأسفم! مشکلی رخ داد."</string>
+    <string name="something_went_wrong" msgid="529840112449799117">"متأسفانه مشکلی پیش آمد."</string>
     <string name="theme_preview_icons_section_title" msgid="7064768910744000643">"رنگ/نمادها"</string>
     <string name="style_info_description" msgid="2612473574431003251">"پیش‌نمایش قلم، نمادها، شکل و رنگ برنامه"</string>
     <string name="accessibility_custom_font_title" msgid="966867359157303705">"قلم سفارشی"</string>
@@ -130,9 +129,7 @@
     <string name="mode_disabled_msg" msgid="9196245518435936512">"به‌دلیل روشن بودن «بهینه‌سازی باتری» موقتاً غیرفعال شده است"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"نمادهای موضوعی"</string>
     <string name="themed_icon_beta_title" msgid="5433087142610402812">"نمادهای موضوعی (بتا)"</string>
-    <string name="pack_theme_title" msgid="8859400282820047298">"عنوان"</string>
     <string name="beta_title" msgid="8703819523760746458">"بتا"</string>
-    <string name="theme_packs_description" msgid="7214401664119395771">"شرح"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"تغییر جدول برنامه"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"رنگ‌های کاغذدیواری"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"نمادها، نوشتار، و موارد دیگر با رنگ کاغذدیواری هماهنگ می‌شود"</string>
@@ -144,6 +141,7 @@
     <string name="adaptive_color_title" msgid="1336508599235896205">"پویا"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"رنگ‌های سیستم"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"رنگ"</string>
+    <string name="screen_saver_title" msgid="4178511806237734356">"محافظ صفحه‌نمایش"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"میان‌بر چپ"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"میان‌بر راست"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"هیچ‌کدام"</string>

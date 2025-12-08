@@ -25,11 +25,11 @@ import android.stats.style.StyleEnums.LOCATION_PREFERENCE_UNSPECIFIED
 import android.stats.style.StyleEnums.SCREEN_UNSPECIFIED
 import android.stats.style.StyleEnums.SET_WALLPAPER_ENTRY_POINT_UNSPECIFIED
 import android.stats.style.StyleEnums.WALLPAPER_DESTINATION_UNSPECIFIED
+import com.android.customization.module.logging.ThemesUserEventLogger.AppIconStyle
 import com.android.customization.module.logging.ThemesUserEventLogger.ClockSize
 import com.android.customization.module.logging.ThemesUserEventLogger.ColorSource
 import com.android.systemui.shared.system.SysUiStatsLog
 import com.android.systemui.shared.system.SysUiStatsLog.STYLE_UI_CHANGED
-import com.android.wallpaper.module.logging.UserEventLogger.AppIconStyle
 import com.android.wallpaper.module.logging.UserEventLogger.CustomizationPickerScreen
 import com.android.wallpaper.module.logging.UserEventLogger.DatePreference
 import com.android.wallpaper.module.logging.UserEventLogger.EffectStatus

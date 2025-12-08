@@ -17,11 +17,14 @@
 package com.android.wallpaper.customization.ui.viewmodel
 
 import android.content.Context
+import android.stats.style.StyleEnums.APP_ICON_STYLE_UNSPECIFIED
+import android.util.Log
 import com.android.customization.model.grid.ShapeOptionModel
 import com.android.customization.module.logging.ThemesUserEventLogger
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
 import com.android.customization.picker.icon.domain.interactor.AppIconInteractor
 import com.android.customization.picker.icon.shared.model.IconStyle
+import com.android.customization.picker.icon.shared.model.IconStyleModel
 import com.android.themepicker.R
 import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
@@ -33,7 +36,10 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import java.util.Locale
+import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,6 +53,7 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 
 class AppIconPickerViewModel
 @AssistedInject
@@ -84,7 +91,7 @@ constructor(
             replay = 1,
         )
 
-    //// Themed icons enabled
+    //// Themed icons
     val isThemedIconAvailable =
         interactor.isThemedIconAvailable.shareIn(
             scope = viewModelScope,
@@ -114,18 +121,27 @@ constructor(
         }
 
     //// Style
-    private val selectedIconStyle = interactor.selectedIconStyle
+    val selectedIconStyle = interactor.selectedIconStyle
     private val overridingIconStyle: MutableStateFlow<IconStyle?> = MutableStateFlow(null)
     val previewingIconStyle =
         combine(selectedIconStyle, overridingIconStyle) { selected, overriding ->
             overriding ?: selected
         }
-    private val iconStyles = interactor.iconStyles
-    val styleOptions: Flow<List<OptionItemViewModel2<IconStyle>>> =
-        iconStyles.map {
+    private val iconStylesModels =
+        interactor.iconStyleModels.shareIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            replay = 1,
+        )
+    val previewingIconStyleModel =
+        combine(previewingIconStyle, iconStylesModels) { previewingIconStyle, iconStylesModels ->
+            iconStylesModels.find { it.iconStyle == previewingIconStyle }
+        }
+    val styleOptions: Flow<List<OptionItemViewModel2<IconStyleModel>>> =
+        iconStylesModels.map {
             List(size = it.size, init = { index -> toStyleOptionItemViewModel(it[index]) })
         }
-    val isIconStyleAvailable = iconStyles.map { it.size > 1 }
+    val isIconStyleAvailable = iconStylesModels.map { it.size > 1 }
 
     enum class Tab {
         STYLE,
@@ -134,12 +150,12 @@ constructor(
 
     private val _selectedTab = MutableStateFlow<Tab?>(null)
     val selectedTab =
-        combine(isThemedIconAvailable, isShapeOptionsAvailable, _selectedTab) {
-            isThemedIconAvailable,
+        combine(isIconStyleAvailable, isShapeOptionsAvailable, _selectedTab) {
+            isIconStyleAvailable,
             isShapeOptionsAvailable,
             selectedTab ->
             selectedTab
-                ?: if (isThemedIconAvailable) {
+                ?: if (isIconStyleAvailable) {
                     Tab.STYLE
                 } else if (isShapeOptionsAvailable) {
                     Tab.SHAPE
@@ -201,7 +217,7 @@ constructor(
             }
         }
 
-    val summary: Flow<AppIconPickerSummaryViewModel> =
+    val shapeAndThemedIconSummary: Flow<AppIconPickerSummaryViewModel> =
         combine(selectedShape, isThemedIconEnabled, isShapeOptionsAvailable) {
             selectedShape,
             isThemedIconEnabled,
@@ -231,11 +247,56 @@ constructor(
                         }
                     ),
                 iconShape = selectedShape.payload,
+                icon = null,
                 isThemed = isThemedIconEnabled,
             )
         }
 
-    val onApply: Flow<(suspend () -> Unit)?> =
+    val iconStyleAndShapeSummary: Flow<AppIconPickerSummaryViewModel> =
+        combine(
+            selectedShape,
+            selectedIconStyle,
+            iconStylesModels,
+            isIconStyleAvailable,
+            isShapeOptionsAvailable,
+        ) {
+            selectedShape,
+            selectedIconStyle,
+            iconStylesModels,
+            isIconStyleAvailable,
+            isShapeOptionsAvailable ->
+            val selectedShapeString =
+                if (isShapeOptionsAvailable) selectedShape.text.asString(applicationContext) else ""
+            val selectedIconStyleModel = iconStylesModels.find { it.iconStyle == selectedIconStyle }
+            val appIconThemeString =
+                if (isIconStyleAvailable)
+                    selectedIconStyleModel?.nameResId?.let { applicationContext.getString(it) }
+                else null
+            AppIconPickerSummaryViewModel(
+                description =
+                    Text.Loaded(
+                        if (
+                            selectedShapeString.isNotEmpty() && !appIconThemeString.isNullOrEmpty()
+                        ) {
+                            // Show theme and shape, comma separated
+                            applicationContext.getString(
+                                R.string.app_icons_description,
+                                appIconThemeString,
+                                selectedShapeString,
+                            )
+                        } else if (!appIconThemeString.isNullOrEmpty()) {
+                            appIconThemeString
+                        } else {
+                            selectedShapeString
+                        }
+                    ),
+                iconShape = selectedShape.payload,
+                icon = selectedIconStyleModel?.icon,
+                isThemed = selectedIconStyleModel?.isThemedIcon ?: false,
+            )
+        }
+
+    val shapeAndThemedIconOnApply: Flow<(suspend () -> Unit)?> =
         combine(
             overridingShapeKey,
             selectedShape,
@@ -278,7 +339,7 @@ constructor(
             }
         }
 
-    val onApply2: Flow<(suspend () -> Unit)?> =
+    val iconStyleAndShapeOnApply: Flow<(suspend () -> Unit)?> =
         combine(overridingShapeKey, selectedShape, overridingIconStyle, selectedIconStyle) {
             overridingShapeKey,
             selectedShape,
@@ -298,17 +359,34 @@ constructor(
                     }
                     if (styleNeedsUpdate) {
                         coroutineScope {
-                            launch {
-                                overridingIconStyle?.let {
-                                    interactor.applyThemedIconEnabled(it.getIsThemedIcon())
+                            val waitForUpdate = launch {
+                                try {
+                                    withTimeout(ICON_UPDATE_TIMEOUT) {
+                                        // Drop the first emitted icon style since it is the current
+                                        // selection. The next emitted icon style signals an update.
+                                        selectedIconStyle.drop(1).take(1).collect {
+                                            return@collect
+                                        }
+                                    }
+                                } catch (e: TimeoutCancellationException) {
+                                    Log.w(TAG, "Timed out waiting for icon update", e)
                                 }
                             }
-                            selectedIconStyle.drop(1).take(1).collect {
-                                return@collect
+                            launch {
+                                val success =
+                                    overridingIconStyle?.let { interactor.applyIconStyle(it) }
+                                if (success == true) {
+                                    logger.logIconStyleApplied(
+                                        overridingIconStyle.loggingId ?: APP_ICON_STYLE_UNSPECIFIED
+                                    )
+                                } else {
+                                    Log.w(TAG, "Apply unsuccessful, no data was updated")
+                                    waitForUpdate.cancel()
+                                }
                             }
-                            overridingIconStyle?.let {
-                                logger.logThemedIconApplied(it.getIsThemedIcon())
-                            }
+                            try {
+                                waitForUpdate.join()
+                            } catch (_: CancellationException) {}
                         }
                     }
                 }
@@ -355,35 +433,39 @@ constructor(
         )
     }
 
-    private fun toStyleOptionItemViewModel(iconStyle: IconStyle): OptionItemViewModel2<IconStyle> {
+    private fun toStyleOptionItemViewModel(
+        iconStyleModel: IconStyleModel
+    ): OptionItemViewModel2<IconStyleModel> {
         val isSelected =
             previewingIconStyle
-                .map { it == iconStyle }
+                .map { it == iconStyleModel.iconStyle }
                 .stateIn(
                     scope = viewModelScope,
                     started = SharingStarted.Lazily,
                     initialValue = false,
                 )
-        val text = Text.Resource(iconStyle.nameResId)
+        val text = Text.Resource(iconStyleModel.nameResId)
         return OptionItemViewModel2(
             key = MutableStateFlow(text.asString(applicationContext)),
-            payload = iconStyle,
+            payload = iconStyleModel,
             text = text,
             isSelected = isSelected,
             onClicked =
-                if (iconStyle.getIsExternalLink()) {
+                if (iconStyleModel.isExternalLink) {
                     // A button is not selectable.
                     flowOf(null)
                 } else {
                     isSelected.map {
                         if (!it) {
-                            { overridingIconStyle.value = iconStyle }
+                            { overridingIconStyle.value = iconStyleModel.iconStyle }
                         } else {
                             null
                         }
                     }
                 },
-            skipOnClickBinding = iconStyle.getIsExternalLink(),
+            skipOnClickBinding = iconStyleModel.isExternalLink,
+            // Icon styles have custom color bindings, if any, and don't need the default binding.
+            skipForegroundColorBinding = true,
         )
     }
 
@@ -391,5 +473,10 @@ constructor(
     @AssistedFactory
     interface Factory {
         fun create(viewModelScope: CoroutineScope): AppIconPickerViewModel
+    }
+
+    companion object {
+        const val TAG = "AppIconPickerViewModel"
+        val ICON_UPDATE_TIMEOUT = 1000.milliseconds
     }
 }

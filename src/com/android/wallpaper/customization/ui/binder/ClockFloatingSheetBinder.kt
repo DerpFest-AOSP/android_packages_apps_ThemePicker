@@ -19,6 +19,7 @@ package com.android.wallpaper.customization.ui.binder
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewStub
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.ImageView
 import android.widget.TextView
@@ -166,7 +167,14 @@ object ClockFloatingSheetBinder {
             lifecycleOwner = lifecycleOwner,
         )
 
-        val clockColorContent: View = view.requireViewById(R.id.clock_floating_sheet_color_content)
+        val clockColorContentStub: ViewStub = view.requireViewById(R.id.clock_color_content_stub)
+        clockColorContentStub.layoutResource =
+            if (isDesktopUi) {
+                R.layout.floating_sheet_clock_color_desktop_content
+            } else {
+                R.layout.floating_sheet_clock_color_content
+            }
+        val clockColorContent: View = clockColorContentStub.inflate()
 
         val clockColorAdapter =
             createClockColorOptionItemAdapter(
@@ -538,6 +546,7 @@ object ClockFloatingSheetBinder {
                         axisPresetSlider.valueTo = axisPresetsSliderViewModel.valueTo
                         axisPresetSlider.stepSize = axisPresetsSliderViewModel.stepSize
                         axisPresetSlider.clearOnSliderTouchListeners()
+                        updateAccessibilityStateDescription(axisPresetSlider, axisPresetSlider.context)
                         axisPresetSlider.addOnSliderTouchListener(
                             object : OnSliderTouchListener {
                                 override fun onStartTrackingTouch(slider: Slider) {}

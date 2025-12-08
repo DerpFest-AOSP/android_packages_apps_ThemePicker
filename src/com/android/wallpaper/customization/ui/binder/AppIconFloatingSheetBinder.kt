@@ -33,7 +33,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.customization.picker.common.ui.view.SingleRowListItemSpacing
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
-import com.android.customization.picker.icon.shared.model.IconStyle
+import com.android.customization.picker.icon.shared.model.IconStyleModel
 import com.android.customization.picker.icon.ui.util.IconStyleViewUtil
 import com.android.themepicker.R
 import com.android.wallpaper.config.BaseFlags
@@ -41,6 +41,8 @@ import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptio
 import com.android.wallpaper.customization.ui.view.ShapeTileDrawable
 import com.android.wallpaper.customization.ui.viewmodel.AppIconPickerViewModel.Tab
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
+import com.android.wallpaper.picker.common.icon.ui.viewbinder.IconViewBinder
+import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.view.FloatingToolbar
 import com.android.wallpaper.picker.customization.ui.view.adapter.FloatingToolbarTabAdapter
@@ -367,32 +369,34 @@ object AppIconFloatingSheetBinder {
         shouldAnimateColor: () -> Boolean,
         lifecycleOwner: LifecycleOwner,
         backgroundDispatcher: CoroutineDispatcher,
-    ): OptionItemAdapter2<IconStyle> {
+    ): OptionItemAdapter2<IconStyleModel> {
         return OptionItemAdapter2(
             layoutResourceId = R.layout.icon_style_option2,
             lifecycleOwner = lifecycleOwner,
             backgroundDispatcher = backgroundDispatcher,
-            bindPayload = { view: View, iconStyle: IconStyle ->
+            bindPayload = { view: View, iconStyleModel: IconStyleModel ->
                 val optionIcon = view.requireViewById<ViewGroup>(R.id.option_icon)
                 val buttonIcon = view.requireViewById<ViewGroup>(R.id.button_icon)
-                val drawable = iconStyleViewUtil.getDrawable(iconStyle)
-                if (iconStyle.getIsExternalLink()) {
+                val icon = iconStyleModel.icon
+                if (iconStyleModel.isExternalLink) {
                     optionIcon.visibility = View.GONE
                     buttonIcon.visibility = View.VISIBLE
                     val imageView = view.requireViewById<ImageView>(R.id.button_foreground)
-                    imageView.setImageDrawable(drawable)
-                    view.setOnClickListener { iconStyleViewUtil.getOnClick(iconStyle)?.invoke() }
+                    icon?.let { IconViewBinder.bind(imageView, it) }
+                    view.setOnClickListener {
+                        iconStyleViewUtil.getOnClick(iconStyleModel.iconStyle)?.invoke()
+                    }
                 } else {
                     optionIcon.visibility = View.VISIBLE
                     buttonIcon.visibility = View.GONE
                     val imageView =
                         view.requireViewById<ImageView>(com.android.wallpaper.R.id.foreground)
-                    imageView.setImageDrawable(drawable)
+                    icon?.let { IconViewBinder.bind(imageView, it) }
                 }
                 // If the icon is a themed icon, bind its foreground and background color
                 val disposableHandle =
-                    if (iconStyle.getIsThemedIcon()) {
-                        (drawable as? ShapeTileDrawable)?.let {
+                    if (iconStyleModel.isThemedIcon) {
+                        ((icon as? Icon.Loaded)?.drawable as? ShapeTileDrawable)?.let {
                             ShapeIconViewBinder.bindPreviewIconColor(
                                 shapeTileDrawable = it,
                                 colorUpdateViewModel = colorUpdateViewModel,
@@ -400,7 +404,7 @@ object AppIconFloatingSheetBinder {
                                 lifecycleOwner = lifecycleOwner,
                             )
                         }
-                    } else if (iconStyle.getIsExternalLink()) {
+                    } else if (iconStyleModel.isExternalLink) {
                         ShapeIconViewBinder.bindButtonIconColor(
                             foreground = buttonIcon.requireViewById(R.id.button_foreground),
                             background = buttonIcon.requireViewById(R.id.button_background),

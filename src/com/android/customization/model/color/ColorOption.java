@@ -19,6 +19,7 @@ import static com.android.customization.model.ResourceConstants.OVERLAY_CATEGORY
 import static com.android.customization.model.ResourceConstants.OVERLAY_CATEGORY_SYSTEM_PALETTE;
 
 import android.content.Context;
+import android.content.theming.ThemeStyle;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -29,7 +30,6 @@ import com.android.customization.model.CustomizationManager;
 import com.android.customization.model.CustomizationOption;
 import com.android.customization.model.color.ColorOptionsProvider.ColorSource;
 import com.android.customization.module.logging.ThemesUserEventLogger;
-import com.android.systemui.monet.Style;
 import com.android.themepicker.R;
 
 import org.json.JSONException;
@@ -57,14 +57,14 @@ public abstract class ColorOption implements CustomizationOption<ColorOption> {
     protected final Map<String, String> mPackagesByCategory;
     private final String mTitle;
     private final boolean mIsDefault;
-    @Style.Type
+    @ThemeStyle.Type
     private final Integer mStyle;
     private final int mIndex;
     private CharSequence mContentDescription;
     private final @ColorInt int mSeedColor;
 
     protected ColorOption(String title, Map<String, String> overlayPackages, boolean isDefault,
-            int seedColor, @Style.Type Integer style, int index) {
+            int seedColor, @ThemeStyle.Type Integer style, int index) {
         mTitle = title;
         mIsDefault = isDefault;
         mSeedColor = seedColor;
@@ -84,9 +84,9 @@ public abstract class ColorOption implements CustomizationOption<ColorOption> {
 
         String currentStyle = colorManager.getCurrentStyle();
         if (TextUtils.isEmpty(currentStyle)) {
-            currentStyle = Style.toString(Style.TONAL_SPOT);
+            currentStyle = ThemeStyle.toString(ThemeStyle.TONAL_SPOT);
         }
-        boolean isCurrentStyle = TextUtils.equals(Style.toString(getStyle()), currentStyle);
+        boolean isCurrentStyle = TextUtils.equals(ThemeStyle.toString(getStyle()), currentStyle);
 
         if (mIsDefault) {
             String serializedOverlays = colorManager.getStoredOverlays();
@@ -227,7 +227,7 @@ public abstract class ColorOption implements CustomizationOption<ColorOption> {
     /**
      * @return the style of this color option
      */
-    @Style.Type
+    @ThemeStyle.Type
     public Integer getStyle() {
         return mStyle;
     }

@@ -68,7 +68,6 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"தற்போதைய வால்பேப்பரே இருக்கட்டும்"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"ஸ்டைல் மாதிரிக்காட்சி"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"கட்ட மாதிரிக்காட்சி"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"உள்ளடக்க விளக்கம்"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"எழுத்துரு மாதிரிக்காட்சி"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"ஐகான் மாதிரிக்காட்சி"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"வண்ண மாதிரிக்காட்சி"</string>
@@ -130,12 +129,10 @@
     <string name="mode_disabled_msg" msgid="9196245518435936512">"பேட்டரிச் சேமிப்பான் காரணமாகத் தற்காலிகமாக முடக்கப்பட்டுள்ளது"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"தீம் ஐகான்கள்"</string>
     <string name="themed_icon_beta_title" msgid="5433087142610402812">"தீம் ஐகான்கள் (பீட்டா)"</string>
-    <string name="pack_theme_title" msgid="8859400282820047298">"தலைப்பு"</string>
     <string name="beta_title" msgid="8703819523760746458">"பீட்டா"</string>
-    <string name="theme_packs_description" msgid="7214401664119395771">"விளக்கம்"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"ஆப்ஸ் கட்டக் காட்சியை மாற்றும்"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"வால்பேப்பர் நிறங்கள்"</string>
-    <string name="wallpaper_color_subheader" msgid="4044464573669965670">"ஐகான், உரை மற்றும் பலவற்றின் வண்ணம் வால்பேப்பருடன் பொருந்தும்"</string>
+    <string name="wallpaper_color_subheader" msgid="4044464573669965670">"ஐகான், எழுத்து மற்றும் பலவற்றின் வண்ணம் வால்பேப்பருடன் பொருந்தும்"</string>
     <string name="wallpaper_color_title" msgid="5687965239180986458">"வால்பேப்பரின் நிறம்"</string>
     <string name="preset_color_tab" msgid="3133391839341329314">"அடிப்படை வண்ணங்கள்"</string>
     <string name="preset_color_tab_2" msgid="1444107326712562538">"பிற வண்ணங்கள்"</string>
@@ -144,6 +141,7 @@
     <string name="adaptive_color_title" msgid="1336508599235896205">"டைனமிக்"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"சிஸ்டம் வண்ணங்கள்"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"வண்ணங்கள்"</string>
+    <string name="screen_saver_title" msgid="4178511806237734356">"ஸ்கிரீன் சேவர்"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"இடது ஷார்ட்கட்"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"வலது ஷார்ட்கட்"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"ஏதுமில்லை"</string>

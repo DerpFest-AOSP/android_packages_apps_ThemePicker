@@ -17,11 +17,13 @@
 package com.android.wallpaper.customization.ui.viewmodel
 
 import com.android.customization.picker.grid.ui.viewmodel.ShapeIconViewModel
+import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 
 /** View model representing information needed for the app icon entry point summary. */
 data class AppIconPickerSummaryViewModel(
     val description: Text,
     val iconShape: ShapeIconViewModel?,
+    val icon: Icon?,
     val isThemed: Boolean,
 )

@@ -31,4 +31,6 @@ class ThemePickerPackThemeRepository @Inject constructor() : PackThemeRepository
         MutableStateFlow<PackThemeData>(PackThemeData())
     override val packThemeData: StateFlow<PackThemeData>
         get() = _packThemeData.asStateFlow()
+
+    override fun refetchPackTheme() {}
 }

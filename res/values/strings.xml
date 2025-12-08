@@ -183,9 +183,6 @@
     <!-- Content description of grid preview card. [CHAR_LIMIT=30]-->
     <string name="grid_preview_card_content_description">Grid preview</string>
 
-    <!-- Content description of theme preview card. [CHAR_LIMIT=30]-->
-    <string name="pack_theme_preview_card_content_description">Content Description</string>
-
     <!-- Content description of font preview. [CHAR_LIMIT=30]-->
     <string name="font_preview_content_description">Font preview</string>
 
@@ -395,16 +392,8 @@
 
     <!-- Title of a section of the customization where the user can select color override for icon. [CHAR LIMIT=40] -->
     <string name="themed_icon_beta_title">Themed icons (beta)</string>
-
-    <!-- Title of a section of the pack theme where the user enter the theme app. [CHAR LIMIT=30] -->
-    <string name="pack_theme_title">Title</string>
-
     <!-- Title of the tag to indicate beta version. [CHAR LIMIT=6] -->
     <string name="beta_title">Beta</string>
-
-    <!-- The description of theme picker entry. [CHAR LIMIT=30] -->
-    <string name="theme_packs_description">Description</string>
-
     <!-- The content description of grid picker entry. [CHAR LIMIT=NONE] -->
     <string name="gird_picker_entry_content_description" msgid="7538418512525897691">Change app grid</string>
 
@@ -439,6 +428,12 @@
     [CHAR LIMIT=32].
     -->
     <string name="system_colors_title">Colors</string>
+
+    <!--
+    Title for a customization picker section where the user can navigate to screen saver setting.
+    [CHAR LIMIT=32].
+    -->
+    <string name="screen_saver_title">Screen saver</string>
 
     <!--
     Name of the slot on the "start" side of the bottom of the lock screen, where lock screen

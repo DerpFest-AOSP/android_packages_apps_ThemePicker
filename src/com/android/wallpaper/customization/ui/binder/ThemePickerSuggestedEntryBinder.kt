@@ -16,8 +16,11 @@
 
 package com.android.wallpaper.customization.ui.binder
 
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.view.View
+import android.widget.Toast
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -31,6 +34,10 @@ import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewMo
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 @Singleton
@@ -49,6 +56,8 @@ class ThemePickerSuggestedEntryBinder @Inject constructor() : PackThemeSuggested
         val optionsViewModel =
             viewModel.customizationOptionsViewModel as ThemePickerCustomizationOptionsViewModel
 
+        val backgroundScope =
+            CoroutineScope(Dispatchers.IO + Job() + CoroutineName(BACKGROUND_CONTEXT))
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
@@ -56,7 +65,17 @@ class ThemePickerSuggestedEntryBinder @Inject constructor() : PackThemeSuggested
                         .collect { intent ->
                             if (intent != null) {
                                 view.suggestedChip.setOnClickListener {
-                                    navigateToPackThemeActivity.invoke(intent)
+                                    backgroundScope.launch {
+                                        if (isActivityAvailable(view.context, intent)) {
+                                            navigateToPackThemeActivity.invoke(intent)
+                                        } else {
+                                            showNoPackThemeIntentErrorMessage(
+                                                lifecycleOwner,
+                                                view,
+                                                optionsViewModel,
+                                            )
+                                        }
+                                    }
                                 }
                             } else {
                                 view.suggestedChip.setOnClickListener { null }
@@ -68,6 +87,9 @@ class ThemePickerSuggestedEntryBinder @Inject constructor() : PackThemeSuggested
                         if (packThemeData.suggestedChipThemePackInfo.title.isNotEmpty()) {
                             view.visibility = View.VISIBLE
                             view.hideSuggestedChip = false
+                        } else {
+                            view.visibility = View.GONE
+                            view.hideSuggestedChip = true
                         }
                         view.suggestedChipText.text = packThemeData.suggestedChipThemePackInfo.title
                     }
@@ -85,13 +107,39 @@ class ThemePickerSuggestedEntryBinder @Inject constructor() : PackThemeSuggested
         )
         ColorUpdateBinder.bind(
             setColor = { color ->
-                DrawableCompat.setTint(DrawableCompat.wrap(view.cancelButton.background), color)
+                DrawableCompat.setTint(DrawableCompat.wrap(view.cancelButton.drawable), color)
                 DrawableCompat.setTint(DrawableCompat.wrap(view.icon.background), color)
                 view.suggestedChipText.setTextColor(color)
             },
-            color = colorUpdateViewModel.colorOnPrimaryContainer,
+            color = colorUpdateViewModel.colorOnSecondaryContainer,
             shouldAnimate = isOnMainScreen,
             lifecycleOwner = lifecycleOwner,
         )
+    }
+
+    private suspend fun isActivityAvailable(context: Context, intent: Intent): Boolean {
+        val packageManager: PackageManager = context.packageManager
+        val activities =
+            packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+        return activities.isNotEmpty()
+    }
+
+    private fun showNoPackThemeIntentErrorMessage(
+        lifecycleOwner: LifecycleOwner,
+        view: View,
+        optionsViewModel: ThemePickerCustomizationOptionsViewModel,
+    ) {
+        lifecycleOwner.lifecycleScope.launch {
+            Toast.makeText(
+                    view.context,
+                    optionsViewModel.packThemeViewModel.noAppErrorMessage,
+                    Toast.LENGTH_SHORT,
+                )
+                .show()
+        }
+    }
+
+    companion object {
+        private const val BACKGROUND_CONTEXT = "backgroundContext"
     }
 }

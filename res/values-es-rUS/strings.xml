@@ -54,7 +54,7 @@
     <string name="clock_style_sharp" msgid="453991773733285628">"elegante"</string>
     <string name="grid_title" msgid="1688173478777254123">"Cuadrícula de apps"</string>
     <string name="shape_and_grid_title" msgid="9092477491363761054">"Forma y diseño"</string>
-    <string name="grid_layout" msgid="370175667652663686">"Diseño"</string>
+    <string name="grid_layout" msgid="370175667652663686">"Diseño de cuadrícula"</string>
     <string name="app_icons_title" msgid="8953944517006998975">"Íconos"</string>
     <string name="app_icons_description" msgid="6616831372060467315">"<xliff:g id="ID_1">%1$s</xliff:g>, <xliff:g id="ID_2">%2$s</xliff:g>"</string>
     <string name="app_icons_theme_default" msgid="4773453045331265070">"predeterminado"</string>
@@ -68,7 +68,6 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"Conservar fondo de pantalla actual"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"Vista previa del estilo"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"Vista previa de la cuadrícula"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"Descripción del contenido"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"Vista previa de fuente"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"Vista previa de ícono"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"Vista previa de color"</string>
@@ -130,9 +129,7 @@
     <string name="mode_disabled_msg" msgid="9196245518435936512">"Se inhabilitó temporalmente debido al Ahorro de batería"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"Íconos temáticos"</string>
     <string name="themed_icon_beta_title" msgid="5433087142610402812">"Íconos temáticos (beta)"</string>
-    <string name="pack_theme_title" msgid="8859400282820047298">"Título"</string>
     <string name="beta_title" msgid="8703819523760746458">"Beta"</string>
-    <string name="theme_packs_description" msgid="7214401664119395771">"Descripción"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"Cambiar cuadrícula de apps"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"Colores del fondo"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"Combina el color de íconos, texto y más con tu fondo"</string>
@@ -144,6 +141,7 @@
     <string name="adaptive_color_title" msgid="1336508599235896205">"Dinámico"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"Colores del sistema"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"Colores"</string>
+    <string name="screen_saver_title" msgid="4178511806237734356">"Protector de pantalla"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"Acceso izquierdo"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"Acceso derecho"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"Ninguno"</string>

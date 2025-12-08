@@ -68,7 +68,6 @@
     <string name="keep_my_wallpaper" msgid="8012385376769568517">"រក្សាទុក​ផ្ទាំងរូបភាព​បច្ចុប្បន្ន"</string>
     <string name="theme_preview_card_content_description" msgid="5989222908619535533">"ការមើល​រចនាប័ទ្មសាកល្បង"</string>
     <string name="grid_preview_card_content_description" msgid="8449383777584714842">"ការមើល​ក្រឡាសាកល្បង"</string>
-    <string name="pack_theme_preview_card_content_description" msgid="4283911770796247345">"ការពណ៌នាអំពីខ្លឹមសារ"</string>
     <string name="font_preview_content_description" msgid="128230439293337891">"ការមើលពុម្ព​អក្សរសាកល្បង"</string>
     <string name="icon_preview_content_description" msgid="7761101284351952890">"ការមើលរូបតំណាង​សាកល្បង"</string>
     <string name="color_preview_content_description" msgid="4879120462082058124">"ការមើល​ពណ៌សាកល្បង"</string>
@@ -130,9 +129,7 @@
     <string name="mode_disabled_msg" msgid="9196245518435936512">"បានបិទ​ជា​បណ្តោះអាសន្ន ដោយសារ​មុខងារ​សន្សំ​ថ្ម"</string>
     <string name="themed_icon_title" msgid="7312460430471956558">"រូបតំណាងប្ដូរតាមទម្រង់រចនា"</string>
     <string name="themed_icon_beta_title" msgid="5433087142610402812">"រូបតាមទម្រង់រចនា (បេតា)"</string>
-    <string name="pack_theme_title" msgid="8859400282820047298">"ចំណងជើង"</string>
     <string name="beta_title" msgid="8703819523760746458">"បេតា"</string>
-    <string name="theme_packs_description" msgid="7214401664119395771">"ការពណ៌នា"</string>
     <string name="gird_picker_entry_content_description" msgid="9087651470212293439">"ប្ដូរ​ក្រឡា​កម្មវិធី"</string>
     <string name="wallpaper_color_tab" msgid="1447926591721403840">"ពណ៌ផ្ទាំងរូបភាព"</string>
     <string name="wallpaper_color_subheader" msgid="4044464573669965670">"រូបតំណាង អក្សរ និងពណ៌ដែលត្រូវគ្នាជាច្រើនទៀតក្នុងផ្ទាំងរូបភាពរបស់អ្នក"</string>
@@ -144,6 +141,7 @@
     <string name="adaptive_color_title" msgid="1336508599235896205">"ឌីណាមិក"</string>
     <string name="color_picker_title" msgid="6666830057938082864">"ពណ៌ប្រព័ន្ធ"</string>
     <string name="system_colors_title" msgid="8011422955674152731">"ពណ៌"</string>
+    <string name="screen_saver_title" msgid="4178511806237734356">"ធាតុរក្សាអេក្រង់"</string>
     <string name="keyguard_slot_name_bottom_start" msgid="8747677880200629719">"ផ្លូវកាត់ខាងឆ្វេង"</string>
     <string name="keyguard_slot_name_bottom_end" msgid="2525487375680217083">"ផ្លូវកាត់ខាងស្តាំ"</string>
     <string name="keyguard_affordance_none" msgid="1751643933430782312">"គ្មាន"</string>

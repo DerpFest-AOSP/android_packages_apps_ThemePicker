@@ -46,6 +46,9 @@ class TestThemesUserEventLogger @Inject constructor() :
     var useThemedIcon: Boolean = false
         private set
 
+    var iconStyle: Int = -1
+        private set
+
     var shapeId: String? = null
         private set
 
@@ -67,6 +70,10 @@ class TestThemesUserEventLogger @Inject constructor() :
 
     override fun logThemedIconApplied(useThemeIcon: Boolean) {
         this.useThemedIcon = useThemeIcon
+    }
+
+    override fun logIconStyleApplied(iconStyle: Int) {
+        this.iconStyle = iconStyle
     }
 
     override fun logLockScreenNotificationApplied(showLockScreenNotifications: Boolean) {}
