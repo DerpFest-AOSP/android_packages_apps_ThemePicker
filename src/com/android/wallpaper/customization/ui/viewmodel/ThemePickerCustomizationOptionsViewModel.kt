@@ -21,6 +21,7 @@ import android.view.accessibility.AccessibilityManager
 import com.android.customization.packtheme.ui.viewmodel.PackThemeViewModel
 import com.android.customization.picker.clock.ui.viewmodel.ClockPickerViewModel
 import com.android.customization.picker.color.ui.viewmodel.ColorPickerViewModel
+import com.android.customization.picker.font.ui.viewmodel.FontPickerViewModel
 import com.android.customization.picker.grid.ui.viewmodel.GridPickerViewModel
 import com.android.customization.picker.icon.ui.viewmodel.AppIconPickerViewModel
 import com.android.customization.picker.mode.ui.viewmodel.DarkModeViewModel
@@ -31,7 +32,9 @@ import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptio
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.APP_ICONS
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.COLORS
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.GRID
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.FONT as HOME_FONT
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.CLOCK
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.FONT as LOCK_FONT
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.SHORTCUTS
 import com.android.wallpaper.picker.common.preview.ui.viewmodel.WorkspacePreviewScreen
 import com.android.wallpaper.picker.customization.ui.view.ApplyButton
@@ -76,6 +79,7 @@ constructor(
     clockPickerViewModelFactory: ClockPickerViewModel.Factory,
     gridPickerViewModelFactory: GridPickerViewModel.Factory,
     appIconPickerViewModelFactory: AppIconPickerViewModel.Factory,
+    fontPickerViewModelFactory: FontPickerViewModel.Factory,
     val colorContrastSectionViewModel: ColorContrastSectionViewModel2,
     val darkModeViewModel: DarkModeViewModel,
     val packThemeViewModel: PackThemeViewModel,
@@ -104,6 +108,7 @@ constructor(
     val gridPickerViewModel = gridPickerViewModelFactory.create(viewModelScope = viewModelScope)
     val appIconPickerViewModel =
         appIconPickerViewModelFactory.create(viewModelScope = viewModelScope)
+    val fontPickerViewModel = fontPickerViewModelFactory.create(FontPickerViewModel::class.java)
 
     override val customizationOptionsData: Flow<CustomizationOptionsData> =
         if (BaseFlags.get(appContext).isExtendibleThemeManager()) {
@@ -264,6 +269,24 @@ constructor(
                 null
             }
         }
+
+    val onCustomizeLockFontClicked: Flow<(() -> Unit)?> =
+        selectedOption.map {
+            if (it == null) {
+                { defaultCustomizationOptionsViewModel.selectOption(LOCK_FONT) }
+            } else {
+                null
+            }
+        }
+
+    val onCustomizeHomeFontClicked: Flow<(() -> Unit)?> =
+        selectedOption.map {
+            if (it == null) {
+                { defaultCustomizationOptionsViewModel.selectOption(HOME_FONT) }
+            } else {
+                null
+            }
+        }
     private val isApplyInProgress: MutableStateFlow<Boolean> = MutableStateFlow(false)
     @OptIn(ExperimentalCoroutinesApi::class)
     val onApplyButtonClicked: Flow<((onComplete: () -> Unit) -> Unit)?> =
@@ -273,6 +296,7 @@ constructor(
                     CLOCK -> clockPickerViewModel.onApply
                     SHORTCUTS -> keyguardQuickAffordancePickerViewModel2.onApply
                     GRID -> gridPickerViewModel.onApply
+                    LOCK_FONT, HOME_FONT -> fontPickerViewModel.onApply
                     APP_ICONS ->
                         if (BaseFlags.get(appContext).isExtendibleThemeManager()) {
                             appIconPickerViewModel.iconStyleAndShapeOnApply

@@ -27,6 +27,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.constraintlayout.widget.ConstraintSet
@@ -47,6 +48,7 @@ import com.android.customization.picker.color.ui.binder.ColorsFloatingSheetBinde
 import com.android.customization.picker.color.ui.compose.ColorFloatingSheet
 import com.android.customization.picker.color.ui.view.ColorOptionIconView
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
+import com.android.customization.picker.font.ui.view.FontSectionScreen
 import com.android.customization.picker.grid.ui.binder.GridFloatingSheetBinder
 import com.android.customization.picker.icon.ui.binder.AppIconFloatingSheetBinder
 import com.android.customization.picker.icon.ui.binder.ShapeIconViewBinder
@@ -59,6 +61,8 @@ import com.android.themepicker.R
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.FONT as HOME_FONT
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.FONT as LOCK_FONT
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsData
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
 import com.android.wallpaper.picker.common.icon.ui.viewbinder.IconViewBinder
@@ -191,6 +195,14 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 .first { it.first == ThemePickerLockCustomizationOption.CLOCK }
                 .second
         val optionClockIcon: ImageView = optionClock.requireViewById(R.id.option_entry_icon)
+        val optionLockFont: View =
+            lockScreenCustomizationOptionEntries.first { it.first == LOCK_FONT }.second
+        val optionHomeFont: View =
+            homeScreenCustomizationOptionEntries.first { it.first == HOME_FONT }.second
+        val optionLockFontDescription: TextView =
+            optionLockFont.requireViewById(R.id.option_entry_description)
+        val optionHomeFontDescription: TextView =
+            optionHomeFont.requireViewById(R.id.option_entry_description)
 
         val isKeyguardQuickAffordanceEnabled =
             BaseFlags.get(view.context).isKeyguardQuickAffordanceEnabled(view.context)
@@ -329,6 +341,25 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 launch {
                     optionsViewModel.clockPickerViewModel.selectedClock.collect {
                         optionClockIcon.setImageDrawable(it.thumbnail)
+                    }
+                }
+
+                launch {
+                    optionsViewModel.onCustomizeLockFontClicked.collect {
+                        optionLockFont.setOnClickListener { _ -> it?.invoke() }
+                    }
+                }
+
+                launch {
+                    optionsViewModel.onCustomizeHomeFontClicked.collect {
+                        optionHomeFont.setOnClickListener { _ -> it?.invoke() }
+                    }
+                }
+
+                launch {
+                    optionsViewModel.fontPickerViewModel.activeOption.collect { option ->
+                        optionLockFontDescription.text = option?.title.orEmpty()
+                        optionHomeFontDescription.text = option?.title.orEmpty()
                     }
                 }
 
@@ -677,6 +708,16 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                     lifecycleOwner,
                 )
             }
+        listOf(LOCK_FONT, HOME_FONT).forEach { option ->
+            customizationOptionFloatingSheetViewMap?.get(option)?.let { view ->
+                (view as ComposeView).setContent {
+                    FontSectionScreen(
+                        viewModel = optionsViewModel.fontPickerViewModel,
+                        isDark = isSystemInDarkTheme(),
+                    )
+                }
+            }
+        }
         if (isComposeRefactorEnabled) {
             customizationOptionFloatingSheetViewMap
                 ?.get(ThemePickerLockCustomizationOption.SHORTCUTS)
