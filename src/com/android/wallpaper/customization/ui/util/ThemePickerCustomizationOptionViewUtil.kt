@@ -17,13 +17,25 @@
 package com.android.wallpaper.customization.ui.util
 
 import android.content.Context
+import android.content.res.Configuration
+import android.content.pm.PackageManager
+import android.hardware.fingerprint.FingerprintManager
+import android.os.Build
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import com.android.customization.picker.mode.shared.util.DarkModeLifecycleUtil
 import com.android.themepicker.R
 import com.android.wallpaper.config.BaseFlags
@@ -39,6 +51,8 @@ import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptio
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.LOCK_SCREEN_NOTIFICATIONS
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.MORE_LOCK_SCREEN_SETTINGS
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.SHORTCUTS
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.UDFPS_ANIMATION
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.UDFPS_ICON
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsData
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.Screen.HOME_SCREEN
@@ -47,6 +61,8 @@ import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUti
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionViewUtil
 import com.android.wallpaper.picker.customization.ui.util.DefaultCustomizationOptionViewUtil
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsData
+import com.android.customization.picker.udfps.UdfpsAnimationScreen
+import com.android.customization.picker.udfps.UdfpsIconScreen
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
@@ -119,6 +135,26 @@ constructor(
                             SHORTCUTS to
                                 layoutInflater.inflate(
                                     R.layout.customization_option_entry_keyguard_quick_affordance,
+                                    optionContainer,
+                                    false,
+                                )
+                        )
+                    }
+                    if (isUdfpsAnimationAvailable(optionContainer.context)) {
+                        add(
+                            UDFPS_ANIMATION to
+                                layoutInflater.inflate(
+                                    R.layout.customization_option_entry_udfps_animation,
+                                    optionContainer,
+                                    false,
+                                )
+                        )
+                    }
+                    if (isUdfpsIconAvailable(optionContainer.context)) {
+                        add(
+                            UDFPS_ICON to
+                                layoutInflater.inflate(
+                                    R.layout.customization_option_entry_udfps_icon,
                                     optionContainer,
                                     false,
                                 )
@@ -258,6 +294,28 @@ constructor(
                         .also { bottomSheetContainer.addView(it) },
                 )
             }
+            if (isUdfpsAnimationAvailable(bottomSheetContainer.context)) {
+                put(
+                    UDFPS_ANIMATION,
+                    ComposeView(context).apply {
+                        setContent {
+                            UdfpsWithDynamicTheme { UdfpsAnimationScreen() }
+                        }
+                    }
+                        .also { bottomSheetContainer.addView(it) },
+                )
+            }
+            if (isUdfpsIconAvailable(bottomSheetContainer.context)) {
+                put(
+                    UDFPS_ICON,
+                    ComposeView(context).apply {
+                        setContent {
+                            UdfpsWithDynamicTheme { UdfpsIconScreen() }
+                        }
+                    }
+                        .also { bottomSheetContainer.addView(it) },
+                )
+            }
 
             put(
                 COLORS,
@@ -305,4 +363,70 @@ constructor(
                     "Customization option $option does not have a bottom sheet view"
                 )
         }.let { layoutInflater.inflate(it, bottomSheetContainer, false) }
+
+    private fun isUdfpsAvailable(context: Context): Boolean {
+        return try {
+            val array =
+                context.resources.getIntArray(com.android.internal.R.array.config_udfps_sensor_props)
+            if (array.isNotEmpty()) {
+                true
+            } else {
+                val hasFingerprint =
+                    context.packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)
+                if (hasFingerprint) {
+                    try {
+                        val fingerprintManager =
+                            context.getSystemService(Context.FINGERPRINT_SERVICE)
+                                as FingerprintManager
+                        fingerprintManager.getSensorPropertiesInternal()
+                            .any { it.isAnyUdfpsType() }
+                    } catch (e: Exception) {
+                        false
+                    }
+                } else {
+                    false
+                }
+            }
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    private fun isUdfpsAnimationAvailable(context: Context): Boolean {
+        return try {
+            context.resources.getBoolean(R.bool.config_show_udfps_animation_customization) &&
+                isUdfpsAvailable(context)
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    private fun isUdfpsIconAvailable(context: Context): Boolean {
+        return try {
+            context.resources.getBoolean(R.bool.config_show_udfps_icon_customization) &&
+                isUdfpsAvailable(context)
+        } catch (e: Exception) {
+            false
+        }
+    }
+}
+
+@Composable
+private fun UdfpsWithDynamicTheme(content: @Composable () -> Unit) {
+    val context = LocalContext.current
+    val uiMode =
+        context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+    val isDark = uiMode == Configuration.UI_MODE_NIGHT_YES
+    val colorScheme =
+        remember(context, isDark) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (isDark) dynamicDarkColorScheme(context)
+                else dynamicLightColorScheme(context)
+            } else {
+                if (isDark) darkColorScheme() else lightColorScheme()
+            }
+        }
+    MaterialTheme(colorScheme = colorScheme) {
+        content()
+    }
 }

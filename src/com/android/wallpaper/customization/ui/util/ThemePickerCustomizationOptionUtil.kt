@@ -32,6 +32,8 @@ constructor(private val defaultCustomizationOptionUtil: DefaultCustomizationOpti
     enum class ThemePickerLockCustomizationOption : CustomizationOption {
         CLOCK,
         SHORTCUTS,
+        UDFPS_ANIMATION,
+        UDFPS_ICON,
         LOCK_SCREEN_NOTIFICATIONS,
         MORE_LOCK_SCREEN_SETTINGS,
         FONT,

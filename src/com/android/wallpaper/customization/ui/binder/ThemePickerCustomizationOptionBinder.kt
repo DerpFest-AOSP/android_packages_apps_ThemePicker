@@ -223,6 +223,15 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
             navigateToLockScreenNotificationsSettingsActivity.invoke()
         }
 
+        val optionUdfpsAnimation: View? =
+            lockScreenCustomizationOptionEntries
+                .find { it.first == ThemePickerLockCustomizationOption.UDFPS_ANIMATION }
+                ?.second
+        val optionUdfpsIcon: View? =
+            lockScreenCustomizationOptionEntries
+                .find { it.first == ThemePickerLockCustomizationOption.UDFPS_ICON }
+                ?.second
+
         val optionMoreLockScreenSettings: View? =
             lockScreenCustomizationOptionEntries
                 .find { it.first == ThemePickerLockCustomizationOption.MORE_LOCK_SCREEN_SETTINGS }
@@ -385,6 +394,17 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                 launch {
                     optionsViewModel.onCustomizeColorsClicked.collect {
                         optionColors?.setOnClickListener { _ -> it?.invoke() }
+                    }
+                }
+
+                launch {
+                    optionsViewModel.onCustomizeUdfpsAnimationClicked.collect {
+                        optionUdfpsAnimation?.setOnClickListener { _ -> it?.invoke() }
+                    }
+                }
+                launch {
+                    optionsViewModel.onCustomizeUdfpsIconClicked.collect {
+                        optionUdfpsIcon?.setOnClickListener { _ -> it?.invoke() }
                     }
                 }
 

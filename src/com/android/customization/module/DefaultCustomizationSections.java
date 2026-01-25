@@ -12,6 +12,8 @@ import androidx.lifecycle.ViewModelStoreOwner;
 import com.android.customization.model.font.FontSectionController;
 import com.android.customization.model.grid.GridOptionsManager;
 import com.android.customization.model.themedicon.ThemedIconSectionController;
+import com.android.customization.model.udfps.UdfpsAnimationSectionController;
+import com.android.customization.model.udfps.UdfpsIconSectionController;
 import com.android.customization.model.themedicon.ThemedIconSwitchProvider;
 import com.android.customization.model.themedicon.domain.interactor.ThemedIconInteractor;
 import com.android.customization.model.themedicon.domain.interactor.ThemedIconSnapshotRestorer;
@@ -196,6 +198,12 @@ public final class DefaultCustomizationSections implements CustomizationSections
                                         mNotificationSectionViewModelFactory)
                                         .get(NotificationSectionViewModel.class),
                                 lifecycleOwner));
+
+                // Udfps animation selection section.
+                sectionControllers.add(new UdfpsAnimationSectionController(sectionNavigationController));
+
+                // Udfps icon selection section.
+                sectionControllers.add(new UdfpsIconSectionController(sectionNavigationController));
 
                 // More settings section.
                 sectionControllers.add(new MoreSettingsSectionController());

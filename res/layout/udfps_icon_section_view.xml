@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: DerpFest AOSP
+     SPDX-License-Identifier: Apache-2.0
+-->
+<com.android.customization.picker.udfps.UdfpsIconSectionView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:clickable="true"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/section_horizontal_padding"
+    android:paddingVertical="@dimen/section_padding">
+
+    <TextView
+        android:id="@+id/udfps_icon_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/udfps_icon_title"
+        style="@style/SectionTitleTextStyle" />
+
+</com.android.customization.picker.udfps.UdfpsIconSectionView>
