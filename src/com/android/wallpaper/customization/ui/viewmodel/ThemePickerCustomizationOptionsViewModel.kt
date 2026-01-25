@@ -36,6 +36,8 @@ import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptio
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.CLOCK
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.FONT as LOCK_FONT
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.SHORTCUTS
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.UDFPS_ANIMATION
+import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerLockCustomizationOption.UDFPS_ICON
 import com.android.wallpaper.picker.common.preview.ui.viewmodel.WorkspacePreviewScreen
 import com.android.wallpaper.picker.customization.ui.view.ApplyButton
 import com.android.wallpaper.picker.customization.ui.view.ApplyButton.ApplyButtonState.APPLY_BUTTON_DISABLED
@@ -287,6 +289,25 @@ constructor(
                 null
             }
         }
+
+    val onCustomizeUdfpsAnimationClicked: Flow<(() -> Unit)?> =
+        selectedOption.map {
+            if (it == null) {
+                { defaultCustomizationOptionsViewModel.selectOption(UDFPS_ANIMATION) }
+            } else {
+                null
+            }
+        }
+
+    val onCustomizeUdfpsIconClicked: Flow<(() -> Unit)?> =
+        selectedOption.map {
+            if (it == null) {
+                { defaultCustomizationOptionsViewModel.selectOption(UDFPS_ICON) }
+            } else {
+                null
+            }
+        }
+
     private val isApplyInProgress: MutableStateFlow<Boolean> = MutableStateFlow(false)
     @OptIn(ExperimentalCoroutinesApi::class)
     val onApplyButtonClicked: Flow<((onComplete: () -> Unit) -> Unit)?> =
@@ -353,7 +374,10 @@ constructor(
             }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), APPLY_BUTTON_DISABLED)
 
-    val isApplyButtonVisible: Flow<Boolean> = selectedOption.map { it != null }
+    val isApplyButtonVisible: Flow<Boolean> =
+        selectedOption.map { option ->
+            option != null && option != UDFPS_ANIMATION && option != UDFPS_ICON
+        }
 
     fun isAccessibilityEnabled(context: Context): Boolean {
         return AccessibilityUtil.isAccessibilityEnabled(
