@@ -75,6 +75,7 @@ class ClockRegistryProvider(
                 "com.android.systemui.clocks.metro",
                 "com.android.systemui.clocks.numoverlap",
                 "com.android.systemui.clocks.weather",
+                "com.libremobileos.clock",
             ),
             PluginEnabler.AlwaysEnabled(),
             Executors.newSingleThreadExecutor(),
