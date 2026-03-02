@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    SPDX-FileCopyrightText: DerpFest AOSP
+    SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+
+    <!-- The revised title for the tab with a default set of color options. [CHAR_LIMIT=20]-->
+    <string name="preset_color_tab_3">Кольори DerpFest</string>
+
+    <string name="udfps_animation_title">Анімація відбитка</string>
+    <string name="udfps_animation_description">Налаштування анімації розблокування за відбитком пальця</string>
+    <string name="udfps_icon_title">Іконки відбитка</string>
+    <string name="udfps_icon_description">Налаштування іконки відбитка пальця на екрані блокування</string>
+    <string name="new_title">Нове</string>
+</resources>
