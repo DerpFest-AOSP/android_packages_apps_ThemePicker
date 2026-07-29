@@ -17,9 +17,11 @@
 package com.android.wallpaper.customization.ui.binder
 
 import android.app.Activity
+import android.content.ComponentCallbacks
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.provider.Settings
 import android.view.View
@@ -34,6 +36,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -152,6 +155,41 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
 
         val allCustomizationOptionEntries =
             lockScreenCustomizationOptionEntries + homeScreenCustomizationOptionEntries
+        fun refreshOptionFonts() {
+            allCustomizationOptionEntries.forEach { (_, optionEntry) ->
+                optionEntry
+                    .findViewById<TextView>(R.id.option_entry_title)
+                    ?.setTextAppearance(R.style.CustomizationOptionEntryTitleTextStyle)
+                optionEntry
+                    .findViewById<TextView>(R.id.option_entry_description)
+                    ?.setTextAppearance(R.style.CustomizationOptionEntrySubtitleTextStyle)
+            }
+        }
+
+        var assetsSeq = view.resources.configuration.assetsSeq
+        val configurationCallback =
+            object : ComponentCallbacks {
+                override fun onConfigurationChanged(newConfig: Configuration) {
+                    if (newConfig.assetsSeq != assetsSeq) {
+                        assetsSeq = newConfig.assetsSeq
+                        // The overlay has now updated this Activity's resources, so the styles
+                        // resolve the newly configured font-family resources.
+                        view.post(::refreshOptionFonts)
+                    }
+                }
+
+                override fun onLowMemory() = Unit
+            }
+        view.context.registerComponentCallbacks(configurationCallback)
+        lifecycleOwner.lifecycle.addObserver(
+            object : DefaultLifecycleObserver {
+                override fun onDestroy(owner: LifecycleOwner) {
+                    view.context.unregisterComponentCallbacks(configurationCallback)
+                    owner.lifecycle.removeObserver(this)
+                }
+            }
+        )
+
         allCustomizationOptionEntries.forEach { (_, view) ->
             ColorUpdateBinder.bind(
                 setColor = { color ->
