@@ -13,4 +13,8 @@
     <string name="udfps_icon_title">Fingerprint icons</string>
     <string name="udfps_icon_description">Customize the fingerprint icon on lock screen</string>
     <string name="new_title">New</string>
+
+    <string name="global_icon_shape_title">Apply icon shape globally</string>
+    <string name="global_icon_shape_description">Use this shape in app launch screens and system adaptive icons</string>
+    <string name="global_icon_shape_apply_failed">Couldn\'t apply icon shape globally. Your current setting was kept.</string>
 </resources>

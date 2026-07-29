@@ -26,6 +26,7 @@ import androidx.test.filters.SmallTest
 import com.android.customization.model.grid.FakeShapeGridManager
 import com.android.customization.module.logging.TestThemesUserEventLogger
 import com.android.customization.picker.grid.data.repository.ShapeRepository
+import com.android.customization.picker.icon.data.GlobalIconShapeManager
 import com.android.customization.picker.icon.data.repository.FakeIconStyleRepository
 import com.android.customization.picker.icon.domain.interactor.AppIconInteractor
 import com.android.customization.picker.icon.shared.model.ThemePickerIconStyle
@@ -78,8 +79,21 @@ class AppIconPickerViewModelTest {
     fun setUp() {
         hiltRule.inject()
         InjectorProvider.setInjector(testInjector)
+        // Robolectric does not provide a functional system OverlayManager. Existing ViewModel
+        // behavior tests do not need to create an FRRO, so keep the global projection disabled.
+        appContext
+            .getSharedPreferences("global_icon_shape", Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean("enabled", false)
+            .commit()
         underTest =
-            AppIconPickerViewModel(appContext, interactor, logger, testScope.backgroundScope)
+            AppIconPickerViewModel(
+                appContext,
+                interactor,
+                GlobalIconShapeManager(appContext, shapeManager, Dispatchers.Unconfined),
+                logger,
+                testScope.backgroundScope,
+            )
         shapeManager.setShapeOptions(FakeShapeGridManager.DEFAULT_SHAPE_OPTION_LIST)
     }
 
@@ -220,6 +234,40 @@ class AppIconPickerViewModelTest {
             toggleThemedIcon()?.invoke()
 
             assertThat(previewingIsThemeIconEnabled()).isTrue()
+        }
+
+    @Test
+    fun globalIconShapeEnabled_shouldDefaultToTrue() =
+        testScope.runTest {
+            appContext
+                .getSharedPreferences("global_icon_shape", Context.MODE_PRIVATE)
+                .edit()
+                .remove("enabled")
+                .commit()
+            val manager =
+                GlobalIconShapeManager(appContext, shapeManager, Dispatchers.Unconfined)
+            val isEnabled = collectLastValue(manager.isEnabled)
+
+            assertThat(isEnabled()).isTrue()
+        }
+
+    @Test
+    fun previewingGlobalIconShapeEnabled_shouldReflectDisabledPreference() =
+        testScope.runTest {
+            val isEnabled = collectLastValue(underTest.previewingGlobalIconShapeEnabled)
+
+            assertThat(isEnabled()).isFalse()
+        }
+
+    @Test
+    fun previewingGlobalIconShapeEnabled_shouldToggleFromDisabledPreference() =
+        testScope.runTest {
+            val toggle = collectLastValue(underTest.toggleGlobalIconShape)
+            val isEnabled = collectLastValue(underTest.previewingGlobalIconShapeEnabled)
+
+            toggle()?.invoke()
+
+            assertThat(isEnabled()).isTrue()
         }
 
     @Test
