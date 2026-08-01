@@ -26,5 +26,6 @@
         <permission name="android.permission.WRITE_SECURE_SETTINGS"/>
         <permission name="android.permission.SET_WALLPAPER_DIM_AMOUNT"/>
         <permission name="android.permission.UPDATE_THEME_SETTINGS"/>
+        <permission name="com.google.android.apps.aiwallpapers.CONFIGURE_WALLPAPERS"/>
     </privapp-permissions>
 </permissions>
