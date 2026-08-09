@@ -402,11 +402,11 @@ constructor(
                     val targetShapeKey = overridingShapeKey ?: selectedShape.key.value
                     val targetGlobalIconShapeEnabled =
                         overridingGlobalIconShapeEnabled ?: currentGlobalIconShapeEnabled
+                    val globalIconShapeNeedsApply =
+                        globalIconShapeNeedsUpdate ||
+                            (shapeNeedsUpdate && targetGlobalIconShapeEnabled)
                     val globalIconShapeApplied =
-                        if (
-                            globalIconShapeNeedsUpdate ||
-                                (shapeNeedsUpdate && targetGlobalIconShapeEnabled)
-                        ) {
+                        if (globalIconShapeNeedsApply) {
                             val result =
                                 globalIconShapeManager.setEnabled(
                                     targetGlobalIconShapeEnabled,
@@ -441,6 +441,9 @@ constructor(
                             interactor.applyShouldShowAppLabels(it)
                             // TODO(b/456634299): log apply should show app labels
                         }
+                    }
+                    if (globalIconShapeApplied && shapeNeedsUpdate && targetGlobalIconShapeEnabled) {
+                        showGlobalIconShapeRestartRequired()
                     }
                 }
             } else {
@@ -487,11 +490,11 @@ constructor(
                     val targetShapeKey = overridingShapeKey ?: selectedShape.key.value
                     val targetGlobalIconShapeEnabled =
                         overridingGlobalIconShapeEnabled ?: currentGlobalIconShapeEnabled
+                    val globalIconShapeNeedsApply =
+                        globalIconShapeNeedsUpdate ||
+                            (shapeNeedsUpdate && targetGlobalIconShapeEnabled)
                     val globalIconShapeApplied =
-                        if (
-                            globalIconShapeNeedsUpdate ||
-                                (shapeNeedsUpdate && targetGlobalIconShapeEnabled)
-                        ) {
+                        if (globalIconShapeNeedsApply) {
                             val result =
                                 globalIconShapeManager.setEnabled(
                                     targetGlobalIconShapeEnabled,
@@ -541,6 +544,9 @@ constructor(
                             interactor.applyShouldShowAppLabels(it)
                         }
                     }
+                    if (globalIconShapeApplied && shapeNeedsUpdate && targetGlobalIconShapeEnabled) {
+                        showGlobalIconShapeRestartRequired()
+                    }
                 }
             } else {
                 null
@@ -568,6 +574,15 @@ constructor(
         Toast.makeText(
                 applicationContext,
                 R.string.global_icon_shape_apply_failed,
+                Toast.LENGTH_LONG,
+            )
+            .show()
+    }
+
+    private fun showGlobalIconShapeRestartRequired() {
+        Toast.makeText(
+                applicationContext,
+                R.string.global_icon_shape_restart_required,
                 Toast.LENGTH_LONG,
             )
             .show()
