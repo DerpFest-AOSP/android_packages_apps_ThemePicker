@@ -25,9 +25,12 @@ import android.stats.style.StyleEnums.APP_ICON_STYLE_THEMED
 import android.stats.style.StyleEnums.APP_ICON_STYLE_UNSPECIFIED
 import com.android.customization.module.CustomizationPreferences
 import com.android.customization.module.logging.ThemesUserEventLoggerImpl.Companion.TIMEOUT
+import com.android.customization.picker.icon.shared.model.IconPackStyle
+import com.android.customization.picker.icon.shared.model.IconPackStyleModel
 import com.android.customization.picker.icon.shared.model.IconStyle
 import com.android.customization.picker.icon.shared.model.IconStyleModel
 import com.android.customization.picker.icon.shared.model.ThemePickerIconStyle
+import com.android.customization.picker.iconpack.data.repository.IconPackRepository
 import com.android.themepicker.R
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.model.Screen
@@ -45,6 +48,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
@@ -59,6 +63,7 @@ class ThemePickerIconStyleRepository
 constructor(
     @ApplicationContext private val appContext: Context,
     private val contentResolver: ContentResolver,
+    private val iconPackRepository: IconPackRepository,
     @BackgroundDispatcher private val backgroundScope: CoroutineScope,
 ) : IconStyleRepository {
     private val metadataKey = appContext.getString(R.string.themed_icon_metadata_key)
@@ -121,22 +126,31 @@ constructor(
 
     override val iconStyleModels: Flow<List<IconStyleModel>> =
         isCustomizationAvailable.map { isThemedIconAvailable ->
-            ThemePickerIconStyle.entries
-                .toList()
-                // Filter entries if themed icon is not available
-                .filter { isThemedIconAvailable || it != ThemePickerIconStyle.MONOCHROME }
-                .map { it.toIconStyleModel() }
+            buildList {
+                add(ThemePickerIconStyle.DEFAULT.toIconStyleModel())
+                if (isThemedIconAvailable) {
+                    add(ThemePickerIconStyle.MONOCHROME.toIconStyleModel())
+                }
+                iconPackRepository.installedIconPacks
+                    .filter { it.packageName.isNotEmpty() }
+                    .forEach { pack ->
+                        add(
+                            IconPackStyleModel(
+                                iconStyle = IconPackStyle(pack.packageName),
+                                name = Text.Loaded(pack.name),
+                                packIcon = pack.icon,
+                            )
+                        )
+                    }
+            }
         }
 
-    private fun IconStyle.toIconStyleModel(): IconStyleModel {
-        return IconStyleModel(iconStyle = this, name = Text.Resource(nameResId))
-    }
-
     override val selectedIconStyle =
-        isThemedIconActivated.map {
-            when (it) {
-                true -> ThemePickerIconStyle.MONOCHROME
-                false -> ThemePickerIconStyle.DEFAULT
+        combine(isThemedIconActivated, iconPackRepository.selectedIconPack) { themed, pack ->
+            when {
+                !pack.isNullOrEmpty() -> IconPackStyle(pack)
+                themed -> ThemePickerIconStyle.MONOCHROME
+                else -> ThemePickerIconStyle.DEFAULT
             }
         }
 
@@ -182,6 +196,10 @@ constructor(
         return !shouldHideLabels
     }
 
+    private fun IconStyle.toIconStyleModel(): IconStyleModel {
+        return IconStyleModel(iconStyle = this, name = Text.Resource(nameResId))
+    }
+
     override suspend fun setThemedIconEnabled(enabled: Boolean) {
         previewUtilsFlow.first()?.let {
             val values = ContentValues()
@@ -197,16 +215,39 @@ constructor(
 
     override suspend fun setIconStyle(iconStyle: IconStyle): Boolean {
         previewUtilsFlow.first()?.let {
-            val values = ContentValues()
-            values.put(COL_ICON_THEMED_VALUE, iconStyle == ThemePickerIconStyle.MONOCHROME)
-            val rowsUpdated =
-                contentResolver.update(
-                    it.getUri(ICON_THEMED),
-                    values,
-                    /* where= */ null,
-                    /* selectionArgs= */ null,
-                )
-            return rowsUpdated > 0
+            when (iconStyle) {
+                is IconPackStyle -> {
+                    setThemedIconEnabled(false)
+                    return iconPackRepository.setIconPack(iconStyle.packageName)
+                }
+                ThemePickerIconStyle.MONOCHROME -> {
+                    iconPackRepository.setIconPack("")
+                    val values = ContentValues()
+                    values.put(COL_ICON_THEMED_VALUE, true)
+                    val rowsUpdated =
+                        contentResolver.update(
+                            it.getUri(ICON_THEMED),
+                            values,
+                            /* where= */ null,
+                            /* selectionArgs= */ null,
+                        )
+                    return rowsUpdated > 0
+                }
+                ThemePickerIconStyle.DEFAULT -> {
+                    iconPackRepository.setIconPack("")
+                    val values = ContentValues()
+                    values.put(COL_ICON_THEMED_VALUE, false)
+                    val rowsUpdated =
+                        contentResolver.update(
+                            it.getUri(ICON_THEMED),
+                            values,
+                            /* where= */ null,
+                            /* selectionArgs= */ null,
+                        )
+                    return rowsUpdated > 0
+                }
+                else -> return false
+            }
         }
         return false
     }

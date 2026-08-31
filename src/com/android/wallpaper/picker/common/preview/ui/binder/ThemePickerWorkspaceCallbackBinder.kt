@@ -30,6 +30,7 @@ import com.android.customization.model.grid.DefaultShapeGridManager.Companion.CO
 import com.android.customization.model.grid.DefaultShapeGridManager.Companion.COL_SHAPE_KEY
 import com.android.customization.picker.clock.ui.view.ClockViewFactory
 import com.android.customization.picker.color.data.util.MaterialColorsGenerator
+import com.android.customization.picker.icon.shared.model.IconPackStyle
 import com.android.customization.picker.icon.shared.model.ThemePickerIconStyle
 import com.android.systemui.shared.keyguard.shared.model.KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_END
 import com.android.systemui.shared.keyguard.shared.model.KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_START
@@ -315,6 +316,41 @@ constructor(
 
                             if (BaseFlags.get(context).isExtendibleThemeManager()) {
                                 launch {
+                                    var hasEmittedPackOverride = false
+                                    viewModel.appIconPickerViewModel.iconStyleOverride.collect {
+                                        override ->
+                                        if (override != null) {
+                                            hasEmittedPackOverride = true
+                                            val packValue =
+                                                (override as? IconPackStyle)?.packageName
+                                                    ?: SYSTEM_ICONS_SENTINEL
+                                            safeSendMessage(
+                                                workspaceCallback,
+                                                MESSAGE_ID_UPDATE_COMMAND,
+                                                Bundle().apply {
+                                                    putString(
+                                                        KEY_UPDATE_METHOD,
+                                                        METHOD_SET_ICON_PACK,
+                                                    )
+                                                    putString(KEY_ICON_PACK_VALUE, packValue)
+                                                },
+                                            )
+                                        } else if (hasEmittedPackOverride) {
+                                            safeSendMessage(
+                                                workspaceCallback,
+                                                MESSAGE_ID_UPDATE_COMMAND,
+                                                Bundle().apply {
+                                                    putString(
+                                                        KEY_UPDATE_METHOD,
+                                                        METHOD_SET_ICON_PACK,
+                                                    )
+                                                    putString(KEY_ICON_PACK_VALUE, "")
+                                                },
+                                            )
+                                        }
+                                    }
+                                }
+                                launch {
                                     viewModel.appIconPickerViewModel.previewingIconStyle.collect {
                                         safeSendMessage(
                                             workspaceCallback,
@@ -394,6 +430,9 @@ constructor(
         const val KEY_UPDATE_METHOD = "update_method"
         private const val METHOD_SET_WORKSPACE_ITEMS_LABEL_HIDDEN =
             "/set_workspace_items_label_hidden"
+        private const val METHOD_SET_ICON_PACK = "/icon_pack"
+        private const val KEY_ICON_PACK_VALUE = "icon_pack_value"
+        private const val SYSTEM_ICONS_SENTINEL = "system_icons"
 
         fun safeSendMessage(workspaceCallback: Message, what: Int, data: Bundle) {
             try {

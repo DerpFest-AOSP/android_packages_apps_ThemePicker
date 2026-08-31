@@ -22,6 +22,7 @@ import android.view.View
 import android.widget.ImageView
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
+import com.android.customization.picker.icon.shared.model.IconPackStyleModel
 import com.android.customization.picker.icon.shared.model.IconStyle
 import com.android.customization.picker.icon.shared.model.IconStyleModel
 import com.android.customization.picker.icon.shared.model.ThemePickerIconStyle
@@ -111,6 +112,9 @@ constructor(@ApplicationContext private val context: Context) : IconStyleViewUti
     }
 
     override fun getIcon(iconStyleModel: IconStyleModel?, shapePath: String?): Icon {
+        if (iconStyleModel is IconPackStyleModel && iconStyleModel.packIcon != null) {
+            return Icon.Loaded(drawable = iconStyleModel.packIcon, contentDescription = null)
+        }
         val previewIconPackageName = context.resources.getString(R.string.camera_package)
         val appIconDrawable = ShapeIconViewBinder.loadAppIcon(context, previewIconPackageName)
         return Icon.Loaded(

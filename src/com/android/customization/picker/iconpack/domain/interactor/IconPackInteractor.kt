@@ -18,7 +18,7 @@ constructor(
 
     val selectedIconPack: Flow<String?> = repository.selectedIconPack
 
-    suspend fun setIconPack(packageName: String) {
-        repository.setIconPack(packageName)
+    suspend fun setIconPack(packageName: String): Boolean {
+        return repository.setIconPack(packageName)
     }
 }

@@ -9,5 +9,5 @@ interface IconPackRepository {
 
     val selectedIconPack: Flow<String?>
 
-    suspend fun setIconPack(packageName: String)
+    suspend fun setIconPack(packageName: String): Boolean
 }

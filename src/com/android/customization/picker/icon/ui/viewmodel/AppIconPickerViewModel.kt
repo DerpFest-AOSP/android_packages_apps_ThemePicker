@@ -46,6 +46,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filterNotNull
@@ -147,6 +148,7 @@ constructor(
     //// Style
     val selectedIconStyle = interactor.selectedIconStyle
     private val overridingIconStyle: MutableStateFlow<IconStyle?> = MutableStateFlow(null)
+    val iconStyleOverride: StateFlow<IconStyle?> = overridingIconStyle
     val previewingIconStyle =
         combine(selectedIconStyle, overridingIconStyle) { selected, overriding ->
             overriding ?: selected
@@ -335,9 +337,7 @@ constructor(
             val selectedIconStyleModel = iconStylesModels.find { it.iconStyle == selectedIconStyle }
             val appIconThemeString =
                 if (isIconStyleAvailable)
-                    selectedIconStyleModel?.iconStyle?.nameResId?.let {
-                        applicationContext.getString(it)
-                    }
+                    selectedIconStyleModel?.name?.asString(applicationContext)
                 else null
             AppIconPickerSummaryViewModel2(
                 description =

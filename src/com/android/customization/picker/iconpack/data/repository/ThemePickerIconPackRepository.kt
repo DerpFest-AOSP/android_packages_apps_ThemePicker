@@ -100,11 +100,11 @@ constructor(
                 initialValue = null,
             )
 
-    override suspend fun setIconPack(packageName: String) {
+    override suspend fun setIconPack(packageName: String): Boolean {
         val utils = previewUtilsFlow.first()
         if (utils == null) {
             Log.e("IconPackRepository", "Cannot set icon pack: PreviewUtils is null, content provider not available")
-            return
+            return false
         }
         val uri = utils.getUri(ICON_PACK_PATH)
         val values = ContentValues()
@@ -112,8 +112,10 @@ constructor(
         val updated = contentResolver.update(uri, values, null, null)
         if (updated > 0) {
             Log.i("IconPackRepository", "Icon pack set to '$packageName' ($updated rows updated)")
+            return true
         } else {
             Log.e("IconPackRepository", "Failed to set icon pack: update returned $updated for URI $uri")
+            return false
         }
     }
 
