@@ -17,14 +17,18 @@
 package com.android.wallpaper.customization.ui.binder
 
 import android.view.View.MeasureSpec
+import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.widget.LinearLayout
 import android.widget.Toolbar
 import androidx.core.animation.Animator
 import androidx.core.animation.ValueAnimator
 import androidx.core.graphics.ColorUtils
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.isInvisible
+import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -74,6 +78,20 @@ constructor(
             lifecycleOwner,
             onNavBack,
         )
+
+        val initialPaddingTop = toolbarContainer.paddingTop
+        ViewCompat.setOnApplyWindowInsetsListener(toolbarContainer) { view, windowInsets ->
+            val statusBarInset = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+            (view.layoutParams as? ViewGroup.MarginLayoutParams)?.let { lp ->
+                if (lp.topMargin != 0) {
+                    lp.topMargin = 0
+                    view.layoutParams = lp
+                }
+            }
+            view.updatePadding(top = initialPaddingTop + statusBarInset)
+            windowInsets
+        }
+        ViewCompat.requestApplyInsets(toolbarContainer)
 
         val toolbar: Toolbar = toolbarContainer.requireViewById(R.id.toolbar)
         val applyButton: ApplyButton = toolbarContainer.requireViewById(R.id.apply_button)
