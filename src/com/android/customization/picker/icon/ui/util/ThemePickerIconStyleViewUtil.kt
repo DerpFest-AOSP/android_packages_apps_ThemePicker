@@ -17,7 +17,9 @@
 package com.android.customization.picker.icon.ui.util
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.AdaptiveIconDrawable
+import android.provider.MediaStore
 import android.view.View
 import android.widget.ImageView
 import androidx.lifecycle.LifecycleOwner
@@ -115,23 +117,49 @@ constructor(@ApplicationContext private val context: Context) : IconStyleViewUti
         if (iconStyleModel is IconPackStyleModel && iconStyleModel.packIcon != null) {
             return Icon.Loaded(drawable = iconStyleModel.packIcon, contentDescription = null)
         }
-        val previewIconPackageName = context.resources.getString(R.string.camera_package)
-        val appIconDrawable = ShapeIconViewBinder.loadAppIcon(context, previewIconPackageName)
         return Icon.Loaded(
             drawable =
                 ShapeTileDrawable(
                     context = context,
                     path = shapePath,
-                    icon = appIconDrawable as? AdaptiveIconDrawable,
+                    // A fresh instance per option, they set their own bounds on it.
+                    icon = previewIconPackage?.let(::loadAdaptiveIcon),
                     isThemed = iconStyleModel?.iconStyle == ThemePickerIconStyle.MONOCHROME,
                 ),
             contentDescription = null,
         )
     }
 
+    /**
+     * App whose icon is drawn as an example on the options that don't bring their own icon.
+     * [R.string.camera_package] is not installed on every device, and an option without an adaptive
+     * icon renders as an empty tile, so fall back to any camera app that is installed. The
+     * monochrome option only draws the monochrome layer, so prefer an icon that has one.
+     */
+    private val previewIconPackage: String? by lazy {
+        val icons =
+            previewIconCandidates().mapNotNull { pkg -> loadAdaptiveIcon(pkg)?.let { pkg to it } }
+        (icons.firstOrNull { (_, icon) -> icon.monochrome != null } ?: icons.firstOrNull())?.first
+    }
+
+    private fun previewIconCandidates(): Set<String> = buildSet {
+        add(context.resources.getString(R.string.camera_package))
+        context.packageManager
+            .queryIntentActivities(Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA), 0)
+            .mapTo(this) { it.activityInfo.packageName }
+        add(SETTINGS_PACKAGE)
+    }
+
+    private fun loadAdaptiveIcon(packageName: String) =
+        ShapeIconViewBinder.loadAppIcon(context, packageName) as? AdaptiveIconDrawable
+
     override fun bindListDivider(
         options: List<OptionItemViewModel2<IconStyleModel>>,
         list: RecyclerView,
         optionIconHeightPx: Int?,
     ) {}
+
+    companion object {
+        private const val SETTINGS_PACKAGE = "com.android.settings"
+    }
 }
