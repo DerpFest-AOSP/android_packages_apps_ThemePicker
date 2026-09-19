@@ -99,27 +99,34 @@ constructor(
     private val selectedQuickAffordancesGroupBySlotId =
         quickAffordanceInteractor.selections
             .map { it.groupBy { selectionModel -> selectionModel.slotId } }
-            .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
+            // Start immediately so shortcut list construction cannot hang waiting for the first
+            // selection query from SystemUI.
+            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 
     private val _selectedQuickAffordanceIndex: MutableStateFlow<Int> = MutableStateFlow(0)
     val selectedQuickAffordanceIndex: StateFlow<Int> = _selectedQuickAffordanceIndex.asStateFlow()
 
-    val previewingQuickAffordances =
+    val previewingQuickAffordances: StateFlow<Map<String, String>> =
         combine(
-            quickAffordanceInteractor.slots,
-            overridingQuickAffordances,
-            selectedQuickAffordancesGroupBySlotId,
-        ) { slots, overridingQuickAffordances, selectedQuickAffordancesGroupBySlotId ->
-            slots.associate { slot ->
-                val selectedAffordanceId =
-                    overridingQuickAffordances[slot.id]
-                        ?: selectedQuickAffordancesGroupBySlotId[slot.id]
-                            ?.firstOrNull()
-                            ?.affordanceId
-                        ?: KEYGUARD_QUICK_AFFORDANCE_ID_NONE
-                slot.id to selectedAffordanceId
+                quickAffordanceInteractor.slots,
+                overridingQuickAffordances,
+                selectedQuickAffordancesGroupBySlotId,
+            ) { slots, overridingQuickAffordances, selectedQuickAffordancesGroupBySlotId ->
+                slots.associate { slot ->
+                    val selectedAffordanceId =
+                        overridingQuickAffordances[slot.id]
+                            ?: selectedQuickAffordancesGroupBySlotId[slot.id]
+                                ?.firstOrNull()
+                                ?.affordanceId
+                            ?: KEYGUARD_QUICK_AFFORDANCE_ID_NONE
+                    slot.id to selectedAffordanceId
+                }
             }
-        }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = emptyMap(),
+            )
 
     fun resetPreview() {
         overridingQuickAffordances.tryEmit(emptyMap())
@@ -201,7 +208,11 @@ constructor(
                         previewingQuickAffordances[selectedSlotId] ==
                             KEYGUARD_QUICK_AFFORDANCE_ID_NONE
                     }
-                    .stateIn(viewModelScope)
+                    .stateIn(
+                        scope = viewModelScope,
+                        started = SharingStarted.WhileSubscribed(),
+                        initialValue = true,
+                    )
             listOf(
                 none(
                     slotId = selectedSlotId,
@@ -231,12 +242,20 @@ constructor(
                                 previewingQuickAffordances ->
                                 previewingQuickAffordances[selectedSlotId] == affordance.id
                             }
-                            .stateIn(viewModelScope)
+                            .stateIn(
+                                scope = viewModelScope,
+                                started = SharingStarted.WhileSubscribed(),
+                                initialValue = false,
+                            )
                     OptionItemViewModel2<Icon>(
                         key =
                             selectedSlotId
                                 .map { slotId -> "$slotId::${affordance.id}" }
-                                .stateIn(viewModelScope),
+                                .stateIn(
+                                    scope = viewModelScope,
+                                    started = SharingStarted.WhileSubscribed(),
+                                    initialValue = "${selectedSlotId.value}::${affordance.id}",
+                                ),
                         payload = Icon.Loaded(drawable = affordanceIcon, contentDescription = null),
                         text = Text.Loaded(affordance.name),
                         isSelected = isSelectedFlow,
@@ -401,7 +420,14 @@ constructor(
         onSelected: Flow<(() -> Unit)?>,
     ): OptionItemViewModel2<Icon> {
         return OptionItemViewModel2<Icon>(
-            key = slotId.map { "$it::none" }.stateIn(viewModelScope),
+            key =
+                slotId
+                    .map { "$it::none" }
+                    .stateIn(
+                        scope = viewModelScope,
+                        started = SharingStarted.WhileSubscribed(),
+                        initialValue = "${slotId.value}::none",
+                    ),
             payload = Icon.Resource(res = R.drawable.link_off, contentDescription = null),
             text = Text.Resource(res = R.string.keyguard_affordance_none),
             isSelected = isSelected,
@@ -432,7 +458,12 @@ constructor(
     }
 
     private suspend fun getAffordanceIcon(@DrawableRes iconResourceId: Int): Drawable {
-        return quickAffordanceInteractor.getAffordanceIcon(iconResourceId)
+        return try {
+            quickAffordanceInteractor.getAffordanceIcon(iconResourceId)
+        } catch (_: Exception) {
+            // A single missing SystemUI icon must not abort the whole shortcut list.
+            applicationContext.getDrawable(R.drawable.link_off)!!
+        }
     }
 
     val summary: Flow<KeyguardQuickAffordanceSummaryViewModel> =
