@@ -186,6 +186,24 @@ constructor(
     val toggleShouldShowAppLabels: Flow<() -> Unit> =
         previewingShouldShowAppLabels.map { { overridingShouldShowAppLabels.value = !it } }
 
+    private val overridingShouldShowAppDrawerLabels = MutableStateFlow<Boolean?>(null)
+    private val shouldShowAppDrawerLabels: SharedFlow<Boolean> =
+        interactor.shouldShowAppDrawerLabels.shareIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            replay = 1,
+        )
+    val previewingShouldShowAppDrawerLabels: Flow<Boolean> =
+        combine(overridingShouldShowAppDrawerLabels, shouldShowAppDrawerLabels) {
+            overridingShowAppDrawerLabels,
+            showAppDrawerLabels ->
+            overridingShowAppDrawerLabels ?: showAppDrawerLabels
+        }
+    val toggleShouldShowAppDrawerLabels: Flow<() -> Unit> =
+        previewingShouldShowAppDrawerLabels.map {
+            { overridingShouldShowAppDrawerLabels.value = !it }
+        }
+
     enum class Tab {
         STYLE,
         SHAPE,
@@ -370,6 +388,8 @@ constructor(
             isThemedIconEnabled,
             overridingShouldShowAppLabels,
             shouldShowAppLabels,
+            overridingShouldShowAppDrawerLabels,
+            shouldShowAppDrawerLabels,
             combine(overridingGlobalIconShapeEnabled, isGlobalIconShapeEnabled, ::Pair),
         ) { args: Array<Any?> ->
             val overridingShapeKey = args[0] as String?
@@ -378,7 +398,9 @@ constructor(
             val currentIsThemedIconEnabled = args[3] as Boolean
             val overridingShouldShowAppLabels = args[4] as Boolean?
             val shouldShowAppLabels = args[5] as Boolean
-            val globalIconShapeState = args[6] as Pair<Boolean?, Boolean>
+            val overridingShouldShowAppDrawerLabels = args[6] as Boolean?
+            val shouldShowAppDrawerLabels = args[7] as Boolean
+            val globalIconShapeState = args[8] as Pair<Boolean?, Boolean>
             val (overridingGlobalIconShapeEnabled, currentGlobalIconShapeEnabled) =
                 globalIconShapeState
             val shapeNeedsUpdate =
@@ -389,6 +411,9 @@ constructor(
             val shouldShowAppLabelsNeedsUpdate =
                 overridingShouldShowAppLabels != null &&
                     overridingShouldShowAppLabels != shouldShowAppLabels
+            val shouldShowAppDrawerLabelsNeedsUpdate =
+                overridingShouldShowAppDrawerLabels != null &&
+                    overridingShouldShowAppDrawerLabels != shouldShowAppDrawerLabels
             val globalIconShapeNeedsUpdate =
                 overridingGlobalIconShapeEnabled != null &&
                     overridingGlobalIconShapeEnabled != currentGlobalIconShapeEnabled
@@ -396,6 +421,7 @@ constructor(
                 shapeNeedsUpdate ||
                     themedIconNeedsUpdate ||
                     shouldShowAppLabelsNeedsUpdate ||
+                    shouldShowAppDrawerLabelsNeedsUpdate ||
                     globalIconShapeNeedsUpdate
             ) {
                 {
@@ -442,6 +468,11 @@ constructor(
                             // TODO(b/456634299): log apply should show app labels
                         }
                     }
+                    if (globalIconShapeApplied && shouldShowAppDrawerLabelsNeedsUpdate) {
+                        overridingShouldShowAppDrawerLabels?.let {
+                            interactor.applyShouldShowAppDrawerLabels(it)
+                        }
+                    }
                     if (globalIconShapeApplied && shapeNeedsUpdate && targetGlobalIconShapeEnabled) {
                         showGlobalIconShapeRestartRequired()
                     }
@@ -459,6 +490,8 @@ constructor(
             selectedIconStyle,
             overridingShouldShowAppLabels,
             shouldShowAppLabels,
+            overridingShouldShowAppDrawerLabels,
+            shouldShowAppDrawerLabels,
             combine(overridingGlobalIconShapeEnabled, isGlobalIconShapeEnabled, ::Pair),
         ) { args: Array<Any?> ->
             val overridingShapeKey = args[0] as String?
@@ -467,7 +500,9 @@ constructor(
             val currentIconStyle = args[3] as IconStyle
             val overridingShouldShowAppLabels = args[4] as Boolean?
             val shouldShowAppLabels = args[5] as Boolean
-            val globalIconShapeState = args[6] as Pair<Boolean?, Boolean>
+            val overridingShouldShowAppDrawerLabels = args[6] as Boolean?
+            val shouldShowAppDrawerLabels = args[7] as Boolean
+            val globalIconShapeState = args[8] as Pair<Boolean?, Boolean>
             val (overridingGlobalIconShapeEnabled, currentGlobalIconShapeEnabled) =
                 globalIconShapeState
             val shapeNeedsUpdate =
@@ -477,6 +512,9 @@ constructor(
             val showAppLabelsNeedsUpdate =
                 overridingShouldShowAppLabels != null &&
                     overridingShouldShowAppLabels != shouldShowAppLabels
+            val showAppDrawerLabelsNeedsUpdate =
+                overridingShouldShowAppDrawerLabels != null &&
+                    overridingShouldShowAppDrawerLabels != shouldShowAppDrawerLabels
             val globalIconShapeNeedsUpdate =
                 overridingGlobalIconShapeEnabled != null &&
                     overridingGlobalIconShapeEnabled != currentGlobalIconShapeEnabled
@@ -484,6 +522,7 @@ constructor(
                 shapeNeedsUpdate ||
                     styleNeedsUpdate ||
                     showAppLabelsNeedsUpdate ||
+                    showAppDrawerLabelsNeedsUpdate ||
                     globalIconShapeNeedsUpdate
             ) {
                 {
@@ -544,6 +583,11 @@ constructor(
                             interactor.applyShouldShowAppLabels(it)
                         }
                     }
+                    if (globalIconShapeApplied && showAppDrawerLabelsNeedsUpdate) {
+                        overridingShouldShowAppDrawerLabels?.let {
+                            interactor.applyShouldShowAppDrawerLabels(it)
+                        }
+                    }
                     if (globalIconShapeApplied && shapeNeedsUpdate && targetGlobalIconShapeEnabled) {
                         showGlobalIconShapeRestartRequired()
                     }
@@ -557,6 +601,7 @@ constructor(
         overridingShapeKey.value = null
         overridingIsThemedIconEnabled.value = null
         overridingShouldShowAppLabels.value = null
+        overridingShouldShowAppDrawerLabels.value = null
         overridingGlobalIconShapeEnabled.value = null
         _selectedTab.value = Tab.STYLE
     }
@@ -565,6 +610,7 @@ constructor(
         overridingShapeKey.value = null
         overridingIconStyle.value = null
         overridingShouldShowAppLabels.value = null
+        overridingShouldShowAppDrawerLabels.value = null
         overridingGlobalIconShapeEnabled.value = null
         _selectedTab.value = Tab.STYLE
     }

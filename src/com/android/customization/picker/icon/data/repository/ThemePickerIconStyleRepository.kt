@@ -177,10 +177,13 @@ constructor(
         return isEnabled
     }
 
-    private fun getShouldShowAppLabels(previewUtils: PreviewUtils): Boolean {
+    private fun getShouldShowAppLabels(
+        previewUtils: PreviewUtils,
+        hiddenLabelsPath: String,
+    ): Boolean {
         val cursor =
             contentResolver.query(
-                previewUtils.getUri(HIDE_APP_LABELS),
+                previewUtils.getUri(hiddenLabelsPath),
                 /* projection= */ null,
                 /* selection= */ null,
                 /* selectionArgs= */ null,
@@ -263,7 +266,10 @@ constructor(
         }
     }
 
-    override val shouldShowAppLabels: Flow<Boolean> =
+    private fun observeShouldShowAppLabels(
+        hiddenLabelsPath: String,
+        setHiddenLabelsPath: String,
+    ): Flow<Boolean> =
         previewUtilsFlow
             .flatMapLatest {
                 callbackFlow {
@@ -272,16 +278,16 @@ constructor(
                         val contentObserver =
                             object : ContentObserver(null) {
                                 override fun onChange(selfChange: Boolean) {
-                                    trySend(getShouldShowAppLabels(it))
+                                    trySend(getShouldShowAppLabels(it, hiddenLabelsPath))
                                 }
                             }
                         contentResolver.registerContentObserver(
-                            it.getUri(SET_HIDE_APP_LABELS),
+                            it.getUri(setHiddenLabelsPath),
                             /* notifyForDescendants= */ true,
                             contentObserver,
                         )
 
-                        trySend(getShouldShowAppLabels(it))
+                        trySend(getShouldShowAppLabels(it, hiddenLabelsPath))
 
                         disposableHandle = DisposableHandle {
                             contentResolver.unregisterContentObserver(contentObserver)
@@ -296,18 +302,33 @@ constructor(
                 initialValue = false,
             )
 
-    override suspend fun setShouldShowAppLabels(shouldShowAppLabels: Boolean) {
+    override val shouldShowAppLabels: Flow<Boolean> =
+        observeShouldShowAppLabels(HIDE_APP_LABELS, SET_HIDE_APP_LABELS)
+
+    override val shouldShowAppDrawerLabels: Flow<Boolean> =
+        observeShouldShowAppLabels(HIDE_APP_DRAWER_LABELS, SET_HIDE_APP_DRAWER_LABELS)
+
+    private suspend fun setShouldShowAppLabels(
+        shouldShowAppLabels: Boolean,
+        setHiddenLabelsPath: String,
+    ) {
         previewUtilsFlow.first()?.let {
             val values = ContentValues()
             values.put(COL_HIDE_APP_NAMES, !shouldShowAppLabels)
             contentResolver.update(
-                it.getUri(SET_HIDE_APP_LABELS),
+                it.getUri(setHiddenLabelsPath),
                 values,
                 /* where= */ null,
                 /* selectionArgs= */ null,
             )
         }
     }
+
+    override suspend fun setShouldShowAppLabels(shouldShowAppLabels: Boolean) =
+        setShouldShowAppLabels(shouldShowAppLabels, SET_HIDE_APP_LABELS)
+
+    override suspend fun setShouldShowAppDrawerLabels(shouldShowAppDrawerLabels: Boolean) =
+        setShouldShowAppLabels(shouldShowAppDrawerLabels, SET_HIDE_APP_DRAWER_LABELS)
 
     companion object {
         const val ICON_THEMED = "icon_themed"
@@ -317,6 +338,10 @@ constructor(
         private const val HIDE_APP_LABELS = "workspace_items_label_hidden"
         // Key for applying the boolean to hide the app names on the home screen, to the system
         private const val SET_HIDE_APP_LABELS = "set_workspace_items_label_hidden"
+        // String for building uri when querying the boolean to hide app names in the app drawer
+        private const val HIDE_APP_DRAWER_LABELS = "all_apps_items_label_hidden"
+        // Key for applying the boolean to hide app names in the app drawer
+        private const val SET_HIDE_APP_DRAWER_LABELS = "set_all_apps_items_label_hidden"
         // Key for querying the boolean to hide the app names on the home screen
         private const val COL_HIDE_APP_NAMES = "boolean_value"
         private const val ENABLED = 1
