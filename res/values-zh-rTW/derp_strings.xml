@@ -13,4 +13,9 @@
     <string name="udfps_icon_title">指紋圖示</string>
     <string name="udfps_icon_description">自訂鎖定畫面上的指紋圖示</string>
     <string name="new_title">新項目</string>
+    <string name="global_icon_shape_title">全系統套用圖示外形</string>
+    <string name="global_icon_shape_description">在應用程式啟動畫面及系統自適應圖示中使用這個外形</string>
+    <string name="global_icon_shape_apply_failed">無法將圖示外形套用至全系統。已保留目前設定。</string>
+    <string name="global_icon_shape_restart_required">重新啟動桌面啟動器或裝置，即可讓全系統圖示外形生效。</string>
+    <string name="clock_style_title">時鐘樣式</string>
 </resources>
