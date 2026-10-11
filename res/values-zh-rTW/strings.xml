@@ -67,6 +67,7 @@
     <string name="app_labels" msgid="4290052401987798752">"應用程式標籤"</string>
     <string name="app_names" msgid="708691253698583169">"名稱"</string>
     <string name="show_app_names" msgid="522703901790555973">"顯示應用程式名稱"</string>
+    <string name="show_app_names_in_app_drawer">在應用程式抽屜顯示應用程式名稱</string>
     <string name="app_icons_style" msgid="993356162262531521">"樣式"</string>
     <string name="apply_theme_btn" msgid="6293081192321303991">"套用"</string>
     <string name="edit_custom_theme_lbl" msgid="5211377705710775224">"輕觸這裡即可編輯"</string>
