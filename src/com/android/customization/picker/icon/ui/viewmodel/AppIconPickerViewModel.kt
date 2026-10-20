@@ -163,6 +163,10 @@ constructor(
         combine(previewingIconStyle, iconStylesModels) { previewingIconStyle, iconStylesModels ->
             iconStylesModels.find { it.iconStyle == previewingIconStyle }
         }
+    val previewingIconStyleOptionIndex: Flow<Int> =
+        combine(previewingIconStyle, iconStylesModels) { previewingIconStyle, iconStylesModels ->
+            iconStylesModels.indexOfFirst { it.iconStyle == previewingIconStyle }
+        }
     val styleOptions: Flow<List<OptionItemViewModel2<IconStyleModel>>> =
         iconStylesModels.map {
             List(size = it.size, init = { index -> toStyleOptionItemViewModel(it[index]) })

@@ -292,6 +292,30 @@ class AppIconPickerViewModelTest {
         }
 
     @Test
+    fun previewingIconStyleOptionIndex_shouldBeIndexOfDefault() =
+        testScope.runTest {
+            val previewingIconStyleOptionIndex =
+                collectLastValue(underTest.previewingIconStyleOptionIndex)
+
+            assertThat(previewingIconStyleOptionIndex()).isEqualTo(0)
+        }
+
+    @Test
+    fun previewingIconStyleOptionIndex_shouldUpdate_whenIconStyleClicked() =
+        testScope.runTest {
+            val styleOptions = collectLastValue(underTest.styleOptions)
+            val previewingIconStyleOptionIndex =
+                collectLastValue(underTest.previewingIconStyleOptionIndex)
+            val onMinimalOptionClick =
+                styleOptions()?.get(1)?.onClicked?.let { collectLastValue(it) }
+            checkNotNull(onMinimalOptionClick)
+
+            onMinimalOptionClick()?.invoke()
+
+            assertThat(previewingIconStyleOptionIndex()).isEqualTo(1)
+        }
+
+    @Test
     fun iconStyleAndShapeOnApply_shouldBeNonnull_whenIconStyleSelected() =
         testScope.runTest {
             val styleOptions = collectLastValue(underTest.styleOptions)

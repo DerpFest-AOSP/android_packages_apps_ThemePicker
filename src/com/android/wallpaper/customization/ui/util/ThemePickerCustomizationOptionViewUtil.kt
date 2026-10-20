@@ -325,7 +325,12 @@ constructor(
                     }
                     .also { bottomSheetContainer.addView(it) },
             )
-            put(APP_ICONS, inflateFloatingSheet(APP_ICONS, bottomSheetContainer, layoutInflater))
+            put(
+                APP_ICONS,
+                inflateFloatingSheet(APP_ICONS, bottomSheetContainer, layoutInflater).also {
+                    bottomSheetContainer.addView(it)
+                },
+            )
             if (customizationOptionsData.isGridCustomizationAvailable) {
                 put(
                     GRID,

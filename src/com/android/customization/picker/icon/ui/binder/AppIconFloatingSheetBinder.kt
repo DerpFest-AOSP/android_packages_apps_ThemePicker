@@ -29,8 +29,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.customization.picker.common.ui.view.DoubleRowListItemSpacing
 import com.android.customization.picker.common.ui.view.SingleRowListItemSpacing
 import com.android.customization.picker.icon.shared.model.IconStyleModel
 import com.android.customization.picker.icon.ui.util.IconStyleViewUtil
@@ -42,6 +44,7 @@ import com.android.wallpaper.customization.ui.binder.FloatingSheetHeightAnimatio
 import com.android.wallpaper.customization.ui.binder.SwitchColorBinder
 import com.android.wallpaper.customization.ui.util.ThemePickerCustomizationOptionUtil.ThemePickerHomeCustomizationOption.APP_ICONS
 import com.android.wallpaper.customization.ui.viewmodel.ThemePickerCustomizationOptionsViewModel
+import com.android.wallpaper.picker.category.ui.binder.SectionsBinder.removeItemDecorations
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.view.FloatingToolbar
 import com.android.wallpaper.picker.customization.ui.view.adapter.FloatingToolbarTabAdapter
@@ -135,12 +138,16 @@ object AppIconFloatingSheetBinder {
             )
         val styleOptionList =
             view.requireViewById<RecyclerView>(R.id.icon_style_options).also {
-                it.initOptionList(view.context, styleOptionListAdapter)
+                it.initOptionList(
+                    view.context,
+                    styleOptionListAdapter,
+                    GridLayoutManager(view.context, 1, RecyclerView.HORIZONTAL, false),
+                )
             }
 
         val styleOption = styleContent.findViewById<View>(R.id.icon_style_option_placeholder)
         val styleIcon = styleOption.findViewById<View>(R.id.option_icon)
-        val styleIconHeight: MutableStateFlow<Int?> = MutableStateFlow(null)
+        val styleOptionsPerRow: MutableStateFlow<Int?> = MutableStateFlow(null)
 
         val themedIconsSwitch = view.requireViewById<MaterialSwitch>(R.id.themed_icon_toggle)
         val themedIconEntry = view.requireViewById<ViewGroup>(R.id.themed_icon_toggle_entry)
@@ -180,22 +187,21 @@ object AppIconFloatingSheetBinder {
             MutableStateFlow(FloatingSheetHeightsViewModel())
 
         if (isExtendibleThemeManager) {
+            val listEdgeSpace =
+                view.resources.getDimensionPixelSize(
+                    R.dimen.floating_sheet_content_horizontal_padding
+                )
+            val listItemSpace =
+                view.resources.getDimensionPixelSize(
+                    R.dimen.floating_sheet_list_item_horizontal_space
+                )
             styleContent.viewTreeObserver.addOnGlobalLayoutListener(
                 object : OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
-                        styleIconHeight.value = styleIcon.height
-                        if (
-                            styleContent.height != 0 &&
-                                floatingSheetHeights.value.styleContentHeight != styleContent.height
-                        ) {
-                            floatingSheetHeights.value =
-                                floatingSheetHeights.value.copy(
-                                    styleContentHeight = styleContent.height
-                                )
-                            // Keep the height of the style floating sheet fixed so text renders
-                            // correctly after changing tabs.
-                            styleContent.layoutParams =
-                                styleContent.layoutParams.apply { height = styleContent.height }
+                        if (styleContent.width != 0 && styleOption.width != 0) {
+                            styleOptionsPerRow.value =
+                                (styleContent.width - 2 * listEdgeSpace + listItemSpace) /
+                                    (styleOption.width + listItemSpace)
                             styleContent.viewTreeObserver.removeOnGlobalLayoutListener(this)
                         }
                     }
@@ -294,25 +300,75 @@ object AppIconFloatingSheetBinder {
                 if (isExtendibleThemeManager) {
                     themedIconEntry.isVisible = false
 
+                    var styleOptionIndexToFocus = 0
                     launch {
                         viewModel.styleOptions.collect { options ->
                             styleOptionListAdapter.setItems(options) {
-                                val indexToFocus =
-                                    options.indexOfFirst { it.isSelected.value }.coerceAtLeast(0)
                                 (styleOptionList.layoutManager as LinearLayoutManager)
-                                    .scrollToPosition(indexToFocus)
+                                    .scrollToPosition(styleOptionIndexToFocus)
                             }
                         }
                     }
 
                     launch {
-                        combine(viewModel.styleOptions, styleIconHeight.filterNotNull(), ::Pair)
-                            .collect { (options, iconHeight) ->
-                                iconStyleViewUtil.bindListDivider(
-                                    options,
-                                    styleOptionList,
-                                    iconHeight,
-                                )
+                        viewModel.previewingIconStyleOptionIndex.collect { index ->
+                            if (index < 0) return@collect
+                            styleOptionIndexToFocus = index
+                            styleOptionList.post {
+                                val layoutManager =
+                                    styleOptionList.layoutManager as? LinearLayoutManager
+                                        ?: return@post
+                                val itemView = layoutManager.findViewByPosition(index)
+
+                                if (itemView != null) {
+                                    val parentCenter = styleOptionList.width / 2
+                                    val itemCenter = itemView.left + itemView.width / 2
+                                    val scrollBy = itemCenter - parentCenter
+                                    styleOptionList.smoothScrollBy(scrollBy, 0)
+                                } else if (index < styleOptionListAdapter.itemCount) {
+                                    layoutManager.scrollToPosition(index)
+                                }
+                            }
+                        }
+                    }
+
+                    launch {
+                        val itemVerticalSpace =
+                            view.resources.getDimensionPixelSize(
+                                R.dimen.floating_sheet_list_item_vertical_space
+                            )
+                        combine(viewModel.styleOptions, styleOptionsPerRow.filterNotNull(), ::Pair)
+                            .collect { (options, optionsPerRow) ->
+                                val rowCount = if (options.size > optionsPerRow) 2 else 1
+                                styleOptionList.setStyleOptionRowCount(rowCount)
+                                val styleContentHeight =
+                                    if (rowCount == 1) {
+                                        styleOption.height
+                                    } else {
+                                        // GridLayoutManager gives both rows the same height, so
+                                        // both need room for the space DoubleRowListItemSpacing
+                                        // adds below the first row.
+                                        2 * (styleOption.height + itemVerticalSpace)
+                                    }
+                                // Keep the height of the style floating sheet fixed so text renders
+                                // correctly after changing tabs.
+                                if (styleContent.layoutParams.height != styleContentHeight) {
+                                    styleContent.layoutParams =
+                                        styleContent.layoutParams.apply {
+                                            height = styleContentHeight
+                                        }
+                                }
+                                floatingSheetHeights.value =
+                                    floatingSheetHeights.value.copy(
+                                        styleContentHeight = styleContentHeight
+                                    )
+                                if (rowCount == 1) {
+                                    iconStyleViewUtil.bindListDivider(
+                                        options,
+                                        styleOptionList,
+                                        styleIcon.height,
+                                    )
+                                }
                             }
                     }
 
@@ -364,12 +420,15 @@ object AppIconFloatingSheetBinder {
                                     Tab.SHAPE -> shapeContent
                                     Tab.NAMES -> labelContent
                                 }
+                            val fromContent =
+                                if (currentTab != selectedTab) currentContent else null
+                            val toContent = if (currentTab != selectedTab) selectedContent else null
                             FloatingSheetHeightAnimationBinder.bind(
                                 floatingSheetContainer,
                                 fromHeight,
                                 toHeight,
-                                currentContent,
-                                selectedContent,
+                                fromContent,
+                                toContent,
                             )
                             currentTab = selectedTab
                         }
@@ -570,9 +629,14 @@ object AppIconFloatingSheetBinder {
             shouldAnimateColor = shouldAnimateColor,
         )
 
-    private fun RecyclerView.initOptionList(context: Context, adapter: OptionItemAdapter2<*>) {
+    private fun RecyclerView.initOptionList(
+        context: Context,
+        adapter: OptionItemAdapter2<*>,
+        layoutManager: LinearLayoutManager =
+            LinearLayoutManager(context, RecyclerView.HORIZONTAL, false),
+    ) {
         apply {
-            this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            this.layoutManager = layoutManager
             addItemDecoration(
                 SingleRowListItemSpacing(
                     edgeItemSpacePx =
@@ -587,5 +651,35 @@ object AppIconFloatingSheetBinder {
             )
             this.adapter = adapter
         }
+    }
+
+    private fun RecyclerView.setStyleOptionRowCount(rowCount: Int) {
+        val gridLayoutManager = layoutManager as GridLayoutManager
+        if (gridLayoutManager.spanCount == rowCount) return
+        gridLayoutManager.spanCount = rowCount
+        removeItemDecorations()
+        val edgeItemSpacePx =
+            resources.getDimensionPixelSize(R.dimen.floating_sheet_content_horizontal_padding)
+        val itemHorizontalSpacePx =
+            resources.getDimensionPixelSize(R.dimen.floating_sheet_list_item_horizontal_space)
+        addItemDecoration(
+            if (rowCount == 1) {
+                SingleRowListItemSpacing(
+                    edgeItemSpacePx = edgeItemSpacePx,
+                    itemHorizontalSpacePx = itemHorizontalSpacePx,
+                )
+            } else {
+                // DoubleRowListItemSpacing adds the space on both sides of a column, so halve it
+                // to keep the same gap between columns as between items in a single row.
+                DoubleRowListItemSpacing(
+                    edgeItemSpacePx = edgeItemSpacePx,
+                    itemHorizontalSpacePx = itemHorizontalSpacePx / 2,
+                    itemVerticalSpacePx =
+                        resources.getDimensionPixelSize(
+                            R.dimen.floating_sheet_list_item_vertical_space
+                        ),
+                )
+            }
+        )
     }
 }
