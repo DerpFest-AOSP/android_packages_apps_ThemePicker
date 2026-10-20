@@ -2,6 +2,7 @@ package com.android.customization.picker.iconpack
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.graphics.drawable.Drawable
 
@@ -18,6 +19,24 @@ object IconPackUtil {
         "org.adw.launcher.icons.ACTION_PICK_ICON",
         "com.dlto.atom.launcher.THEME",
     )
+
+    private const val META_DATA_THEMED = "org.derpfest.iconpack.THEMED"
+
+    /**
+     * Whether the pack is drawn in the themed icon palette, so it has to be applied together with
+     * themed icons to match the apps and the search bar it does not cover.
+     */
+    fun isThemedIconPack(context: Context, packageName: String): Boolean {
+        if (packageName.isEmpty()) return false
+        return try {
+            context.packageManager
+                .getApplicationInfo(packageName, PackageManager.GET_META_DATA)
+                .metaData
+                ?.getBoolean(META_DATA_THEMED) == true
+        } catch (e: PackageManager.NameNotFoundException) {
+            false
+        }
+    }
 
     fun getInstalledIconPacks(context: Context): List<IconPackInfo> {
         val pm = context.packageManager
@@ -69,6 +88,10 @@ object IconPackUtil {
             }
         }
 
-        return packs.sortedBy { it.name.lowercase() }
+        // Themed packs extend the Minimal style, so they are listed right after it.
+        return packs.sortedWith(
+            compareByDescending<IconPackInfo> { isThemedIconPack(context, it.packageName) }
+                .thenBy { it.name.lowercase() }
+        )
     }
 }

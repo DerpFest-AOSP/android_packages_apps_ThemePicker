@@ -32,6 +32,7 @@ import com.android.customization.picker.clock.ui.view.ClockViewFactory
 import com.android.customization.picker.color.data.util.MaterialColorsGenerator
 import com.android.customization.picker.icon.shared.model.IconPackStyle
 import com.android.customization.picker.icon.shared.model.ThemePickerIconStyle
+import com.android.customization.picker.iconpack.IconPackUtil
 import com.android.systemui.shared.keyguard.shared.model.KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_END
 import com.android.systemui.shared.keyguard.shared.model.KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_START
 import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.KEY_HIDE_SMART_SPACE
@@ -358,7 +359,12 @@ constructor(
                                             Bundle().apply {
                                                 putBoolean(
                                                     KEY_BOOLEAN_VALUE,
-                                                    it == ThemePickerIconStyle.MONOCHROME,
+                                                    it == ThemePickerIconStyle.MONOCHROME ||
+                                                        (it is IconPackStyle &&
+                                                            IconPackUtil.isThemedIconPack(
+                                                                context,
+                                                                it.packageName,
+                                                            )),
                                                 )
                                             },
                                         )

@@ -30,6 +30,7 @@ import com.android.customization.picker.icon.shared.model.IconPackStyleModel
 import com.android.customization.picker.icon.shared.model.IconStyle
 import com.android.customization.picker.icon.shared.model.IconStyleModel
 import com.android.customization.picker.icon.shared.model.ThemePickerIconStyle
+import com.android.customization.picker.iconpack.IconPackUtil
 import com.android.customization.picker.iconpack.data.repository.IconPackRepository
 import com.android.themepicker.R
 import com.android.wallpaper.config.BaseFlags
@@ -220,7 +221,9 @@ constructor(
         previewUtilsFlow.first()?.let {
             when (iconStyle) {
                 is IconPackStyle -> {
-                    setThemedIconEnabled(false)
+                    setThemedIconEnabled(
+                        IconPackUtil.isThemedIconPack(appContext, iconStyle.packageName)
+                    )
                     return iconPackRepository.setIconPack(iconStyle.packageName)
                 }
                 ThemePickerIconStyle.MONOCHROME -> {
