@@ -22,6 +22,9 @@ object IconPackUtil {
 
     private const val META_DATA_THEMED = "org.derpfest.iconpack.THEMED"
 
+    /** Bundled PUI pack. It stays immediately after the built-in Minimal style. */
+    private const val PUI_ICON_PACK_PACKAGE = "com.android.theme.icon_pack.pui.apps"
+
     /**
      * Whether the pack is drawn in the themed icon palette, so it has to be applied together with
      * themed icons to match the apps and the search bar it does not cover.
@@ -88,9 +91,10 @@ object IconPackUtil {
             }
         }
 
-        // Themed packs extend the Minimal style, so they are listed right after it.
+        // Style list is Default, Minimal, then these packs. PUI is always first;
+        // packs the user installed follow, in name order.
         return packs.sortedWith(
-            compareByDescending<IconPackInfo> { isThemedIconPack(context, it.packageName) }
+            compareBy<IconPackInfo> { if (it.packageName == PUI_ICON_PACK_PACKAGE) 0 else 1 }
                 .thenBy { it.name.lowercase() }
         )
     }
