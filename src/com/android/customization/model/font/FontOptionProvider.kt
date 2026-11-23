@@ -81,6 +81,9 @@ class FontOptionProvider(private val mContext: Context, manager: OverlayManagerC
                 }
             }
         }
+        // Keep the default option first and list the font overlays by name
+        val overlayOptions = mOptions.subList(1, mOptions.size)
+        overlayOptions.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.title })
     }
 
     private fun addDefault() {
